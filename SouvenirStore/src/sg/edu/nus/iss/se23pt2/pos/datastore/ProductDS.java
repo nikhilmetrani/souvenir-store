@@ -11,10 +11,20 @@
 
 package sg.edu.nus.iss.se23pt2.pos.datastore;
 
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
+
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
+import sg.edu.nus.iss.se23pt2.pos.StoreKeeper;
 
 public class ProductDS extends DataStore
 {
+    private static final String fileName = "Product.dat";
+
+    public ProductDS () throws AccessDeniedException, IOException {
+        super(fileName);
+    }
 
     @Override
     public <T> void create (T obj) {
@@ -29,8 +39,9 @@ public class ProductDS extends DataStore
     }
 
     @Override
-    public <T> void load (SouvenirStore store) {
+    public ArrayList<StoreKeeper> load (SouvenirStore store) {
         // TODO Auto-generated method stub
+        return null;
         
     }
 
