@@ -15,22 +15,24 @@ public class StoreKeeper
 {
 	private String userName;
 	private String password;
-	public void createStoreKeeper(String userName, String password)
+	public StoreKeeper(String userName, String password)
 	{
+	    this.userName = userName;
+	    this.password = password;
 	}
 	
 	public String getUserName()
 	{
-	    return null;
+	    return userName;
 	}
 	
 	public String getPassword()
 	{
-	    return null;
+	    return password;
 	}
 	
 	public Boolean isPasswordCorrect(String password)
 	{
-	    return false;
+	    return this.password.equals(password);
 	}
 }

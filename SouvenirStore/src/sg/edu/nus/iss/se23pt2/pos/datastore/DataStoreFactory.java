@@ -9,7 +9,7 @@
 //
 //
 
-package sg.edu.nus.iss.se23pt2.pos;
+package sg.edu.nus.iss.se23pt2.pos.datastore;
 
 public class DataStoreFactory
 {

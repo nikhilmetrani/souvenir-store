@@ -11,8 +11,12 @@
 
 package sg.edu.nus.iss.se23pt2.pos;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 
 
 public class SouvenirStore {
@@ -25,6 +29,10 @@ public class SouvenirStore {
     private List<BillInfo>           billInfos;
     private String                   loginUserName;
 
+    public SouvenirStore(){
+        this.loadData();
+    }
+    
     public void addStoreKeeper (String userName, String password) {
     }
 
@@ -59,5 +67,20 @@ public class SouvenirStore {
 
     public String getLoginUserName () {
         return null;
+    }
+
+    public void loadData(){
+        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+        try{
+            ArrayList<StoreKeeper> list = dsFactory.getStoreKeeperDS().load(this);
+            Iterator<StoreKeeper> iterator = list.iterator();
+            StoreKeeper storeKeeper = null;
+            while(iterator.hasNext()){
+                storeKeeper = iterator.next();
+                this.storeKeepers.put( storeKeeper.getUserName(), storeKeeper);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
