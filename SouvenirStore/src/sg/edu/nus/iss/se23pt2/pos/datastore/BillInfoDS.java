@@ -37,7 +37,7 @@ public class BillInfoDS extends DataStore
         // TODO Auto-generated method stub
         
     }
-
+ 
     @Override
     public ArrayList<StoreKeeper> load (SouvenirStore store) {
         // TODO Auto-generated method stub
