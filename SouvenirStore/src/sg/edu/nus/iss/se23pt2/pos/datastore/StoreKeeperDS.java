@@ -27,12 +27,8 @@ public class StoreKeeperDS extends DataStore {
     }
 
     @Override
-    public <T> void update (T obj) {
-        // There is no update to StoreKeeper for now
-    }
-
-    @Override
-    public ArrayList<StoreKeeper> load (SouvenirStore store) throws DataLoadFailedException {
+    public ArrayList<StoreKeeper> load (SouvenirStore store)
+            throws DataLoadFailedException {
         String line;
         String[] elements;
         StoreKeeper storeKeeper;
@@ -45,13 +41,17 @@ public class StoreKeeperDS extends DataStore {
             }
         } catch (IOException e) {
             throw new DataLoadFailedException(e.getMessage());
+        } finally {
+            this.close();
         }
         return storeKeepers;
     }
 
     @Override
-    public <T> void remove (T obj) {
-        // There is no remove logic for StoreKeeper
-
+    protected <T> boolean matchData (T obj, String data) {
+        String key = ((StoreKeeper) obj).getUserName();
+        if (data.indexOf(key + ",") == 0)
+            return true;
+        return false;
     }
 }

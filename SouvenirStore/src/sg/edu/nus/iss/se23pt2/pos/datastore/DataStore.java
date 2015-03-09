@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.exception.CreationFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 public abstract class DataStore {
     public static final String DATA_FILE_PATH = "data" + File.pathSeparator;
@@ -42,22 +44,36 @@ public abstract class DataStore {
         }
     }
 
+    public abstract <T> ArrayList<T> load (SouvenirStore store)
+            throws DataLoadFailedException;
+
+    protected abstract <T> boolean matchData (T obj, String data);
+
     public <T> void create (T obj) throws CreationFailedException {
         try {
             this.write(obj.toString());
         } catch (IOException ioe) {
-            new CreationFailedException(ioe.getMessage());
+            throw new CreationFailedException(ioe.getMessage());
         } finally {
             this.close();
         }
     }
 
-    public abstract <T> void update (T obj);
+    public <T> void update (T obj) throws UpdateFailedException {
+        try {
+            this.modify(obj, false);
+        } catch (IOException ioe) {
+            throw new UpdateFailedException(ioe.getMessage());
+        }
+    }
 
-    public abstract <T> ArrayList<T> load (SouvenirStore store)
-            throws DataLoadFailedException;
-
-    public abstract <T> void remove (T obj);
+    public <T> void remove (T obj) throws RemoveFailedException {
+        try {
+            this.modify(obj, true);
+        } catch (IOException ioe) {
+            throw new RemoveFailedException(ioe.getMessage());
+        }
+    }
 
     protected void write (String data) throws IOException {
         this.getWriter().write(data);
@@ -97,6 +113,50 @@ public abstract class DataStore {
             System.out
                     .println("Reader/Writer close failed " + ioe.getMessage());
             ioe.printStackTrace();
+        }
+    }
+
+    private <T> void modify (T obj, boolean deleteFlag) throws IOException {
+        String fileName = file.getName();
+        File tmpFile = new File(fileName + ".tmp");
+        File oldFile = new File(fileName + ".old");
+        BufferedReader br = null;
+        BufferedWriter bw = null;
+        String line;
+        boolean recordFound = false;
+        try {
+            tmpFile.createNewFile();
+            br = this.getReader();
+            bw = new BufferedWriter(new FileWriter(tmpFile, true));
+
+            while ((line = br.readLine()) != null) {
+                if (!recordFound && this.matchData(obj, line)) {
+                    if (deleteFlag)
+                        continue;
+
+                    bw.append(obj.toString());
+                    recordFound = true;
+                } else {
+                    bw.append(line);
+                }
+                bw.newLine();
+            }
+            bw.close();
+            this.close();
+
+            oldFile.delete();
+            file.renameTo(new File(fileName + ".old"));
+            tmpFile.renameTo(new File(fileName));
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            try {
+                if (bw != null)
+                    bw.close();
+                this.close();
+            } catch (IOException e) {
+                throw e;
+            }
         }
     }
 }
