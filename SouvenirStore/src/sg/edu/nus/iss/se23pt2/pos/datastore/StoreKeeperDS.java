@@ -49,7 +49,7 @@ public class StoreKeeperDS extends DataStore {
 
     @Override
     protected <T> boolean matchData (T obj, String data) {
-        String key = ((StoreKeeper) obj).getUserName();
+        String key = ((StoreKeeper) obj).getName();
         if (data.indexOf(key + ",") == 0)
             return true;
         return false;
