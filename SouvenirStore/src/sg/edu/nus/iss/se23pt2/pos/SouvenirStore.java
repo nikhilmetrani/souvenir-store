@@ -77,7 +77,7 @@ public class SouvenirStore {
             StoreKeeper storeKeeper = null;
             while(iterator.hasNext()){
                 storeKeeper = iterator.next();
-                this.storeKeepers.put( storeKeeper.getUserName(), storeKeeper);
+                this.storeKeepers.put( storeKeeper.getName(), storeKeeper);
             }
         }catch(Exception e){
             e.printStackTrace();
