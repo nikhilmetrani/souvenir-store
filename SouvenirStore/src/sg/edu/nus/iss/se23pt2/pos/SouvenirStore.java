@@ -12,6 +12,7 @@
 package sg.edu.nus.iss.se23pt2.pos;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class SouvenirStore {
     private String                   loginUserName;
 
     public SouvenirStore(){
+        storeKeepers = new HashMap<String, StoreKeeper>();
         this.loadData();
     }
     
