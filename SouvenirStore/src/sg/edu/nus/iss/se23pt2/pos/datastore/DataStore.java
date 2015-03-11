@@ -27,7 +27,7 @@ import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 public abstract class DataStore {
-    public static final String DATA_FILE_PATH = "data" + File.pathSeparator;
+    public static final String DATA_FILE_PATH = "data\\";
     private File               file;
     private BufferedWriter     bufferedWriter;
     private BufferedReader     bufferedReader;
@@ -85,14 +85,14 @@ public abstract class DataStore {
     }
 
     private BufferedWriter getWriter () throws IOException {
-        if (bufferedWriter != null) {
+        if (bufferedWriter == null) {
             bufferedWriter = new BufferedWriter(new FileWriter(file, true));
         }
         return bufferedWriter;
     }
 
     private BufferedReader getReader () throws IOException {
-        if (bufferedReader != null) {
+        if (bufferedReader == null) {
             bufferedReader = new BufferedReader(new FileReader(file));
         }
         return bufferedReader;
@@ -117,7 +117,7 @@ public abstract class DataStore {
     }
 
     private <T> void modify (T obj, boolean deleteFlag) throws IOException {
-        String fileName = file.getName();
+        String fileName = file.getPath();
         File tmpFile = new File(fileName + ".tmp");
         File oldFile = new File(fileName + ".old");
         BufferedReader br = null;
