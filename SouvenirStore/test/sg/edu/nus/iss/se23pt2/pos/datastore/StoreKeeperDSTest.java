@@ -37,6 +37,7 @@ public class StoreKeeperDSTest extends TestCase{
     public void tearDown() throws Exception{
         ds.remove(storekeeper1);
         ds.remove(storekeeper2);
+        ds.close();
     }
     
     @Test
