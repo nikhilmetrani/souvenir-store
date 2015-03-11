@@ -122,7 +122,11 @@ public class Product {
     public Integer getAvailableQuantity() {
     	return this.availableQuantity;
     }
-    
+
+    public void setAvailableQuantity (Integer availableQuantity) {
+        this.availableQuantity = availableQuantity;
+    }
+
     public void setBarcodeNumber(String barcode) {
     	this.barcodeNumber = barcode;
     }
