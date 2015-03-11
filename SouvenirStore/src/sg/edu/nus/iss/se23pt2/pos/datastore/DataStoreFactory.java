@@ -11,54 +11,62 @@
 
 package sg.edu.nus.iss.se23pt2.pos.datastore;
 
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+
 public class DataStoreFactory
 {
-	private static DataStoreFactory dataStoreFactory;
+	private static DataStoreFactory dataStoreFactory = new DataStoreFactory();
+	private DataStore storeKeeperDS;
+
+
 	private void createDataStoreFactory()
 	{
 	}
 	
 	public static DataStoreFactory getInstance()
 	{
-	    return new DataStoreFactory();
+	    return dataStoreFactory;
 	}
 	
-	public DataStore getStoreKeeperDS()
+	public DataStore getStoreKeeperDS() throws AccessDeniedException, IOException
+	{
+	    if(storeKeeperDS == null)
+	        storeKeeperDS = new StoreKeeperDS();
+	    return storeKeeperDS;
+	}
+	
+	public DataStore getCategoryDS() throws AccessDeniedException, IOException
 	{
 	    return null;
 	}
 	
-	public DataStore getCategoryDS()
+	public DataStore getVendorDS() throws AccessDeniedException, IOException
 	{
 	    return null;
 	}
 	
-	public DataStore getVendorDS()
+	public DataStore getProductDS() throws AccessDeniedException, IOException
 	{
 	    return null;
 	}
 	
-	public DataStore getProductDS()
+	public DataStore getMemberDS() throws AccessDeniedException, IOException
 	{
 	    return null;
 	}
 	
-	public DataStore getMemberDS()
+	public DataStore getDiscountDS() throws AccessDeniedException, IOException
 	{
 	    return null;
 	}
 	
-	public DataStore getDiscountDS()
+	public DataStore getTransactionDS() throws AccessDeniedException, IOException
 	{
 	    return null;
 	}
 	
-	public DataStore getTransactionDS()
-	{
-	    return null;
-	}
-	
-	public DataStore getBillInfoDS()
+	public DataStore getBillInfoDS() throws AccessDeniedException, IOException
 	{
 	    return null;
 	}
