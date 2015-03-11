@@ -159,4 +159,22 @@ public abstract class DataStore {
             }
         }
     }
+    
+    protected void deleteAll() throws RemoveFailedException{
+        BufferedWriter bufferedWriter = null;
+        try{
+            bufferedWriter = new BufferedWriter(new FileWriter(file, false));
+            bufferedWriter.write("");
+        }catch(IOException e){
+            e.printStackTrace();
+            throw new RemoveFailedException(e.getMessage());
+        }finally{
+            try{
+                if(bufferedWriter!=null)
+                    bufferedWriter.close();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
 }

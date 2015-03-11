@@ -14,40 +14,123 @@ package sg.edu.nus.iss.se23pt2.pos.datastore;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
+import java.util.List;
 
+import sg.edu.nus.iss.se23pt2.pos.Category;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
-import sg.edu.nus.iss.se23pt2.pos.StoreKeeper;
+import sg.edu.nus.iss.se23pt2.pos.Vendor;
+import sg.edu.nus.iss.se23pt2.pos.exception.CreationFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 public class CategoryDS extends DataStore
 {
     private static final String fileName = "Category.dat";
+    private DataStoreFactory dsFactory = DataStoreFactory.getInstance();
 
     public CategoryDS () throws AccessDeniedException, IOException {
         super(fileName);
     }
 
     @Override
-    public <T> void create (T obj) {
-        // TODO Auto-generated method stub
-        
+    public <T> void create (T obj) throws CreationFailedException{
+        super.create(obj);
+        Category category = (Category) obj;
+        List<Vendor> venodrs = category.getVendors();
+        DataStore ds = null;
+        try{
+            ds = dsFactory.getVendorDS(category.getCode());
+            for(Vendor vendor:venodrs){
+                ds.create(vendor);
+            }
+        }catch(IOException e){
+            throw new CreationFailedException(e.getMessage());
+        }finally{
+            if(ds!=null)
+                ds.close();
+        }
     }
 
     @Override
-    public <T> void update (T obj) {
-        // TODO Auto-generated method stub
-        
+    public <T> void update (T obj) throws UpdateFailedException {
+        super.update(obj);
+        Category category = (Category) obj;
+        List<Vendor> venodrs = category.getVendors();
+        DataStore ds = null;
+        try{
+            ds = dsFactory.getVendorDS(category.getCode());
+            ds.deleteAll();
+            for(Vendor vendor:venodrs){
+                ds.create(vendor);
+            }
+        }catch(CreationFailedException e){
+            throw new UpdateFailedException(e.getMessage());
+        }catch(RemoveFailedException e){
+            throw new UpdateFailedException(e.getMessage());
+        }catch(IOException e){
+            throw new UpdateFailedException(e.getMessage());
+        }finally{
+            if(ds!=null)
+                ds.close();
+        }
     }
 
     @Override
-    public ArrayList<StoreKeeper> load (SouvenirStore store) {
-        // TODO Auto-generated method stub
-        return null;
-        
+    public ArrayList<Category> load (SouvenirStore store)
+            throws DataLoadFailedException {
+        String line;
+        String[] elements;
+        Category category;
+        List<Vendor> venodrs = null;
+        DataStore ds = null;
+        ArrayList<Category> categories = new ArrayList<Category>();
+        try {
+            while ((line = this.read()) != null) {
+                elements = line.split(",");
+                category = new Category(elements[0], elements[1]);
+                try{
+                    ds = dsFactory.getVendorDS(category.getCode());
+                    venodrs = ds.load(store);
+                    for(Vendor vendor:venodrs){
+                        category.addVendor(vendor);
+                    }
+                }finally{
+                    if(ds!=null)
+                        ds.close();
+                }
+                categories.add(category);
+            }
+        } catch (IOException e) {
+            throw new DataLoadFailedException(e.getMessage());
+        } finally {
+            this.close();
+        }
+        return categories;
     }
 
     @Override
-    public <T> void remove (T obj) {
-        // TODO Auto-generated method stub
-        
+    protected <T> boolean matchData (T obj, String data) {
+        String key = ((Category) obj).getCode();
+        if (data.indexOf(key + ",") == 0)
+            return true;
+        return false;
+    }
+
+    @Override
+    public <T> void remove (T obj) throws RemoveFailedException {
+        Category category = (Category) obj;
+        List<Vendor> venodrs = category.getVendors();
+        DataStore ds = null;
+        try{
+            ds = dsFactory.getVendorDS(category.getCode());
+            ds.deleteAll();
+        }catch(IOException e){
+            throw new RemoveFailedException(e.getMessage());
+        }finally{
+            if(ds!=null)
+                ds.close();
+        }
+        super.remove(obj);
     }
 }

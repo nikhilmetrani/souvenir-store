@@ -16,38 +16,42 @@ import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
-import sg.edu.nus.iss.se23pt2.pos.StoreKeeper;
+import sg.edu.nus.iss.se23pt2.pos.Vendor;
+import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 
 public class VendorDS extends DataStore
 {
-    private static final String fileName = "Vendor.dat";
 
     public VendorDS (String type) throws AccessDeniedException, IOException {
-        super(type + fileName);
+        super("Vendors"+type+".dat");
     }
 
     @Override
-    public <T> void create (T obj) {
-        // TODO Auto-generated method stub
+    public ArrayList<Vendor> load (SouvenirStore store) throws DataLoadFailedException {
+        String line;
+        String[] elements;
+        Vendor vendor;
+        ArrayList<Vendor> vendors = new ArrayList<Vendor>();
+        try {
+            while ((line = this.read()) != null) {
+                elements = line.split(",");
+                vendor = new Vendor(elements[0], elements[1]);
+                vendors.add(vendor);
+            }
+        } catch (IOException e) {
+            throw new DataLoadFailedException(e.getMessage());
+        } finally {
+            this.close();
+        }
+        return vendors;
         
     }
 
     @Override
-    public <T> void update (T obj) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public ArrayList<StoreKeeper> load (SouvenirStore store) {
-        // TODO Auto-generated method stub
-        return null;
-        
-    }
-
-    @Override
-    public <T> void remove (T obj) {
-        // TODO Auto-generated method stub
-        
+    protected <T> boolean matchData (T obj, String data) {
+        String key = ((Vendor) obj).getName();
+        if (data.indexOf(key + ",") == 0)
+            return true;
+        return false;
     }
 }

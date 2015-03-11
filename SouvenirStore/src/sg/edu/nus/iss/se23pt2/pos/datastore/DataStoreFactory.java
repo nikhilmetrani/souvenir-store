@@ -13,15 +13,19 @@ package sg.edu.nus.iss.se23pt2.pos.datastore;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DataStoreFactory
 {
 	private static DataStoreFactory dataStoreFactory = new DataStoreFactory();
-	private DataStore storeKeeperDS;
+	private DataStore storeKeeperDS, categoryDS, productDS;
+	private Map<String, VendorDS> vendorDS;
 
 
 	private void createDataStoreFactory()
 	{
+	    vendorDS = new HashMap<String, VendorDS>();
 	}
 	
 	public static DataStoreFactory getInstance()
@@ -38,17 +42,23 @@ public class DataStoreFactory
 	
 	public DataStore getCategoryDS() throws AccessDeniedException, IOException
 	{
-	    return null;
+        if(categoryDS == null)
+            categoryDS = new CategoryDS();
+        return categoryDS;
 	}
 	
-	public DataStore getVendorDS() throws AccessDeniedException, IOException
+	public DataStore getVendorDS(String category) throws AccessDeniedException, IOException
 	{
-	    return null;
+        if(!vendorDS.containsKey(category))
+            vendorDS.put(category.toUpperCase(), new VendorDS(category.toUpperCase()));
+        return vendorDS.get(category.toUpperCase());
 	}
 	
 	public DataStore getProductDS() throws AccessDeniedException, IOException
 	{
-	    return null;
+        if(productDS == null)
+            productDS = new ProductDS();
+        return productDS;
 	}
 	
 	public DataStore getMemberDS() throws AccessDeniedException, IOException

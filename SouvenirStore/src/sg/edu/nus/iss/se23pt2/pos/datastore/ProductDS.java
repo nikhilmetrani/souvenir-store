@@ -15,39 +15,51 @@ import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 
+import sg.edu.nus.iss.se23pt2.pos.Product;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
-import sg.edu.nus.iss.se23pt2.pos.StoreKeeper;
+import sg.edu.nus.iss.se23pt2.pos.Vendor;
+import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 
 public class ProductDS extends DataStore
 {
-    private static final String fileName = "Product.dat";
+    private static final String fileName = "Products.dat";
 
     public ProductDS () throws AccessDeniedException, IOException {
         super(fileName);
     }
 
     @Override
-    public <T> void create (T obj) {
-        // TODO Auto-generated method stub
+    public ArrayList<Product> load (SouvenirStore store) throws DataLoadFailedException {
+        String line;
+        String[] elements;
+        Product product;
+        ArrayList<Product> products = new ArrayList<Product>();
+        try {
+            while ((line = this.read()) != null) {
+                elements = line.split(",");
+                product = new Product(elements[0], elements[1]);
+                product.setDescription(elements[2]); 
+                product.setAvailableQuantity(Integer.parseInt(elements[3]));
+                product.setPrice(Float.parseFloat(elements[4]));
+                product.setBarcodeNumber(elements[5]);
+                product.setReorderThresholdQty(Integer.parseInt(elements[6]));
+                product.setOrderQuantity(Integer.parseInt(elements[7]));
+                products.add(product);
+            }
+        } catch (IOException e) {
+            throw new DataLoadFailedException(e.getMessage());
+        } finally {
+            this.close();
+        }
+        return products;
         
     }
 
     @Override
-    public <T> void update (T obj) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public ArrayList<StoreKeeper> load (SouvenirStore store) {
-        // TODO Auto-generated method stub
-        return null;
-        
-    }
-
-    @Override
-    public <T> void remove (T obj) {
-        // TODO Auto-generated method stub
-        
+    protected <T> boolean matchData (T obj, String data) {
+        String key = ((Product) obj).getId();
+        if (data.indexOf(key + ",") == 0)
+            return true;
+        return false;
     }
 }
