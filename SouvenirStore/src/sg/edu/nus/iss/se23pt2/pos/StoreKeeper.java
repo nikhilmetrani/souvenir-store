@@ -45,7 +45,7 @@ public class StoreKeeper {
     /** */
     public Boolean validatePassword(String password) {
 		
-		if (password == this.password)
+		if (this.password.equals(password))
 			return true; //validation successful
 			
 		return false; //validation failure
@@ -53,6 +53,20 @@ public class StoreKeeper {
     
     /** */
     public Boolean setPassword(String currentPassword, String newPassword, String confirmNewPassword) {
+        this.password = newPassword;
 		return false;
+    }
+
+    @Override
+    public String toString(){
+        return name + "," + password;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj instanceof StoreKeeper){
+            return this.name.equals(((StoreKeeper)obj).name);
+        }
+        return false;
     }
 }
