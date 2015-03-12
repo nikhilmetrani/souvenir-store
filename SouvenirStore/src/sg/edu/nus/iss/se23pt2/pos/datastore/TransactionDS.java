@@ -16,7 +16,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
-import sg.edu.nus.iss.se23pt2.pos.StoreKeeper;
+import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 
 public class TransactionDS extends DataStore
 {
@@ -38,16 +38,23 @@ public class TransactionDS extends DataStore
         
     }
 
-    @Override
-    public ArrayList<StoreKeeper> load (SouvenirStore store) {
-        // TODO Auto-generated method stub
-        return null;
-        
-    }
 
     @Override
     public <T> void remove (T obj) {
         // TODO Auto-generated method stub
         
     }
+
+	@Override
+	public <T> ArrayList<T> load(SouvenirStore store)
+			throws DataLoadFailedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected <T> boolean matchData(T obj, String data) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
