@@ -21,8 +21,8 @@ public class Vendor {
     /** */
     private String description;
     
-    /** */
-    public PurchaseOrder po;
+    /** For future implementation*/
+    //public PurchaseOrder po;
     
 	/** */
     public Vendor() {
@@ -37,7 +37,8 @@ public class Vendor {
     
 	/** */
     public void setName(String name) {
-		this.name = name;
+    	if (null != name)
+    		this.name = name;
     }
 	
     /** */
@@ -47,7 +48,8 @@ public class Vendor {
     
 	/** */
     public void setDescription(String description) {
-		this.description = description;
+    	if (null != description)
+    		this.description = description;
     }
 	
     /** */
@@ -55,19 +57,36 @@ public class Vendor {
 		return this.description;
     }
     
-    /** */
-    public void placeOrder(PurchaseOrder po) {
+    /** For future implementation*/
+    /*public void placeOrder(PurchaseOrder po) {
 		this.po = po;
 		return;
     }
-    
+    */
     /** */
-    public PurchaseOrder dispatchOrder() {
+    /*public PurchaseOrder dispatchOrder() {
 		return this.po;
     }
-	
+	*/
     @Override
 	public String toString() {
-		return this.name + "," + this.description;
+    	if (null == this.name && null == this.description)
+    		return null;
+    	else {
+    		if (null != this.name && null == this.description)
+    			return this.name + ",";
+    		else if (null == this.name && null != this.description)
+    			return "," + this.description;
+    	}
+    	return this.name + "," + this.description;
 	}
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (obj instanceof Vendor) {
+	    	if (this.name.equals(((Vendor)obj).name) && this.description.equals(((Vendor)obj).description))
+	    		return true;
+    	}
+    	return false;
+    }
 }
