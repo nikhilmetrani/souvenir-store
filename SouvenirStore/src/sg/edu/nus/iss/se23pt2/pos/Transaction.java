@@ -7,8 +7,8 @@ import java.util.ArrayList;
 //
 //  @ Project : SouvenirStore
 //  @ File Name : Transaction.java
-//  @ Date : 3/8/2015
-//  @ Author : Nikhil Metrani
+//  @ Date : 3/12/2015
+//  @ Author : Rushabh Shah
 //
 //
 
@@ -63,17 +63,16 @@ public class Transaction {
     public ArrayList<Item> getItems() {
 		return this.items;
     }
-    
-	/** */
-    public void getCustomer(Customer c) {
-		this.customer = c;
-    }
-	
+
     /** */
     public Customer getCustomer() {
 		return this.customer;
     }
     
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
 	/** */
     public void setDate(String date) {
 		this.date = date;
@@ -92,11 +91,23 @@ public class Transaction {
     /** */
     public Discount getDiscount() {
 		return this.discount;
-    }
+    }   
+    
 	
 	public String toString() {
 		//for each item in items
-			//return this.id + "," + this.items[i].id + "," + this.customer.id + "," + this.items[i].quantity + "," + this.date;
-		return null;
+		StringBuilder stb = new StringBuilder();
+			for(Item item:items){
+				stb = stb.append(this.id)
+						 .append(" , ")
+						 .append(item.getProductId())
+						 .append(" , ")
+						 .append(this.getCustomer().getId())
+						 .append(" , ")
+						 .append(item.getQuantity())
+						 .append(System.getProperty("line.separator"));			
+			}
+		
+		return stb.toString();
 	}
 }
