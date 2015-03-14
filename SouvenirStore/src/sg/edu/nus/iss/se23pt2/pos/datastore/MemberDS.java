@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 
+import sg.edu.nus.iss.se23pt2.pos.Member;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 
@@ -26,35 +27,33 @@ public class MemberDS extends DataStore
         super(fileName);
     }
 
-    @Override
-    public <T> void create (T obj) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public <T> void update (T obj) {
-        // TODO Auto-generated method stub
-        
-    }
-
-
-    @Override
-    public <T> void remove (T obj) {
-        // TODO Auto-generated method stub
-        
-    }
-
 	@Override
-	public <T> ArrayList<T> load(SouvenirStore store)
+	public ArrayList<Member> load(SouvenirStore store)
 			throws DataLoadFailedException {
-		// TODO Auto-generated method stub
-		return null;
+        String line;
+        String[] elements;
+        Member member;
+        ArrayList<Member> members = new ArrayList<Member>();
+        try {
+            while ((line = this.read()) != null) {
+                elements = line.split(",");
+                member = new Member(elements[1], elements[0]);
+                member.addLoyaltyPoints(Integer.parseInt(elements[2]));
+                members.add(member);
+            }
+        } catch (IOException e) {
+            throw new DataLoadFailedException(e.getMessage());
+        } finally {
+            this.close();
+        }
+        return members;
 	}
 
 	@Override
 	protected <T> boolean matchData(T obj, String data) {
-		// TODO Auto-generated method stub
-		return false;
+        String key = ((Member) obj).getId();
+        if (data.indexOf( "," + key + ",") > 0)
+            return true;
+        return false;
 	}
 }

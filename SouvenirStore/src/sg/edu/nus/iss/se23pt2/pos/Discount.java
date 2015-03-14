@@ -19,10 +19,12 @@ public class Discount
 	private String periodInDays;
 	private Integer discountPercentage;
 	private String applicableTo;
-	public void createDiscount(String discountCode, String description, String startDate, String periodInDays, Integer discountPercentage, String applicableTo)
-	{
-	}
-	
+
+    public Discount(String discountCode, String description, String startDate, String periodInDays, Integer discountPercentage, String applicableTo)
+    {
+        
+    }
+    
 	public String getDiscountCode()
 	{
 	    return null;
@@ -46,6 +48,10 @@ public class Discount
 	public Integer getDiscountPercentage()
 	{
 	    return 0;
+	}
+	
+	public void setDiscountPercentage(int discountPercentage){
+	    this.discountPercentage = discountPercentage;
 	}
 	
 	public String getApplicableTo()

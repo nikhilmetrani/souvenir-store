@@ -17,54 +17,29 @@ package sg.edu.nus.iss.se23pt2.pos;
 public class Member extends Customer {
     
 	/** */
-    private String firstName;
+    private String name;
     
     /** */
-    private String lastName;
-    
-    /** */
-    private Integer loyaltyPoints;
+    private Integer loyaltyPoints = -1;
     
     public Member() {
-    	this(null, null, null, -1);
+    	this(null, null);
     }
     
     /** */
-    public Member(String id, String firstName, String lastName) {
-    	this(id, firstName, lastName, -1);
+    public Member(String id, String name) {
+        super.setId(id);
+        this.name = name;
     }
     
     /** */
-    public Member(String id, String firstName, String lastName, Integer loyaltyPoints) {
-    	super.setId(id);
-    	this.firstName = firstName;
-    	this.lastName = lastName;
-    	this.loyaltyPoints = loyaltyPoints;
+    public void setName(String name) {
+    	this.name = name;
     }
     
     /** */
-    public void setFirstName(String name) {
-    	this.firstName = name;
-    }
-    
-    /** */
-    public String getFirstName() {
-    	return this.firstName;
-    }
-    
-    /** */
-    public void setLastName(String name) {
-    	this.lastName = name;
-    }
-    
-    /** */
-    public String getLastName() {
-    	return this.lastName;
-    }
-    
-    /** */
-    public String getFullName() {
-    	return this.firstName + " " + this.lastName;
+    public String getName() {
+    	return this.name;
     }
     
     /** */

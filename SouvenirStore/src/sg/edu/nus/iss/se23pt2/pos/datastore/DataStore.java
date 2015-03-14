@@ -27,7 +27,7 @@ import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 public abstract class DataStore {
-    public static final String DATA_FILE_PATH = "SouvenirStore\\data\\";
+    public static final String DATA_FILE_PATH = "data\\";
     private File               file;
     private BufferedWriter     bufferedWriter;
     private BufferedReader     bufferedReader;

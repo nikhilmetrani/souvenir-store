@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 
+import sg.edu.nus.iss.se23pt2.pos.Discount;
+import sg.edu.nus.iss.se23pt2.pos.MemberDiscount;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 
@@ -27,34 +29,34 @@ public class DiscountDS extends DataStore
     }
 
     @Override
-    public <T> void create (T obj) {
-        // TODO Auto-generated method stub
-        
+    public ArrayList<Discount> load(SouvenirStore store)
+            throws DataLoadFailedException {
+        String line;
+        String[] elements;
+        Discount discount;
+        ArrayList<Discount> discounts = new ArrayList<Discount>();
+        try {
+            while ((line = this.read()) != null) {
+                elements = line.split(",");
+                if(elements[5].equals("M"))
+                    discount = new MemberDiscount(elements[0], elements[1], elements[2], elements[3], Integer.parseInt(elements[4]), elements[5]);
+                else
+                    discount = new Discount(elements[0], elements[1], elements[2], elements[3], Integer.parseInt(elements[4]), elements[5]);
+                discounts.add(discount);
+            }
+        } catch (IOException e) {
+            throw new DataLoadFailedException(e.getMessage());
+        } finally {
+            this.close();
+        }
+        return discounts;
     }
 
     @Override
-    public <T> void update (T obj) {
-        // TODO Auto-generated method stub
-        
+    protected <T> boolean matchData(T obj, String data) {
+        String key = ((Discount) obj).getDiscountCode();
+        if (data.indexOf( "," + key + ",") > 0)
+            return true;
+        return false;
     }
-
-
-    @Override
-    public <T> void remove (T obj) {
-        // TODO Auto-generated method stub
-        
-    }
-
-	@Override
-	public <T> ArrayList<T> load(SouvenirStore store)
-			throws DataLoadFailedException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected <T> boolean matchData(T obj, String data) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

@@ -19,7 +19,7 @@ import java.util.Map;
 public class DataStoreFactory
 {
 	private static DataStoreFactory dataStoreFactory = new DataStoreFactory();
-	private DataStore storeKeeperDS, categoryDS, productDS;
+	private DataStore storeKeeperDS, categoryDS, productDS, memberDS, discountDS, transactionDS;
 	private Map<String, VendorDS> vendorDS;
 
 
@@ -63,21 +63,23 @@ public class DataStoreFactory
 	
 	public DataStore getMemberDS() throws AccessDeniedException, IOException
 	{
-	    return null;
+        if(memberDS == null)
+            memberDS = new MemberDS();
+        return memberDS;
 	}
 	
 	public DataStore getDiscountDS() throws AccessDeniedException, IOException
 	{
-	    return null;
+        if(discountDS == null)
+            discountDS = new DiscountDS();
+        return discountDS;
 	}
 	
 	public DataStore getTransactionDS() throws AccessDeniedException, IOException
 	{
-	    return null;
+        if(transactionDS == null)
+            transactionDS = new TransactionDS();
+        return transactionDS;
 	}
 	
-	public DataStore getBillInfoDS() throws AccessDeniedException, IOException
-	{
-	    return null;
-	}
 }

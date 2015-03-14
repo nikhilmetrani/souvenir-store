@@ -27,7 +27,6 @@ public class SouvenirStore {
     private List<Member>             members;
     private List<Discount>           discounts;
     private List<Transaction>        transactions;
-    private List<BillInfo>           billInfos;
     private String                   loginUserName;
 
     public SouvenirStore(){
@@ -55,10 +54,6 @@ public class SouvenirStore {
     public void addDiscount (String discountCode, String description,
             String startDate, String periodInDays, Integer discountPercentage,
             String applicableTo) {
-    }
-
-    public void addTransactionDetails (List<Transaction> transactions,
-            BillInfo billInfo) {
     }
 
     public void updateDiscount (String discountCode, Integer discountPercentage) {
