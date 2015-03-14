@@ -23,6 +23,7 @@ import sg.edu.nus.iss.se23pt2.pos.exception.CreationFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.VendorExistsException;
 
 public class CategoryDS extends DataStore
 {
@@ -37,7 +38,7 @@ public class CategoryDS extends DataStore
     public <T> void create (T obj) throws CreationFailedException{
         super.create(obj);
         Category category = (Category) obj;
-        List<Vendor> venodrs = category.getVendors();
+        List<Vendor> venodrs = category.getAllVendors();
         DataStore ds = null;
         try{
             ds = dsFactory.getVendorDS(category.getCode());
@@ -56,7 +57,7 @@ public class CategoryDS extends DataStore
     public <T> void update (T obj) throws UpdateFailedException {
         super.update(obj);
         Category category = (Category) obj;
-        List<Vendor> venodrs = category.getVendors();
+        List<Vendor> venodrs = category.getAllVendors();
         DataStore ds = null;
         try{
             ds = dsFactory.getVendorDS(category.getCode());
@@ -93,7 +94,12 @@ public class CategoryDS extends DataStore
                     ds = dsFactory.getVendorDS(category.getCode());
                     venodrs = ds.load(store);
                     for(Vendor vendor:venodrs){
-                        category.addVendor(vendor);
+                    	try {
+                    		category.addVendor(vendor);
+                    	}
+                    	catch (VendorExistsException e) {
+                    		//Do nothing for existing exception
+                    	}
                     }
                 }finally{
                     if(ds!=null)
@@ -120,7 +126,7 @@ public class CategoryDS extends DataStore
     @Override
     public <T> void remove (T obj) throws RemoveFailedException {
         Category category = (Category) obj;
-        List<Vendor> venodrs = category.getVendors();
+        List<Vendor> venodrs = category.getAllVendors();
         DataStore ds = null;
         try{
             ds = dsFactory.getVendorDS(category.getCode());

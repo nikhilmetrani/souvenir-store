@@ -53,7 +53,7 @@ public class VendorTest {
 	}
 
 	@Test
-	public void InstantiateTest() {
+	public void instantiateTest() {
 		
 		/** Return null of instantiate */
 		v1 = new Vendor();
@@ -67,7 +67,7 @@ public class VendorTest {
 	}
 	
 	@Test
-	public void SetGetNameTest() {
+	public void setGetNameTest() {
 		
 		/** Return null of instantiate */
 		v1 = new Vendor();
@@ -86,7 +86,7 @@ public class VendorTest {
 	}
 	
 	@Test
-	public void SetGetDescriptionTest() {
+	public void setGetDescriptionTest() {
 		
 		/** Return null of instantiate */
 		v1 = new Vendor();
@@ -105,7 +105,7 @@ public class VendorTest {
 	}
 	
 	@Test
-	public void ToStringTest() {
+	public void toStringTest() {
 		/** Return null of instantiate */
 		v1 = new Vendor();
 		assertNull(v1.toString());
@@ -131,7 +131,7 @@ public class VendorTest {
 	}
 	
 	@Test
-	public void EqualsTest() {
+	public void equalsTest() {
 		
 		/** Must return false when description does not match */
 		v1 = new Vendor(v1Name, v1Description);
@@ -148,5 +148,20 @@ public class VendorTest {
 		v2 = new Vendor(v1Name, v1Description);
 		assertTrue(v1.equals(v2));
 	}
-
+	
+	@Test
+	public void cloneTest() {
+		
+		v1 = new Vendor(v1Name, v1Description);
+		
+		/* Must return copy of self */
+		v2 = v1.clone();
+		assertEquals(v1, v2);
+		assertTrue(v1.equals(v2));
+		
+		/* Modification of clone must not affect original object */
+		v2.setName(v2Name);
+		assertNotEquals(v1, v2);
+		assertFalse(v1.equals(v2));
+	}
 }

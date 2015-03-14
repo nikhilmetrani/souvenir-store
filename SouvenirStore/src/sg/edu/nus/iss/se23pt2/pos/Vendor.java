@@ -84,9 +84,16 @@ public class Vendor {
     @Override
     public boolean equals(Object obj) {
     	if (obj instanceof Vendor) {
-	    	if (this.name.equals(((Vendor)obj).name) && this.description.equals(((Vendor)obj).description))
+	    	if (this.name.equals(((Vendor)obj).getName()) && this.description.equals(((Vendor)obj).getDescription()))
 	    		return true;
     	}
     	return false;
     }
+    
+    @Override
+    public Vendor clone() {
+    	Vendor vendor = new Vendor(this.name, this.description);
+    	return vendor;
+    }
+    
 }
