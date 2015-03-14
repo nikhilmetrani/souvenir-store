@@ -14,6 +14,7 @@ import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.Vendor;
 import sg.edu.nus.iss.se23pt2.pos.exception.CreationFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.InvalidVendorException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 public class CategoryDSTest extends TestCase{
@@ -59,9 +60,9 @@ public class CategoryDSTest extends TestCase{
             assertTrue("Category save failed", categories.contains(category1));
             
             category1 = categories.get(categories.size()-1);
-            assertSame("Category save failed", category1.getVendors().size(), 2);
-            assertTrue("Category save failed", category1.getVendors().get(0).equals(vendor1));
-            assertTrue("Category save failed", category1.getVendors().get(1).equals(vendor2));
+            assertSame("Category save failed", category1.getAllVendors().size(), 2);
+            assertTrue("Category save failed", category1.getAllVendors().get(0).equals(vendor1));
+            assertTrue("Category save failed", category1.getAllVendors().get(1).equals(vendor2));
         }catch(CreationFailedException e){
             assertFalse("Save failed", true);
         }catch(DataLoadFailedException e){
@@ -79,11 +80,16 @@ public class CategoryDSTest extends TestCase{
             categories = ds.load(store);
             assertTrue("Category Update failed", categories.get(categories.size()-1).getName().equals(newName));
             
-            category1.removeVendor("DEF");
+            try {
+            	category1.removeVendor("DEF");
+            }
+            catch (InvalidVendorException e) {
+            	//TO-DO
+            }
             ds.update(category1);
             categories = ds.load(store);
-            assertSame("Category update failed", category1.getVendors().size(), 1);
-            assertTrue("Category update failed", !category1.getVendors().contains(vendor2));
+            assertSame("Category update failed", category1.getAllVendors().size(), 1);
+            assertTrue("Category update failed", !category1.getAllVendors().contains(vendor2));
         }catch(CreationFailedException e){
             assertFalse("Save failed", true);
         }catch(DataLoadFailedException e){
@@ -101,9 +107,9 @@ public class CategoryDSTest extends TestCase{
             assertTrue("Category load failed", categories.contains(category1));
 
             category1 = categories.get(categories.size()-1);
-            assertSame("Category load failed", category1.getVendors().size(), 2);
-            assertTrue("Category load failed", category1.getVendors().get(0).equals(vendor1));
-            assertTrue("Category load failed", category1.getVendors().get(1).equals(vendor2));
+            assertSame("Category load failed", category1.getAllVendors().size(), 2);
+            assertTrue("Category load failed", category1.getAllVendors().get(0).equals(vendor1));
+            assertTrue("Category load failed", category1.getAllVendors().get(1).equals(vendor2));
         }catch(CreationFailedException e){
             assertFalse("Save failed", true);
         }catch(DataLoadFailedException e){

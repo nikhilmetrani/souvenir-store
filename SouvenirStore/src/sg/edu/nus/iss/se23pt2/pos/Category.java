@@ -1,5 +1,8 @@
 package sg.edu.nus.iss.se23pt2.pos;
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import sg.edu.nus.iss.se23pt2.pos.exception.*;
 
 //
 //
@@ -26,9 +29,6 @@ public class Category {
     public ArrayList<Vendor> vendors;
     
     /** */
-    public Product Unnamed4;
-    
-    /** */
     public Category() {
     	this(null, null);
     }
@@ -37,11 +37,12 @@ public class Category {
     public Category(String code, String name) {
     	this.code = code;
     	this.name = name;
-    	this.vendors = new ArrayList<Vendor>();
+    	this.vendors = null;
     }
     
     public void setCode(String code){
-    	this.code = code;
+    	if (null != code)
+    		this.code = code;
     }
     
     /** */
@@ -51,7 +52,8 @@ public class Category {
     
     /** */
     public void setName(String name) {
-    	this.name = name;
+    	if (null != name)
+    		this.name = name;
     }
     
     /** */
@@ -60,26 +62,126 @@ public class Category {
     }
     
     /** */
-    public Vendor addVendor(Vendor vendor) {
-    	//TO-DO
-    	return vendor;
+    public Vendor addVendor(Vendor vendor) throws VendorExistsException {
+    	if (null != vendor) {
+    		if (null == this.vendors)
+    			this.vendors = new ArrayList<Vendor>();
+    		
+    		if (this.vendors.contains(vendor))
+    			throw new VendorExistsException("The vendor: " + vendor.toString() + " already exists");
+    		else {
+    			this.vendors.add(vendor);
+    			return this.vendors.get(this.vendors.size() - 1);
+    		}
+    	}
+    	return null;
     }
     
     /** */
-    public Vendor getVendor(String name) {
-    	//TO DO
-    	Vendor v = new Vendor();;
-    	return v;
+    public Vendor addVendor(String name, String description) throws VendorExistsException {
+    	if ((null != name) && (null != description)) {
+    		if (null == this.vendors)
+    			this.vendors = new ArrayList<Vendor>();
+    		Vendor vendor = new Vendor(name, description);
+    		if (this.vendors.contains(vendor))
+    			throw new VendorExistsException("The vendor: " + vendor.toString() + " already exists");
+    		else {
+    			this.vendors.add(vendor);
+    			return this.vendors.get(this.vendors.size() - 1);
+    		}
+    	}
+    	return null;
     }
     
     /** */
-    public ArrayList<Vendor> getVendors() {
-    	//TO-DO
-    	return (ArrayList<Vendor>) this.vendors;
+    public Vendor getVendor(String name) throws InvalidVendorException {
+    	if (null != this.vendors) {
+	    	if (null != name) {
+	    		Iterator<Vendor> iterator = this.vendors.iterator();
+	    		Vendor vendor = null;
+	    		while (iterator.hasNext()) {
+	    			vendor = iterator.next();
+	    			if (name == vendor.getName())
+	    				return vendor;
+	    		}
+	    	}
+    	}
+    	throw new InvalidVendorException("Given vendor: " + name + " does not exist");
     }
     
     /** */
-    public void removeVendor(String name) {
-    	// TO DO
+    public Vendor getVendor(Integer index) throws IndexOutOfBoundsException {
+    	if (null != this.vendors) {
+    		if ((0 <= index) && (this.vendors.size() > index))
+    			return this.vendors.get(index);
+    	}
+    	throw new IndexOutOfBoundsException("Invalid index: " + index.toString());
+    }
+    
+    /** */
+	public ArrayList<Vendor> getAllVendors() {
+    	if (null == this.vendors)
+    		return null;
+    	ArrayList<Vendor> alv= new ArrayList<Vendor>();
+    	
+    	Iterator<Vendor> iv = this.vendors.iterator();
+    	while (iv.hasNext())
+    	{
+    		alv.add(iv.next().clone());
+    	}
+    	return alv;
+    }
+    
+    /** */
+    public Vendor removeVendor(String name) throws InvalidVendorException {
+    	if (null != this.vendors) {
+    		if (null != name) {
+	    		Iterator<Vendor> iterator = this.vendors.iterator();
+	    		Vendor vendor = null;
+	    		while (iterator.hasNext()) {
+	    			vendor = iterator.next();
+	    			if (name == vendor.getName()) {
+	    				if (this.vendors.remove(vendor))
+	    					return vendor;
+	    			}
+	    		}
+	    	}
+    	}
+    	throw new InvalidVendorException("The vendor: " + name + " does not exist.");
+    }
+    
+    /** */
+    public Vendor removeVendor(Integer index) throws IndexOutOfBoundsException {
+    	if (null != this.vendors) {
+	    	if ((0 <= index) && (this.vendors.size() > index)) {
+	    		Vendor vendor = this.vendors.get(index);
+	    		if (this.vendors.remove(vendor))
+	    			return vendor;
+	    	}
+    	}
+    	throw new IndexOutOfBoundsException("Invalid index: " + index.toString());
+    }
+    
+    @Override
+	public String toString() {
+    	if (null == this.code && null == this.name)
+    		return null;
+    	else {
+    		if (null != this.code && null == this.name)
+    			return this.code + ",";
+    		else if (null == this.code && null != this.name)
+    			return "," + this.name;
+    	}
+    	return this.code + "," + this.name;
+	}
+    
+    /** */
+    @Override
+    public boolean equals(Object obj) {
+    	if (obj instanceof Category) {
+	    	if (this.code.equals(((Category)obj).getCode()) && this.name.equals(((Category)obj).getName()))
+	    		return true;
+    	}
+    	return false;
     }
 }
