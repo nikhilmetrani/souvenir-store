@@ -33,6 +33,8 @@ public class Discount
 
     public Discount(String discountCode, String description, String startDate, String periodInDays, Integer discountPercentage, String applicableTo)
     {
+    	discountCode = this.discountCode;
+    	description = this.description;	
         
     }
     
