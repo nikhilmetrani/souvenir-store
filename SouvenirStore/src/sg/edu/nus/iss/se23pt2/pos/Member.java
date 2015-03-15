@@ -33,7 +33,7 @@ public class Member extends Customer {
     	this.loyaltyPoints += points;
     }
     
-    // Deduct LoyaltyPoints only when the member has enough.
+    // Deduct LoyaltyPoints only when the member has enough points.
     public void deductLoyaltyPoints(int points) {
     	int tempPts = this.loyaltyPoints - points;
     	if(tempPts >= 0) this.loyaltyPoints = tempPts;
