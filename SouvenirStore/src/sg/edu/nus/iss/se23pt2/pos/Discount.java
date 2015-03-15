@@ -28,58 +28,61 @@ public class Discount
 	private String description;
 	private String startDate;
 	private String periodInDays;
-	private Integer discountPercentage;
+	private Integer discPct;
 	private String applicableTo;
 
-    public Discount(String discountCode, String description, String startDate, String periodInDays, Integer discountPercentage, String applicableTo)
+    public Discount(String discountCode, String description, String startDate, String periodInDays, Integer discPct, String applicableTo)
     {
-    	discountCode = this.discountCode;
-    	description = this.description;	
-        
+    	this.discountCode = discountCode;
+    	this.description = description;	
+    	this.startDate = startDate;
+    	this.periodInDays = periodInDays;
+    	this.discPct = discPct;
+    	this.applicableTo = applicableTo;
     }
     
 	public String getDiscountCode()
 	{
-	    return null;
+	    return discountCode;
 	}
 	
 	public String getDiscountDescription()
 	{
-	    return null;
+	    return description;
 	}
 	
 	public String getStartDate()
 	{
-	    return null;
+	    return startDate;
 	}
 	
 	public String getPeriodInDays()
 	{
-	    return null;
+	    return periodInDays;
 	}
 	
-	public Integer getDiscountPercentage()
+	public Integer getDiscPct()
 	{
-	    return 0;
+	    return discPct;
 	}
 	
-	public void setDiscountPercentage(int discountPercentage){
-	    this.discountPercentage = discountPercentage;
+	public void setDiscPct(int discPct){
+	    this.discPct = discPct;
 	}
 	
 	public String getApplicableTo()
 	{
-	    return null;
-	}
-	
-	public Boolean isDiscountForMember()
-	{
-	    return null;
+	    return applicableTo;
 	}
 	
 	public Boolean isWithInDateRange()
 	{
 	    return false;
+	}
+	
+	public Boolean isDiscountForMember()
+	{
+	    return null;
 	}
 	
 	public Boolean isMemberFirst()
