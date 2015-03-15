@@ -14,7 +14,6 @@ package sg.edu.nus.iss.se23pt2.pos;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
