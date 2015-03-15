@@ -39,9 +39,9 @@ public class ProductDS extends DataStore
                 elements = line.split(",");
                 product = new Product(elements[0], elements[1]);
                 product.setDescription(elements[2]); 
-                product.setAvailableQuantity(Integer.parseInt(elements[3]));
+                product.setQuantity(Integer.parseInt(elements[3]));
                 product.setPrice(Float.parseFloat(elements[4]));
-                product.setBarcodeNumber(elements[5]);
+                product.setBarcode(elements[5]);
                 product.setReorderThresholdQty(Integer.parseInt(elements[6]));
                 product.setOrderQuantity(Integer.parseInt(elements[7]));
                 products.add(product);
