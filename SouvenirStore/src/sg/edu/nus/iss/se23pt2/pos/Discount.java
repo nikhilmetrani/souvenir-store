@@ -30,7 +30,7 @@ public class Discount
 	private String periodInDays;
 	private Integer discPct;
 	private String applicableTo;
-
+	
     public Discount(String discountCode, String description, String startDate, String periodInDays, Integer discPct, String applicableTo)
     {
     	this.discountCode = discountCode;
@@ -75,18 +75,10 @@ public class Discount
 	    return applicableTo;
 	}
 	
-	public Boolean isWithInDateRange()
+	// Determine if the discount is applicable only for store members.
+	public Boolean isForMemberOnly()
 	{
-	    return false;
-	}
-	
-	public Boolean isDiscountForMember()
-	{
-	    return null;
-	}
-	
-	public Boolean isMemberFirst()
-	{
-	    return false;
+	    if(applicableTo.equals('M')) return true;
+	    else return false;
 	}
 }
