@@ -13,6 +13,7 @@ import java.util.ArrayList;
 //
 
 
+
 /** */
 public class Transaction {
     /** */
@@ -93,20 +94,45 @@ public class Transaction {
     }   
     
 	
-	public String toString() {
-		//for each item in items
+	public String toString() {		
 		StringBuilder stb = new StringBuilder();
 			for(Item item:items){
 				stb = stb.append(this.id)
-						 .append(" , ")
+						 .append(",")
 						 .append(item.getProductId())
-						 .append(" , ")
+						 .append(",")
 						 .append(this.getCustomer().getId())
-						 .append(" , ")
+						 .append(",")
 						 .append(item.getQuantity())
+						 .append(",")
+						 .append(this.date)
 						 .append(System.getProperty("line.separator"));			
 			}
 		
 		return stb.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Transaction other = (Transaction) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+	
+	
 }
