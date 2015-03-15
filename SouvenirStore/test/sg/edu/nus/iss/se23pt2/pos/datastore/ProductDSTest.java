@@ -33,17 +33,17 @@ public class ProductDSTest extends TestCase{
         
         product1 = new Product("LED/1", "LED Light - Black color");
         product1.setDescription("LED Light - Black color");
-        product1.setAvailableQuantity(100);
+        product1.setQuantity(100);
         product1.setPrice(6.90f);
-        product1.setBarcodeNumber("LED/1");
+        product1.setBarcode("LED/1");
         product1.setReorderThresholdQty(10);
         product1.setOrderQuantity(100);
 
         product2 = new Product("LED/2", "LED Light - Green color");
         product2.setDescription("LED Light - Green color");
-        product2.setAvailableQuantity(100);
+        product2.setQuantity(100);
         product2.setPrice(6.90f);
-        product2.setBarcodeNumber("LED/2");
+        product2.setBarcode("LED/2");
         product2.setReorderThresholdQty(10);
         product2.setOrderQuantity(100);
     }
