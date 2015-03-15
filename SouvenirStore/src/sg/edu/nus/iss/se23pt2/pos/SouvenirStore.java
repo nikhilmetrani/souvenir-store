@@ -7,7 +7,7 @@
 // @Date : 06/03/2015
 // @Author : Jaya Vignesh
 // @Author: Niu Yiming (addMember, addDiscount, updateDiscount) 
-//
+// @Author: Rushabh Shah(Transaction API)
 
 package sg.edu.nus.iss.se23pt2.pos;
 
@@ -26,11 +26,12 @@ public class SouvenirStore {
     private Map<String, Vendor>      vendors;
     private ArrayList<Member>        members;
     private ArrayList<Discount>      discounts;
-    private List<Transaction>        transactions;
+    private Map<String,ArrayList<Transaction>>        transactions;
     private String                   loginUserName;
 
     public SouvenirStore(){
         storeKeepers = new HashMap<String, StoreKeeper>();
+        transactions = new HashMap<String, ArrayList<Transaction>>();
         this.loadData();
     }
     
@@ -87,8 +88,37 @@ public class SouvenirStore {
                 storeKeeper = iterator.next();
                 this.storeKeepers.put( storeKeeper.getName(), storeKeeper);
             }
+            
+            
+            ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
+            ArrayList<Transaction> tempTransactionList;
+            String date;
+            for(Transaction transaction:transactionList){
+            	date = transaction.getDate();
+            	if(transactions!=null && transactions.containsKey(date)){
+            		tempTransactionList = transactions.get(date);            		
+            	}else{
+            		tempTransactionList = new ArrayList<>();
+            	}
+            	tempTransactionList.add(transaction);
+            	transactions.put(date, tempTransactionList);
+            }
+            
+            
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+
+	public Map<String, ArrayList<Transaction>> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(Map<String, ArrayList<Transaction>> transactions) {
+		this.transactions = transactions;
+	}
+	
+	
+    
+    
 }
