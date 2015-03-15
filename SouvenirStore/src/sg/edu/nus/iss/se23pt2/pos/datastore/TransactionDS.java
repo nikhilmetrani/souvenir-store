@@ -5,7 +5,7 @@
 //  @ Project : SouvenirStore
 //  @ File Name : TransactionDS.java
 //  @ Date : 06/03/2015
-//  @ Author : Jaya Vignesh
+//  @ Author : Rushabh Shah
 //
 //
 
@@ -14,8 +14,13 @@ package sg.edu.nus.iss.se23pt2.pos.datastore;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import sg.edu.nus.iss.se23pt2.pos.Customer;
+import sg.edu.nus.iss.se23pt2.pos.Item;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
+import sg.edu.nus.iss.se23pt2.pos.Transaction;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 
 public class TransactionDS extends DataStore
@@ -26,35 +31,61 @@ public class TransactionDS extends DataStore
         super(fileName);
     }
 
-    @Override
-    public <T> void create (T obj) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public <T> void update (T obj) {
-        // TODO Auto-generated method stub
-        
-    }
-
-
-    @Override
-    public <T> void remove (T obj) {
-        // TODO Auto-generated method stub
-        
-    }
-
 	@Override
-	public <T> ArrayList<T> load(SouvenirStore store)
+	public ArrayList<Transaction> load(SouvenirStore store)
 			throws DataLoadFailedException {
-		// TODO Auto-generated method stub
-		return null;
+		String line;
+        String[] elements;
+        ArrayList<Transaction> transactions ;
+        Transaction transaction;
+        Map<String,Transaction> transactionMap  = new HashMap<>();
+        ArrayList<Item> items;
+        String transactionId,custId,productId,date;
+        int quantityPurchased;
+		try {
+            while ((line = this.read()) != null) {
+            	if(line.length()>0){
+            	 elements = line.split(",");
+                 if(elements!=null){                	
+                	transactionId = elements[0];
+                	productId = elements[1];
+                	custId = elements[2];
+                	quantityPurchased = new Integer(elements[3]);
+                	date = elements[4];
+                	transaction = new Transaction();
+                	transaction.setId(new Integer(transactionId));
+                	Customer cust = new Customer();
+                	cust.setId(custId);
+                	transaction.setCustomer(cust);
+                	transaction.setDate(date);                	
+                	Item item = new Item();
+                	item.setProductId(productId);
+                	item.setQuantity(quantityPurchased);
+                	if(transactionMap.containsKey(transactionId)){
+                		items = transactionMap.get(transactionId).getItems();
+                	}else{
+                		items = new ArrayList<Item>();
+                	}
+                	items.add(item);
+                	transaction.setItems(items);
+                	transactionMap.put(transactionId, transaction);                	
+                 }
+              } 	
+           }
+            transactions =  new ArrayList<Transaction>(transactionMap.values());
+        } catch (IOException e) {
+            throw new DataLoadFailedException(e.getMessage());
+        } finally {
+            this.close();
+        }
+		return transactions;
 	}
+	
+
 
 	@Override
 	protected <T> boolean matchData(T obj, String data) {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
 }
