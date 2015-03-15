@@ -9,11 +9,7 @@ package sg.edu.nus.iss.se23pt2.pos;
 //  @ Date : 3/8/2015
 //  @ Author : Nikhil Metrani
 //
-//
 
-
-
-/** */
 public class Customer {
     /** */
     private String id;
