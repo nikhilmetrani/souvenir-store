@@ -19,6 +19,7 @@ import java.util.Map;
 
 import sg.edu.nus.iss.se23pt2.pos.Customer;
 import sg.edu.nus.iss.se23pt2.pos.Item;
+import sg.edu.nus.iss.se23pt2.pos.Product;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.Transaction;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
@@ -59,7 +60,9 @@ public class TransactionDS extends DataStore
                 	transaction.setCustomer(cust);
                 	transaction.setDate(date);                	
                 	Item item = new Item();
-                	item.setProductId(productId);
+                	Product product = new Product();  
+                	product.setId(productId);
+                	item.setProduct(product);
                 	item.setQuantity(quantityPurchased);
                 	if(transactionMap.containsKey(transactionId)){
                 		items = transactionMap.get(transactionId).getItems();
