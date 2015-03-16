@@ -15,13 +15,22 @@ package sg.edu.nus.iss.se23pt2.pos;
 
 /** */
 public class Item {
-    /** */
+    /**
+     * Product
+     * 
+     */
     private Product product;
     
-    /** */
+    /**
+     * Quantity purchased
+     *  
+     */
     private Integer quantity;
     
-    /** */
+    /**
+     **Price of the product 
+     *
+     */
     private Float price;
     
     public Item() {
