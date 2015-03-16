@@ -99,7 +99,7 @@ public class Transaction {
 			for(Item item:items){
 				stb = stb.append(this.id)
 						 .append(",")
-						 .append(item.getProductId())
+						 .append(item.getProduct().getId())
 						 .append(",")
 						 .append(this.getCustomer().getId())
 						 .append(",")
