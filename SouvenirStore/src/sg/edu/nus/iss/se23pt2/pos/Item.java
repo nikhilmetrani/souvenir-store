@@ -16,7 +16,7 @@ package sg.edu.nus.iss.se23pt2.pos;
 /** */
 public class Item {
     /** */
-    private String productId;
+    private Product product;
     
     /** */
     private Integer quantity;
@@ -28,21 +28,21 @@ public class Item {
     	this(null, 0, Float.valueOf(0));
     }
     
-    public Item(String productId, Integer quantity, Float price) {
-    	this.productId = productId;
+    public Item(Product product, Integer quantity, Float price) {
+    	this.product = product;
     	this.quantity = quantity;
     	this.price = price;
-    }
+    }       
     
-    public void setProductId(String id) {
-    	this.productId = id;
-    }
-    
-    public String getProductId() {
-    	return this.productId;
-    }
-    
-    public void setQuantity(Integer quantity) {
+    public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public void setQuantity(Integer quantity) {
     	this.quantity = quantity;
     }
     
@@ -60,8 +60,13 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return "Item [productId=" + productId + ", quantity=" + quantity
+		if(product!=null){
+		return "Item [productId=" + product.getId() + ", quantity=" + quantity
 				+ ", price=" + price + "]";
+		}else{
+			return "Item [quantity=" + quantity
+					+ ", price=" + price + "]";
+		}
 	}
     
     
