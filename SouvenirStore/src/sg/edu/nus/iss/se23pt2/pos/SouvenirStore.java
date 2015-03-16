@@ -17,11 +17,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 
 
-public class SouvenirStore {
+public class SouvenirStore{
     private Map<String, StoreKeeper> storeKeepers;
     private Map<String, Category>    categories;
     private Map<String, Vendor>      vendors;
@@ -104,10 +103,8 @@ public class SouvenirStore {
             		tempTransactionList = new ArrayList<>();
             	}
             	tempTransactionList.add(transaction);
-            	transactions.put(date, tempTransactionList);
-            }
-            
-            
+            	transactions.put(date,tempTransactionList);
+            }      
         }catch(Exception e){
             e.printStackTrace();
         }
