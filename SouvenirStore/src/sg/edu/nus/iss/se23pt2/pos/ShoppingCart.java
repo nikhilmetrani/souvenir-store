@@ -9,30 +9,18 @@ import java.util.ArrayList;
 //  @ File Name : ShoppingCart.java
 //  @ Date : 3/8/2015
 //  @ Author : Nikhil Metrani
+//	@ Author: Niu Yiming	
 //
-//
 
 
-
-/** */
 public class ShoppingCart {
 
-    /** */
     private ArrayList<Item> items;
-    
-    /** */
-    private Customer customer;
-    
-    /** */
-    private int points;
-    
-    /** */
     private Discount discount;
-    
-    /** */
+    private Customer customer;
+    private int points;
     private String date;
     
-	/** */
     public ShoppingCart() {
 		this.items = new ArrayList<Item>();
 		this.customer = new Customer();
@@ -70,15 +58,6 @@ public class ShoppingCart {
 		return total;
     }
     
-    public Integer getPoints() {
-    	return this.points;
-    }
-    
-    public Discount getDiscount() {
-    	return this.discount;
-    }
-    
-    /** */
     public void setMember(Member m) {
 		this.customer = m;
     }
@@ -89,21 +68,14 @@ public class ShoppingCart {
 		return (Member)this.customer;
     }
 	
-    /** */
-    public void redeemPoints(int points) {
+    public void redeemLoyaltyPoints(int points) {
 		//TO-DO
     }
     
-    /** */
-    public void applyDiscount(Discount d) {
-		//TO-DO
-    }
     
-    /** */
-    public Float getPayableAmount() {
-		//TO-DO
-		Float fl = Float.valueOf(0);
-		return fl;
+    // Calculate the discounted payment based on customer type
+    private void calcDiscPmt(double origPmt) {
+    	//TO-DO
     }
     
     /** */
@@ -111,11 +83,5 @@ public class ShoppingCart {
 		Transaction t = new Transaction();
 		//TO-DO
 		return t;
-    }
-    
-    /** */
-    public Integer calculateNewPoints() {
-		//TO-DO
-		return 0;
     }
 }

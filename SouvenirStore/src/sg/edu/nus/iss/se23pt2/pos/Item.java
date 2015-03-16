@@ -7,7 +7,7 @@ package sg.edu.nus.iss.se23pt2.pos;
 //  @ Project : SouvenirStore
 //  @ File Name : Item.java
 //  @ Date : 3/8/2015
-//  @ Author : Nikhil Metrani
+//  @ Author : Rushabh Shah
 //
 //
 
@@ -57,4 +57,12 @@ public class Item {
     public Float getPrice() {
     	return this.price;
     }
+
+	@Override
+	public String toString() {
+		return "Item [productId=" + productId + ", quantity=" + quantity
+				+ ", price=" + price + "]";
+	}
+    
+    
 }
