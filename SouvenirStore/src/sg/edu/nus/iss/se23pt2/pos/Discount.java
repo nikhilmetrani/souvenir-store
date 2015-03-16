@@ -28,10 +28,10 @@ public class Discount
 	private String description;
 	private String startDate;
 	private String periodInDays;
-	private Integer discPct;
+	private double discPct;
 	private String applicableTo;
 	
-    public Discount(String discountCode, String description, String startDate, String periodInDays, Integer discPct, String applicableTo)
+    public Discount(String discountCode, String description, String startDate, String periodInDays, double discPct, String applicableTo)
     {
     	this.discountCode = discountCode;
     	this.description = description;	
@@ -61,12 +61,12 @@ public class Discount
 	    return periodInDays;
 	}
 	
-	public Integer getDiscPct()
+	public double getDiscPct()
 	{
 	    return discPct;
 	}
 	
-	public void setDiscPct(int discPct){
+	public void setDiscPct(double discPct){
 	    this.discPct = discPct;
 	}
 	
