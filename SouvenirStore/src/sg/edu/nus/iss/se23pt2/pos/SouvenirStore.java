@@ -105,8 +105,7 @@ public class SouvenirStore {
             	}
             	tempTransactionList.add(transaction);
             	transactions.put(date, tempTransactionList);
-            }
-            
+            }            
             
         }catch(Exception e){
             e.printStackTrace();
