@@ -21,7 +21,7 @@ import java.util.Map;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 
 
-public class SouvenirStore {
+public class SouvenirStore{
     private Map<String, StoreKeeper> storeKeepers;
     private Map<String, Category>    categories;
     private Map<String, Vendor>      vendors;
