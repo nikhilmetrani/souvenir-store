@@ -11,8 +11,9 @@
 
 package sg.edu.nus.iss.se23pt2.pos;
 
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,12 +27,14 @@ public class SouvenirStore {
     private Map<String, Vendor>      vendors;
     private ArrayList<Member>        members;
     private ArrayList<Discount>      discounts;
-    private Map<String,ArrayList<Transaction>>        transactions;
+    private Map<Date,ArrayList<Transaction>>        transactions;
     private String                   loginUserName;
+    private SimpleDateFormat 		 dateFormat;
 
     public SouvenirStore(){
         storeKeepers = new HashMap<String, StoreKeeper>();
-        transactions = new HashMap<String, ArrayList<Transaction>>();
+        transactions = new HashMap<Date, ArrayList<Transaction>>();
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.loadData();
     }
     
@@ -89,11 +92,12 @@ public class SouvenirStore {
                 this.storeKeepers.put( storeKeeper.getName(), storeKeeper);
             }
             
+            
             ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
             ArrayList<Transaction> tempTransactionList;
-            String date;
+            Date date;
             for(Transaction transaction:transactionList){
-            	date = transaction.getDate();
+            	date = dateFormat.parse(transaction.getDate());
             	if(transactions!=null && transactions.containsKey(date)){
             		tempTransactionList = transactions.get(date);            		
             	}else{
@@ -109,13 +113,14 @@ public class SouvenirStore {
         }
     }
 
-	public Map<String, ArrayList<Transaction>> getTransactions() {
+	public Map<Date, ArrayList<Transaction>> getTransactions() {
 		return transactions;
 	}
 
-	public void setTransactions(Map<String, ArrayList<Transaction>> transactions) {
+	public void setTransactions(Map<Date, ArrayList<Transaction>> transactions) {
 		this.transactions = transactions;
 	}
+
 	
 	
     
