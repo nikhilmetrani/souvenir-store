@@ -58,7 +58,7 @@ public class TransactionDSTest {
 			items.add(item);
 			items.add(item1);
 			
-			transaction1.setDate("12/3/2015");
+			transaction1.setDate("2013-09-28");
 			transaction1.setItems(items);
 			transaction1.setId(21389);
 			transaction1.setCustomer(cust);     
@@ -84,7 +84,7 @@ public class TransactionDSTest {
 			items2.add(item2);
 			items2.add(item3);
 			
-			transaction2.setDate("15/2/2015");
+			transaction2.setDate("2012-02-12");
 			transaction2.setItems(items2);
 			transaction2.setId(22);
 			transaction2.setCustomer(cust2);   
