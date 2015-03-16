@@ -6,19 +6,16 @@
 // @File Name : SouvenirStore.java
 // @Date : 06/03/2015
 // @Author : Jaya Vignesh
-// @Author: Niu Yiming (addMember, addDiscount, updateDiscount, getHighestDiscount) 
+// @Author: Niu Yiming (addMember, addDiscount, updateDiscount) 
 // @Author: Rushabh Shah(Transaction API)
 
 package sg.edu.nus.iss.se23pt2.pos;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Calendar;
-import java.util.Date;
 
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 
@@ -74,45 +71,6 @@ public class SouvenirStore {
     	}
     }
     
-    // Get the highest discount based on customer type and shopping date.
-    public double getHighestDiscount(Customer cust, String shoppingDate) throws ParseException {
-    	
-    	Discount disc;
-    	String startDate;
-    	double highestDesc = 0;
-    	
-    	Calendar cal = Calendar.getInstance();
-    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    	int shoppingDateYear = Integer.parseInt(shoppingDate.substring(0, 4));
-    	int shoppingDateMonth = Integer.parseInt(shoppingDate.substring(5, 7));
-    	int shoppingDateDay = Integer.parseInt(shoppingDate.substring(8));
-    	cal.set(shoppingDateYear, shoppingDateMonth, shoppingDateDay);
-    	
-    	if (cust instanceof Member) {
-    		for(int i = 1; i <= discounts.size(); i++) {
-    			
-    			disc = discounts.get(i);
-    			if(disc.getPeriodInDays().equals("ALWAYS") && disc.getApplicableTo().equals('A')) {
-    				if(disc.getDiscPct() > highestDesc) {
-    					highestDesc = disc.getDiscPct();
-    				} else continue;
-    			} else {
-    				
-    				cal.add(cal.DAY_OF_YEAR, 10);
-    				if (df.parse(shoppingDate).before(cal.getTime())) {
-    					highestDesc = disc.getDiscPct();
-    				} else continue;
-       			}
-    				
-    		}
-    		return highestDesc;
-    	} else {
-    		//TO-DO
-    		return 0;
-    	}
-    	
-    }
-
     public void validateLogin (String userName, String password) {
     }
 
@@ -130,7 +88,6 @@ public class SouvenirStore {
                 storeKeeper = iterator.next();
                 this.storeKeepers.put( storeKeeper.getName(), storeKeeper);
             }
-            
             
             ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
             ArrayList<Transaction> tempTransactionList;

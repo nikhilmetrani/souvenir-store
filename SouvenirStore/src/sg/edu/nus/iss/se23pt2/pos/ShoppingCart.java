@@ -15,7 +15,6 @@ import java.util.Calendar;
 //	@ Author: Niu Yiming (added methods: getHighestDiscount, calcDiscPmt, calcFinalPmt)
 //
 
-
 public class ShoppingCart {
 
     private ArrayList<Item> items;
