@@ -1,5 +1,8 @@
 package sg.edu.nus.iss.se23pt2.pos;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 //
 //
@@ -9,13 +12,14 @@ import java.util.ArrayList;
 //  @ File Name : ShoppingCart.java
 //  @ Date : 3/8/2015
 //  @ Author : Nikhil Metrani
-//	@ Author: Niu Yiming	
+//	@ Author: Niu Yiming (added methods: getHighestDiscount, calcDiscPmt, calcFinalPmt)
 //
 
 
 public class ShoppingCart {
 
     private ArrayList<Item> items;
+    private ArrayList<Discount> discounts;
     private Discount discount;
     private Customer customer;
     private int points;
@@ -38,21 +42,18 @@ public class ShoppingCart {
 		return this.items;
 	}
 	
-    /** */
     public Item addToCart(Product p, int quantity) {
 		//TO-DO
 		Item item = new Item();
 		return item;
     }
     
-    /** */
     public Item removeFromCart(Product p, int quantity) {
 		//TO-DO
 		Item item = new Item();
 		return item;
     }
     
-    /** */
     public Float getTotal() {
 		Float total = Float.valueOf(0);
 		return total;
@@ -62,23 +63,77 @@ public class ShoppingCart {
 		this.customer = m;
     }
     
-	/** */
-    public Member getMember() {
+	public Member getMember() {
 		//TO-DO - type cast customer to member
 		return (Member)this.customer;
     }
 	
-    public void redeemLoyaltyPoints(int points) {
-		//TO-DO
+    
+    // Get the highest discount based on customer type and shopping date
+    private double getHighestDiscount(Customer cust, ArrayList<Discount> discounts
+    		, String transDate) throws ParseException {
+    	
+    	Discount disc;
+    	double highestDesc = 0;
+    	// Members are eligible for all discounts
+    	if (cust instanceof Member) {
+    		for(int i = 1; i <= discounts.size(); i++) {
+    			disc = discounts.get(i);
+    			
+    			if(disc.isValid(disc, transDate)) {
+    				if(disc.getDiscPct() > highestDesc) highestDesc = disc.getDiscPct();
+    				else continue;
+    			}
+    		}
+    		return highestDesc;
+    	} else {
+    		for(int i = 1; i <= discounts.size(); i++) {
+    			// Public are only eligible for discounts that applicable to all customers
+    			if(discounts.get(i).getApplicableTo().equals('A')) {
+    				disc = discounts.get(i);
+    				
+    				if(disc.isValid(disc, transDate)) {
+        				if(disc.getDiscPct() > highestDesc) highestDesc = disc.getDiscPct();
+        				else continue;
+        			}
+    			}
+    		}
+    		return highestDesc;
+    	}
     }
     
-    
-    // Calculate the discounted payment based on customer type
-    private void calcDiscPmt(double origPmt) {
-    	//TO-DO
+    // To calculate the discounted payment amount
+    public double calcDiscPmt(Customer cust, double origPmt
+    		, ArrayList<Discount> discounts) throws ParseException {
+    	double disc = this.getHighestDiscount(cust, discounts, this.date);
+    	return origPmt*(100-disc)/100;
     }
     
-    /** */
+    // To calculate the final payment based on member's decision if or not redeeming loyalty points
+    // This method is open only to members. For public customers the discount amount is considered final
+    public double calcFinalPmt(Member mem, double discPmt
+    		, boolean isRedeemLoyaltyPoints, int pointsRedeemed) {
+    	if (isRedeemLoyaltyPoints == true) {
+    		if (mem.getLoyaltyPoints() >= pointsRedeemed) {
+    			double newLoyaltyPoints = discPmt-pointsRedeemed;
+    			
+    			//Update the member's loyalty points
+    			mem.deductLoyaltyPoints(pointsRedeemed);
+    			
+    			System.out.println("Member "+mem.getName()+": "+pointsRedeemed+" Loyalty Points have been redeemed!");
+    			System.out.println("Member "+mem.getName()+": "+newLoyaltyPoints+" Loyalty Points remained!");
+    			//TO-DO: Display the same message on UI.
+    			return newLoyaltyPoints;
+    		} else {
+    			System.out.println("Member: "+mem.getName()+"'s Loyalty Points not enough for redemption!");
+    			//TO-DO: Display the same message on UI.
+    			return discPmt;
+    		}
+    	} else {
+    		return discPmt;
+    	}
+    }
+
     public Transaction confirmTransaction() {
 		Transaction t = new Transaction();
 		//TO-DO
