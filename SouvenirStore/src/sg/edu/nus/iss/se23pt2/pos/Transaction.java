@@ -54,9 +54,12 @@ public class Transaction {
 		return this.id;
     }
     
-	/** */
+	/**
+	 * Sorting the items according to ProductId
+	 *  */
     public void setItems(ArrayList<Item> items) {
 		this.items = items;
+		this.items.sort(new ItemSort());
     }
 	
     /** */

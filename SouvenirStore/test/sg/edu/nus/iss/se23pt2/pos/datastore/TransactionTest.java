@@ -26,6 +26,7 @@ import sg.edu.nus.iss.se23pt2.pos.Transaction;
  * 
  * @author Rushabh Shah
  * Date    18/3/2015
+ * 
  */
 
 public class TransactionTest {
@@ -90,6 +91,8 @@ public class TransactionTest {
 		item3.setProduct(product3);
 		item3.setQuantity(22);
 		ArrayList<Item> items2 = new ArrayList<>();
+		items2.add(item);
+		items2.add(item1);
 		items2.add(item2);
 		items2.add(item3);
 		
@@ -184,6 +187,26 @@ public class TransactionTest {
 		assertNotNull(items);
 		assertEquals(2, items.size());
 		assertTrue(items.contains(item));
+	}
+	
+	@Test
+	public void testSortingOfTransactionItemForParticularDate() {
+		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
+		assertNotNull(transactionMap);
+		Set<Date> dateSet = transactionMap.keySet();
+		assertTrue(dateSet.contains(date2));	
+		ArrayList<Transaction> transactions = transactionMap.get(date2);
+		assertNotNull(transactions);
+		assertEquals(2,transactions.size());
+		assertTrue(transactions.contains(transaction2));
+		assertTrue(transactions.contains(transaction3));	
+		ArrayList<Item> items = transaction2.getItems();
+		assertNotNull(items);
+		assertEquals(4, items.size());
+        assertEquals("LCD/1",items.get(0).getProduct().getId());
+        assertEquals("LED/1",items.get(1).getProduct().getId());
+        assertEquals("MUG/2",items.get(2).getProduct().getId());
+        assertEquals("ZTV/1",items.get(3).getProduct().getId());
 	}
 	
 	
