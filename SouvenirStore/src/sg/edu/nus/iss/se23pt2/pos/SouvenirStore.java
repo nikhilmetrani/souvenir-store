@@ -11,6 +11,9 @@
 
 package sg.edu.nus.iss.se23pt2.pos;
 
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
+import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 
 
 public class SouvenirStore{
@@ -92,26 +96,32 @@ public class SouvenirStore{
             while(iterator.hasNext()){
                 storeKeeper = iterator.next();
                 this.storeKeepers.put( storeKeeper.getName(), storeKeeper);
-            }
-            
-            
-            ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
-            ArrayList<Transaction> tempTransactionList;
-            Date date;
-            for(Transaction transaction:transactionList){
-            	date = dateFormat.parse(transaction.getDate());
-            	if(transactions!=null && transactions.containsKey(date)){
-            		tempTransactionList = transactions.get(date);            		
-            	}else{
-            		tempTransactionList = new ArrayList<>();
-            	}
-            	tempTransactionList.add(transaction);
-            	transactions.put(date,tempTransactionList);
-            }      
+            }            
+            loadTransactions(dsFactory);      
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+
+	private void loadTransactions(DataStoreFactory dsFactory)
+			throws DataLoadFailedException, AccessDeniedException, IOException,
+			ParseException {
+		ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
+		ArrayList<Transaction> tempTransactionList;
+		Date date;
+		for(Transaction transaction:transactionList){
+			date = dateFormat.parse(transaction.getDate());
+			if(transactions!=null && transactions.containsKey(date)){
+				tempTransactionList = transactions.get(date);            		
+			}else{
+				tempTransactionList = new ArrayList<Transaction>();
+			}
+			tempTransactionList.add(transaction);
+			if(transactions!=null){
+			  transactions.put(date,tempTransactionList);
+			}
+		}
+	}
 
 	public Map<Date, ArrayList<Transaction>> getTransactions() {
 		return transactions;
