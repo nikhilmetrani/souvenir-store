@@ -131,8 +131,7 @@ public class SouvenirStore{
 			if((date.compareTo(startDate)>=0)  &&  (date.compareTo(endDate)<=0)){
 				filterTransactions.addAll(transactions.get(date));
 			}
-		}
-		
+		}		
 		return filterTransactions;
 	}
 	
