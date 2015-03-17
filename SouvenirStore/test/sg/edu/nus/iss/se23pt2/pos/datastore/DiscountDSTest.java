@@ -58,10 +58,10 @@ public class DiscountDSTest extends TestCase{
         try{
             int newDiscountPercentage = 25;
             ds.create(discount1);
-            discount1.setDiscountPercentage(newDiscountPercentage);
+            discount1.setDiscPct(newDiscountPercentage);
             ds.update(discount1);
             discounts = ds.load(store);
-            assertSame("Discount Update failed", discounts.get(discounts.size()-1).getDiscountPercentage(), newDiscountPercentage);
+            assertSame("Discount Update failed", discounts.get(discounts.size()-1).getDiscPct(), newDiscountPercentage);
         }catch(CreationFailedException e){
             assertFalse("Save failed", true);
         }catch(DataLoadFailedException e){
