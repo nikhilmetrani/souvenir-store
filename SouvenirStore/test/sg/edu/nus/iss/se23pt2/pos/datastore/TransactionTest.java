@@ -131,7 +131,7 @@ public class TransactionTest {
 		try {
 			assertFalse(dateSet.contains(dateFormat.parse("2012-03-20")));
 		} catch (ParseException e) {
-			assertTrue("Shouldn' reach here",false);
+			assertTrue("Cannot parse the date",false);
 		}
 		assertEquals(2,dateSet.size());
 	}
@@ -174,6 +174,115 @@ public class TransactionTest {
 		assertEquals(2,transactions.size());
 		assertTrue(transactions.contains(transaction2));
 		assertTrue(transactions.contains(transaction3));	
+		ArrayList<Item> items = transaction3.getItems();
+		assertNotNull(items);
+		assertEquals(2, items.size());
+		assertTrue(items.contains(item));
+	}
+	
+	
+	@Test
+	public void testTransactionBetweenDatesBoundaryCondition() {
+		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
+		assertNotNull(transactionMap);
+		Date startDate = null;
+		Date endDate = null;
+		try {
+			startDate = dateFormat.parse("2012-02-12");
+			endDate = dateFormat.parse("2013-09-28");
+		} catch (ParseException e) {
+			assertTrue("Cannot parse the date",false);
+		}
+		
+		ArrayList<Transaction> transactionList = store.getTransactionsBetweenDates(startDate,endDate);
+		assertNotNull(transactionList);
+		assertEquals(3,transactionList.size());
+		assertTrue(transactionList.contains(transaction1));
+		assertTrue(transactionList.contains(transaction2));
+		assertTrue(transactionList.contains(transaction3));		
+		
+		ArrayList<Item> items = transaction3.getItems();
+		assertNotNull(items);
+		assertEquals(2, items.size());
+		assertTrue(items.contains(item));
+	}
+	
+	
+	
+	@Test
+	public void testTransactionBetweenDates_Date1() {
+		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
+		assertNotNull(transactionMap);
+		Date startDate = null;
+		Date endDate = null;
+		try {
+			startDate = dateFormat.parse("2013-09-23");
+			endDate = dateFormat.parse("2013-09-29");
+		} catch (ParseException e) {
+			assertTrue("Cannot parse the date",false);
+		}
+		
+		ArrayList<Transaction> transactionList = store.getTransactionsBetweenDates(startDate,endDate);
+		assertNotNull(transactionList);
+		assertEquals(1,transactionList.size());
+		assertTrue(transactionList.contains(transaction1));
+		assertFalse(transactionList.contains(transaction2));
+		assertFalse(transactionList.contains(transaction3));		
+		
+		ArrayList<Item> items = transaction1.getItems();
+		assertNotNull(items);
+		assertEquals(2, items.size());
+		assertTrue(items.contains(item));
+	}
+	
+	
+	@Test
+	public void testTransactionBetweenDates_Date2() {
+		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
+		assertNotNull(transactionMap);
+		Date startDate = null;
+		Date endDate = null;
+		try {
+			startDate = dateFormat.parse("2011-02-12");
+			endDate = dateFormat.parse("2012-02-12");
+		} catch (ParseException e) {
+			assertTrue("Cannot parse the date",false);
+		}
+		
+		ArrayList<Transaction> transactionList = store.getTransactionsBetweenDates(startDate,endDate);
+		assertNotNull(transactionList);
+		assertEquals(2,transactionList.size());
+		assertFalse(transactionList.contains(transaction1));
+		assertTrue(transactionList.contains(transaction2));
+		assertTrue(transactionList.contains(transaction3));		
+		
+		ArrayList<Item> items = transaction3.getItems();
+		assertNotNull(items);
+		assertEquals(2, items.size());
+		assertTrue(items.contains(item));
+	}
+	
+	
+	@Test
+	public void testTransactionBetweenSameStartAndEndDates() {
+		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
+		assertNotNull(transactionMap);
+		Date startDate = null;
+		Date endDate = null;
+		try {
+			startDate = dateFormat.parse("2012-02-12");
+			endDate = dateFormat.parse("2012-02-12");
+		} catch (ParseException e) {
+			assertTrue("Cannot parse the date",false);
+		}
+		
+		ArrayList<Transaction> transactionList = store.getTransactionsBetweenDates(startDate,endDate);
+		assertNotNull(transactionList);
+		assertEquals(2,transactionList.size());
+		assertFalse(transactionList.contains(transaction1));
+		assertTrue(transactionList.contains(transaction2));
+		assertTrue(transactionList.contains(transaction3));		
+		
 		ArrayList<Item> items = transaction3.getItems();
 		assertNotNull(items);
 		assertEquals(2, items.size());
