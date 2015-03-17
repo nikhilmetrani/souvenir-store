@@ -12,6 +12,7 @@ import java.util.List;
 //  @ Date : 3/8/2015
 //  @ Author : Nikhil Metrani
 //	@ Author: Niu Yiming (added methods: getHighestDiscount, calcDiscPmt, calcFinalPmt)
+//  @ Author:Debasish(added methods getTotalPriceBeforeDiscount,getPayableAmount,calculateNewPoints)
 //
 
 public class ShoppingCart {
