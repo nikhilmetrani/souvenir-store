@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 
 
@@ -118,6 +120,23 @@ public class SouvenirStore{
 	public void setTransactions(Map<Date, ArrayList<Transaction>> transactions) {
 		this.transactions = transactions;
 	}
+
+	public ArrayList<Transaction> getTransactionsBetweenDates(Date startDate,Date endDate) {
+		if(startDate==null || endDate ==null){
+			return null;
+		}
+		ArrayList<Transaction> filterTransactions = new ArrayList<Transaction>();
+		Set<Date> dateSet = transactions.keySet();		
+		for(Date date : dateSet){
+			if((date.compareTo(startDate)>=0)  &&  (date.compareTo(endDate)<=0)){
+				filterTransactions.addAll(transactions.get(date));
+			}
+		}
+		
+		return filterTransactions;
+	}
+	
+	
 
 	
 	
