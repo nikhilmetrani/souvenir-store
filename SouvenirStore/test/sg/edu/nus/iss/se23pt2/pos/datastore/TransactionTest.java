@@ -22,6 +22,12 @@ import sg.edu.nus.iss.se23pt2.pos.Product;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.Transaction;
 
+/**
+ * 
+ * @author Rushabh Shah
+ * Date    18/3/2015
+ */
+
 public class TransactionTest {
 	 	private DataStoreFactory dsFactory;
 	 	private DataStore ds;
@@ -287,6 +293,27 @@ public class TransactionTest {
 		assertNotNull(items);
 		assertEquals(2, items.size());
 		assertTrue(items.contains(item));
+	}
+	
+	@Test
+	public void testTransactionOutOfRangeStartAndEndDates() {
+		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
+		assertNotNull(transactionMap);
+		Date startDate = null;
+		Date endDate = null;
+		try {
+			startDate = dateFormat.parse("2011-01-22");
+			endDate = dateFormat.parse("2011-06-12");
+		} catch (ParseException e) {
+			assertTrue("Cannot parse the date",false);
+		}
+		
+		ArrayList<Transaction> transactionList = store.getTransactionsBetweenDates(startDate,endDate);
+		assertNotNull(transactionList);
+		assertEquals(0,transactionList.size());
+		assertFalse(transactionList.contains(transaction1));
+		assertFalse(transactionList.contains(transaction2));
+		assertFalse(transactionList.contains(transaction3));		
 	}
 	
 	
