@@ -49,19 +49,20 @@ public class SouvenirStore {
             Integer orderQty) {
     }
     
-    public void addMember (String memberName) {
-    	Member mem  = new Member(memberName);
+    // Add a member to the list of members
+    public void addMember (String memName, String memId) {
+    	Member mem  = new Member(memName, memId);
     	members.add(mem);
     }
 
-    // Add a new discount to the list of discounts.
+    // Add a new discount to the list of discounts
     public void addDiscount (String discCode, String description, String startDate
     		, String periodInDays, double discPct, String applicableTo) {
     	Discount disc = new Discount(discCode, description, startDate, periodInDays, discPct, applicableTo);
     	discounts.add(disc);
     }
     
-    // Update discount percentage for a certain code.
+    // Update discount percentage for a certain code
     public void updateDiscount (String discCode, Integer discPct) {
     	for (int i = 1; i <= discounts.size(); i++) {
     		if (discounts.get(i).getDiscountCode().equals(discCode)) {
