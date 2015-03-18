@@ -57,6 +57,13 @@ public class SouvenirStore{
             Integer orderQty) {
     }
     
+    public StoreKeeper getStoreKeeper(String name) {
+    	if (storeKeepers.containsKey(name))
+    		return storeKeepers.get(name);
+    	else
+    		return null;
+    }
+    
     // Add a member to the list of members
     public void addMember (String memName, String memId) {
     	Member mem  = new Member(memName, memId);

@@ -1,18 +1,19 @@
 package sg.edu.nus.iss.se23pt2.posgui;
+import sg.edu.nus.iss.se23pt2.pos.*;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+/**
+ * @author Nikhil Metrani
+ *
+ */
 
 public class LoginDialog extends JDialog {
 
@@ -25,22 +26,10 @@ public class LoginDialog extends JDialog {
 	private JPasswordField textPassword;
 
 	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		try {
-			LoginDialog dialog = new LoginDialog();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}*/
-
-	/**
 	 * Create the dialog.
 	 */
-	public LoginDialog() {
+	public LoginDialog(Session session) {
+		setModal(true);
 		setLocationByPlatform(true);
 		setTitle("Souvenir store login");
 		setResizable(false);
@@ -73,9 +62,24 @@ public class LoginDialog extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				JButton okButton = new JButton("Login");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
+						if (session.authenticate(getUsername(), getPassword())) {
+		                    JOptionPane.showMessageDialog(LoginDialog.this,
+		                            getUsername() + "! You have successfully logged in.",
+		                            "Login",
+		                            JOptionPane.INFORMATION_MESSAGE);
+		                    dispose();
+		                } else {
+		                    JOptionPane.showMessageDialog(LoginDialog.this,
+		                            "Error :: Invalid username or password!",
+		                            "Login",
+		                            JOptionPane.ERROR_MESSAGE);
+		                    // reset password
+		                    textPassword.setText("");
+
+		                }
 					}
 				});
 				okButton.setActionCommand("OK");
@@ -86,7 +90,7 @@ public class LoginDialog extends JDialog {
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						System.exit(0);
+						dispose();
 					}
 				});
 				cancelButton.setActionCommand("Cancel");
@@ -94,4 +98,13 @@ public class LoginDialog extends JDialog {
 			}
 		}
 	}
+	
+	public String getUsername() {
+        return textUserName.getText().trim();
+    }
+
+    public String getPassword() {
+        return new String(textPassword.getPassword());
+    }
+
 }
