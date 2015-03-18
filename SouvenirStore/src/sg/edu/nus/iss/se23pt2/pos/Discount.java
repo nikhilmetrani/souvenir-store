@@ -23,6 +23,8 @@ import java.util.Calendar;
 //  @ File Name : Discount.java
 //  @ Date : 15/03/2015
 //  @ Author : Niu Yiming
+//	@ Date : 19/03/2015
+//  @ Author : Debasish Routaray(implemeted toString() method)
 //
 //
 
@@ -106,4 +108,21 @@ public class Discount
 			}
 			return false;
 		}
+	
+	public String toString() {		
+		StringBuilder stb = new StringBuilder();
+				stb = stb.append(this.getDiscountCode())
+						 .append(",")
+						 .append(this.getDiscountDescription())
+						 .append(",")
+						 .append(this.getStartDate())
+						 .append(",")
+						 .append(this.periodInDays)
+						 .append(",")
+						 .append(this.getDiscPct())
+						 .append(",")
+						 .append(this.getApplicableTo())
+						 .append(System.getProperty("line.separator"));			
+		return stb.toString();
+	}
 }
