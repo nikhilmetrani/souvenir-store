@@ -37,12 +37,14 @@ public class DiscountDS extends DataStore
         ArrayList<Discount> discounts = new ArrayList<Discount>();
         try {
             while ((line = this.read()) != null) {
-                elements = line.split(",");
-                if(elements[5].equals("M"))
-                    discount = new MemberDiscount(elements[0], elements[1], elements[2], elements[3], Integer.parseInt(elements[4]), elements[5]);
-                else
-                    discount = new Discount(elements[0], elements[1], elements[2], elements[3], Integer.parseInt(elements[4]), elements[5]);
-                discounts.add(discount);
+               if(line.length()>0){
+	            	elements = line.split(",");
+	                if(elements[5].equals("M"))
+	                    discount = new MemberDiscount(elements[0], elements[1], elements[2], elements[3], Double.parseDouble(elements[4]), elements[5]);
+	                else
+	                    discount = new Discount(elements[0], elements[1], elements[2], elements[3], Double.parseDouble(elements[4]), elements[5]);
+	                discounts.add(discount);
+               }
             }
         } catch (IOException e) {
             throw new DataLoadFailedException(e.getMessage());

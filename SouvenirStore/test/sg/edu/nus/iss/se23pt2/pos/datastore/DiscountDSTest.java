@@ -35,9 +35,7 @@ public class DiscountDSTest extends TestCase{
     
     @After
     public void tearDown() throws Exception {
-        ds.remove(discount1);
-        ds.remove(discount2);
-        ds.close();
+    	ds.deleteAll();
     }
     
     @Test
@@ -45,7 +43,7 @@ public class DiscountDSTest extends TestCase{
         try{
             ds.create(discount1);
             discounts = ds.load(store);
-            assertTrue("Discount save failed", discounts.contains(discount1));
+            assertTrue("Discount save failed", discounts.size()==1);
         }catch(CreationFailedException e){
             assertFalse("Save failed", true);
         }catch(DataLoadFailedException e){
@@ -56,12 +54,12 @@ public class DiscountDSTest extends TestCase{
     @Test
     public void testUpdate(){
         try{
-            int newDiscountPercentage = 25;
+            double newDiscountPercentage = 25.0;
             ds.create(discount1);
-            discount1.setDiscPct(newDiscountPercentage);
-            ds.update(discount1);
             discounts = ds.load(store);
-            assertSame("Discount Update failed", discounts.get(discounts.size()-1).getDiscPct(), newDiscountPercentage);
+            discounts.get(discounts.size()-1).setDiscPct(newDiscountPercentage);
+            ds.update(discount1);
+            assertTrue("Discount Update failed", discounts.get(discounts.size()-1).getDiscPct()==newDiscountPercentage);
         }catch(CreationFailedException e){
             assertFalse("Save failed", true);
         }catch(DataLoadFailedException e){
@@ -75,8 +73,9 @@ public class DiscountDSTest extends TestCase{
     public void testLoad(){
         try{
             ds.create(discount1);
+            ds.create(discount2);
             discounts = ds.load(store);
-            assertTrue("Discount save failed", discounts.contains(discount1));
+            assertTrue("Discount save failed", discounts.size()==2);
         }catch(CreationFailedException e){
             assertFalse("Save failed", true);
         }catch(DataLoadFailedException e){
