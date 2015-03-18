@@ -24,7 +24,7 @@ import java.util.Calendar;
 //  @ Date : 15/03/2015
 //  @ Author : Niu Yiming
 //	@ Date : 19/03/2015
-//  @ Author : Debasish Routaray(implemeted toString() method)
+//  @ Author : Debasish Routaray(implemented toString() method)
 //
 //
 
