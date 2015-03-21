@@ -35,7 +35,8 @@ public class DiscountDSTest extends TestCase{
     
     @After
     public void tearDown() throws Exception {
-    	ds.deleteAll();
+    	ds.remove(discount1);
+    	ds.remove(discount2);
     }
     
     @Test

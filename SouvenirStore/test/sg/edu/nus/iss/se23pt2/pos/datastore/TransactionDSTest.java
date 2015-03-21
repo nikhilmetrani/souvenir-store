@@ -92,7 +92,8 @@ public class TransactionDSTest {
 	    
 	    @After
 	    public void tearDown() throws Exception {
-	        ds.deleteAll();
+	        ds.remove(transaction1);
+	        ds.remove(transaction2);
 	    }
 	    
 	    @Test
