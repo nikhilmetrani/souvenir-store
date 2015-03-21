@@ -1,5 +1,10 @@
 package sg.edu.nus.iss.se23pt2.pos;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.swing.AbstractListModel;
 
 //
 //
@@ -17,10 +22,18 @@ import java.util.ArrayList;
 /** */
 public class Inventory {
     /** */
-    public ArrayList<Product> products;
+	private Map<String, Category>   categories;
+    private Map<String, Product>    products;
+    private Map<String, Vendor>     vendors;
     
-    public Inventory (ArrayList<Product> products) {
+    public Inventory () {
+    	this(null, null, null);
+    }
+    
+    public Inventory (Map<String, Product> products, Map<String, Category> categories, Map<String, Vendor> vendors) {
     	this.products = products;
+    	this.categories = categories;
+    	this.vendors = vendors;
     }
     
     /** */
@@ -85,4 +98,34 @@ public class Inventory {
     	PurchaseOrder pr = new PurchaseOrder();
     	return pr;
     }
+    
+    /** */
+    public List<Category> getAllCategories() {
+    	//TO-DO
+    	if (null == this.categories)
+    		return null;
+    	ArrayList<Category> c = new ArrayList<Category>();
+    	Iterator<Category> ic = this.categories.values().iterator();
+    	while (ic.hasNext()) {
+    		c.add(ic.next());
+    	}
+    	return c;
+    }
+    
+    /** */
+    public Category addCategory(String catId, String name) {
+    	//TO-DO
+    	Category cat = new Category(catId, name);
+    	return this.addCategory(cat);
+    }
+    
+    /** */
+    public Category addCategory(Category category) {
+    	//TO-DO
+    	if (this.categories.containsKey(category.getCode()))
+    		return this.categories.get(category.getCode());
+    	this.categories.put(category.getCode(), category);
+    	return category;
+    }
+    
 }

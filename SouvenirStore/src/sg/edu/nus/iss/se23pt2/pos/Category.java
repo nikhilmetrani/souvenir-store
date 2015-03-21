@@ -184,4 +184,10 @@ public class Category {
     	}
     	return false;
     }
+    
+    @Override
+    public Category clone() {
+    	Category cat = new Category(this.code, this.name);
+    	return cat;
+    }
 }

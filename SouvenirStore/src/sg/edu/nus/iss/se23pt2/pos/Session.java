@@ -49,7 +49,7 @@ public class Session {
 	
 	/** Authenticates user login information */
 	public boolean authenticate(String userName, String password) {
-		StoreKeeper sk = store.getStoreKeeper(userName);
+		StoreKeeper sk = store.getStoreKeeper(userName.toLowerCase());
 		
 		if (null == sk)
 			return false;

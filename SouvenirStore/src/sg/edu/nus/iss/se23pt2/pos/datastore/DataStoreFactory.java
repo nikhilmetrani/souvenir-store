@@ -23,7 +23,7 @@ public class DataStoreFactory
 	private Map<String, VendorDS> vendorDS;
 
 
-	private void createDataStoreFactory()
+	private DataStoreFactory()
 	{
 	    vendorDS = new HashMap<String, VendorDS>();
 	}

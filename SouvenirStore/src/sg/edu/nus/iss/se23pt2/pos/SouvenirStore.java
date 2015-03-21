@@ -29,18 +29,26 @@ import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 public class SouvenirStore{
     private Map<String, StoreKeeper> storeKeepers;
     private Map<String, Category>    categories;
+    private Map<String, Product>     products;
     private Map<String, Vendor>      vendors;
     private ArrayList<Member>        members;
     private ArrayList<Discount>      discounts;
     private Map<Date,ArrayList<Transaction>>        transactions;
     private String                   loginUserName;
     private SimpleDateFormat 		 dateFormat;
-
+    private Inventory                inventory = null;
+    
     public SouvenirStore(){
         storeKeepers = new HashMap<String, StoreKeeper>();
         transactions = new HashMap<Date, ArrayList<Transaction>>();
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        this.categories = new HashMap<String, Category>();
         this.loadData();
+        this.inventory = new Inventory(this.products, this.categories, this.vendors);
+    }
+    
+    public Inventory getInventory() {
+    	return this.inventory;
     }
     
     public void addStoreKeeper (String userName, String password) {
@@ -102,12 +110,28 @@ public class SouvenirStore{
             StoreKeeper storeKeeper = null;
             while(iterator.hasNext()){
                 storeKeeper = iterator.next();
-                this.storeKeepers.put( storeKeeper.getName(), storeKeeper);
-            }            
-            loadTransactions(dsFactory);      
+                this.storeKeepers.put( storeKeeper.getName().toLowerCase(), storeKeeper);
+            }
+            loadCategories();
+            loadTransactions(dsFactory);
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+    
+    private void loadCategories() {
+    	DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+    	 try{
+             ArrayList<Category> list = dsFactory.getCategoryDS().load(this);
+             Iterator<Category> iterator = list.iterator();
+             Category category = null;
+             while(iterator.hasNext()){
+            	 category = iterator.next();
+                 this.categories.put( category.getCode(), category);
+             }
+         }catch(Exception e){
+             e.printStackTrace();
+         }
     }
 
 	private void loadTransactions(DataStoreFactory dsFactory)
