@@ -1,4 +1,4 @@
-package sg.edu.nus.iss.se23pt2.pos.datastore;
+package sg.edu.nus.iss.se23pt2.pos;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -16,11 +16,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import sg.edu.nus.iss.se23pt2.pos.Customer;
-import sg.edu.nus.iss.se23pt2.pos.Item;
-import sg.edu.nus.iss.se23pt2.pos.Product;
-import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
-import sg.edu.nus.iss.se23pt2.pos.Transaction;
+import sg.edu.nus.iss.se23pt2.pos.datastore.DataStore;
+import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 
 /**
  * 
@@ -64,7 +61,7 @@ public class TransactionTest {
 		product1.setId("LED/1");
 		item1.setProduct(product1);
 		item1.setQuantity(25);
-		ArrayList<Item> items = new ArrayList<>();
+		ArrayList<Item> items = new ArrayList<Item>();
 		items.add(item);
 		items.add(item1);
 		
@@ -90,7 +87,7 @@ public class TransactionTest {
 		product3.setId("ZTV/1");
 		item3.setProduct(product3);
 		item3.setQuantity(22);
-		ArrayList<Item> items2 = new ArrayList<>();
+		ArrayList<Item> items2 = new ArrayList<Item>();
 		items2.add(item);
 		items2.add(item1);
 		items2.add(item2);
