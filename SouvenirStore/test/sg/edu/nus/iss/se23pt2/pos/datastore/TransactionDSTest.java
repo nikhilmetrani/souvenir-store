@@ -54,7 +54,7 @@ public class TransactionDSTest {
 			product1.setId("LED/1");
 			item1.setProduct(product1);
 			item1.setQuantity(25);
-			ArrayList<Item> items = new ArrayList<>();
+			ArrayList<Item> items = new ArrayList<Item>();
 			items.add(item);
 			items.add(item1);
 			
@@ -80,7 +80,7 @@ public class TransactionDSTest {
 			product3.setId("ZTV/1");
 			item3.setProduct(product3);
 			item3.setQuantity(22);
-			ArrayList<Item> items2 = new ArrayList<>();
+			ArrayList<Item> items2 = new ArrayList<Item>();
 			items2.add(item2);
 			items2.add(item3);
 			

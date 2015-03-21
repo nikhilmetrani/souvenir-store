@@ -39,7 +39,7 @@ public class TransactionDS extends DataStore
         String[] elements;
         ArrayList<Transaction> transactions ;
         Transaction transaction;
-        Map<String,Transaction> transactionMap  = new HashMap<>();
+        Map<String,Transaction> transactionMap  = new HashMap<String, Transaction>();
         ArrayList<Item> items;
         String transactionId,custId,productId,date;
         int quantityPurchased;
