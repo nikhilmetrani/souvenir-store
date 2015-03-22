@@ -44,7 +44,6 @@ public class SouvenirStore{
     
     public SouvenirStore(){
         this.storeKeepers = new HashMap<String, StoreKeeper>();
-        this.transactions = new HashMap<Date, ArrayList<Transaction>>();
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.categories = new HashMap<String, Category>();
         this.products = new HashMap<String, Product>();
@@ -123,21 +122,7 @@ public class SouvenirStore{
             e.printStackTrace();
         }
     }
-    
-    private void loadProducts() {
-   	 try{
-            ArrayList<Product> list = dsFactory.getProductDS().load(this);
-            Iterator<Product> iterator = list.iterator();
-            Product product = null;
-            while(iterator.hasNext()){
-            	product = iterator.next();
-                this.products.put( product.getId(), product);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-   }
-    
+       
     private void loadProducts() {
    	 try{
             ArrayList<Product> list = dsFactory.getProductDS().load(this);
