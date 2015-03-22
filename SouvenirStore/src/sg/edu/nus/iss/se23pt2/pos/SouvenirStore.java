@@ -22,8 +22,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import sg.edu.nus.iss.se23pt2.pos.constant.TransactionConstant;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
+import sg.edu.nus.iss.se23pt2.pos.exception.CreationFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.InvalidTransactionException;
 
 
 public class SouvenirStore{
@@ -40,9 +43,11 @@ public class SouvenirStore{
     private DataStoreFactory 		 dsFactory = DataStoreFactory.getInstance();
     
     public SouvenirStore(){
-        storeKeepers = new HashMap<String, StoreKeeper>();
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        this.storeKeepers = new HashMap<String, StoreKeeper>();
+        
+        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.categories = new HashMap<String, Category>();
+        this.products = new HashMap<String, Product>();
         this.loadData();
         this.inventory = new Inventory(this.products, this.categories, this.vendors);
     }
@@ -112,11 +117,26 @@ public class SouvenirStore{
                 this.storeKeepers.put( storeKeeper.getName().toLowerCase(), storeKeeper);
             }
             loadCategories();
+            loadProducts();
             loadTransactions();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+    
+    private void loadProducts() {
+   	 try{
+            ArrayList<Product> list = dsFactory.getProductDS().load(this);
+            Iterator<Product> iterator = list.iterator();
+            Product product = null;
+            while(iterator.hasNext()){
+            	product = iterator.next();
+                this.products.put( product.getId(), product);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+   }
     
     private void loadCategories() {
     	 try{
@@ -161,6 +181,12 @@ public class SouvenirStore{
 	public void setTransactions(Map<Date, ArrayList<Transaction>> transactions) {
 		this.transactions = transactions;
 	}
+	
+	public void setTransaction(Transaction transaction) throws InvalidTransactionException, AccessDeniedException, CreationFailedException, IOException{
+		validateTransaction(transaction);
+		dsFactory.getTransactionDS().create(transaction);		
+	}
+	
 
 	public ArrayList<Transaction> getTransactionsBetweenDates(Date startDate,Date endDate) {
 		if(startDate==null || endDate ==null){
@@ -177,9 +203,42 @@ public class SouvenirStore{
 	}
 	
 	
-
-	
-	
-    
+	private void validateTransaction(Transaction transaction)
+			throws InvalidTransactionException {
+		
+		if(transaction==null){
+			throw new InvalidTransactionException(TransactionConstant.TRANSACTION_NULL);
+		}
+		if(transaction.getId()==0){
+			throw new InvalidTransactionException(TransactionConstant.TRANSACTION_ID_NULL);
+		}
+		if(transaction.getDate()==null){
+			throw new InvalidTransactionException(TransactionConstant.TRANSACTION_DATE_NULL);
+		}
+		if(transaction.getCustomer()==null){
+			throw new InvalidTransactionException(TransactionConstant.TRANSACTION_CUST_NULL);
+		}
+		if(transaction.getCustomer().getId()==null){
+			throw new InvalidTransactionException(TransactionConstant.TRANSACTION_CUST_ID_NULL);
+		}
+		if(transaction.getItems()==null || transaction.getItems().size()==0){
+			throw new InvalidTransactionException(TransactionConstant.ITEM_LIST_EMPTY);
+		}
+		ArrayList<Item> items = transaction.getItems();
+		for(Item item : items){
+			if(item.getProduct()==null){
+				throw new InvalidTransactionException(TransactionConstant.PRODUCT_ITEM_NULL);
+			}
+			if(item.getProduct().getId()==null){
+				throw new InvalidTransactionException(TransactionConstant.PRODUCT_ID_NULL);
+			}
+			if(item.getPrice()==null || item.getPrice()==0.0f ){
+				throw new InvalidTransactionException(TransactionConstant.ITEM_PRICE_NULL);
+			}			
+			if(item.getQuantity()==null || item.getQuantity()==0){
+				throw new InvalidTransactionException(TransactionConstant.ITEM_QUANTITY_NULL);
+			}
+		}
+	}    
     
 }

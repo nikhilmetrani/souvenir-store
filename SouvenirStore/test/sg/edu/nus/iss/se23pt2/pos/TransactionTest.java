@@ -1,10 +1,6 @@
 package sg.edu.nus.iss.se23pt2.pos;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -16,12 +12,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import sg.edu.nus.iss.se23pt2.pos.constant.TransactionConstant;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStore;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
+import sg.edu.nus.iss.se23pt2.pos.exception.CreationFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.InvalidTransactionException;
 import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
 
 /**
@@ -40,7 +40,7 @@ public class TransactionTest {
 	 	private Transaction transaction3;
 	 	private Item item;
 	 	private SimpleDateFormat dateFormat;
-	 	private Date date1,date2;
+	 	private Date date1,date2,date3;
 
 
 	@Before
@@ -48,6 +48,7 @@ public class TransactionTest {
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		date1 = dateFormat.parse("2013-09-28");
 		date2 = dateFormat.parse("2012-02-12");
+		date3 = dateFormat.parse("2015-03-22");
 		dsFactory = DataStoreFactory.getInstance();
 	    ds = dsFactory.getTransactionDS();		
 		transaction1 = new Transaction();
@@ -358,6 +359,283 @@ public class TransactionTest {
 		assertFalse(transactionList.contains(transaction3));		
 	}
 	
+	@Test
+	public void testSetNullTransaction() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = null;
+		assertNull(transaction);
+		try {
+			store.setTransaction(transaction);
+			Assert.fail("Should throw InvalidTransactionException");
+		} catch (InvalidTransactionException e) {
+			assertEquals(TransactionConstant.TRANSACTION_NULL,e.getMessage());
+		}		
+	}
 	
+	@Test
+	public void testSetNullTransactionId() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = new Transaction();
+		assertNotNull(transaction);
+		try {
+			store.setTransaction(transaction);
+			Assert.fail("Should throw InvalidTransactionException");
+		} catch (InvalidTransactionException e) {
+			assertEquals(TransactionConstant.TRANSACTION_ID_NULL,e.getMessage());
+		}		
+	}
+	
+	@Test
+	public void testSetNullTransactionDate() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		assertNotNull(transaction);
+		try {
+			store.setTransaction(transaction);
+			Assert.fail("Should throw InvalidTransactionException");
+		} catch (InvalidTransactionException e) {
+			assertEquals(TransactionConstant.TRANSACTION_DATE_NULL,e.getMessage());
+		}		
+	}
+	
+	@Test
+	public void testSetNullTransactionCustomer() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		transaction.setDate(dateFormat.format(date3));
+		
+		assertNotNull(transaction);
+		try {
+			store.setTransaction(transaction);
+			Assert.fail("Should throw InvalidTransactionException");
+		} catch (InvalidTransactionException e) {
+			assertEquals(TransactionConstant.TRANSACTION_CUST_NULL,e.getMessage());
+		}		
+	}
+	
+	@Test
+	public void testTransactionCustomerID_Defualt() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		transaction.setDate(dateFormat.format(date3));
+		Customer customer = new Customer();
+		transaction.setCustomer(customer);
+		assertNotNull(customer.getId());
+		assertEquals("PUBLIC",customer.getId())	;
+	}
+	
+	@Test
+	public void testSetTransactionWithEmptyItems() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		transaction.setDate(dateFormat.format(date3));
+		Customer customer = new Customer();
+		transaction.setCustomer(customer);
+		try {
+			store.setTransaction(transaction);
+			Assert.fail("Should throw InvalidTransactionException");
+		} catch (InvalidTransactionException e) {
+			assertEquals(TransactionConstant.ITEM_LIST_EMPTY,e.getMessage());
+		}		
+	}
+	
+	@Test
+	public void testSetTransactionWithItemsLengthZero() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		transaction.setDate(dateFormat.format(date3));
+		Customer customer = new Customer();
+		transaction.setCustomer(customer);
+		ArrayList<Item> items = new ArrayList<>();
+		transaction.setItems(items);
+		assertNotNull(transaction);
+		try {
+			store.setTransaction(transaction);
+			Assert.fail("Should throw InvalidTransactionException");
+		} catch (InvalidTransactionException e) {
+			assertEquals(TransactionConstant.ITEM_LIST_EMPTY,e.getMessage());
+		}		
+	}
+	
+	@Test
+	public void testSetTransactionWithItemsLengthZero1() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		transaction.setDate(dateFormat.format(date3));
+		Customer customer = new Customer();
+		transaction.setCustomer(customer);
+		ArrayList<Item> items = new ArrayList<>();
+		transaction.setItems(items);
+		assertNotNull(transaction);
+		try {
+			store.setTransaction(transaction);
+			Assert.fail("Should throw InvalidTransactionException");
+		} catch (InvalidTransactionException e) {
+			assertEquals(TransactionConstant.ITEM_LIST_EMPTY,e.getMessage());
+		}		
+	}
+	
+	@Test
+	public void testSetTransactionWithNullProduct() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		transaction.setDate(dateFormat.format(date3));
+		Customer customer = new Customer();
+		transaction.setCustomer(customer);
+		ArrayList<Item> items = new ArrayList<>();
+		Item item = new Item();
+		items.add(item);
+		transaction.setItems(items);
+		assertNotNull(transaction);
+		try {
+			store.setTransaction(transaction);
+			Assert.fail("Should throw InvalidTransactionException");
+		} catch (InvalidTransactionException e) {
+			assertEquals(TransactionConstant.PRODUCT_ITEM_NULL,e.getMessage());
+		}		
+	}
+	
+	@Test
+	public void testSetTransactionWithNullProductID() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		transaction.setDate(dateFormat.format(date3));
+		Customer customer = new Customer();
+		transaction.setCustomer(customer);
+		ArrayList<Item> items = new ArrayList<>();
+		Item item = new Item();
+		Product product = new Product();
+		item.setProduct(product);
+		items.add(item);
+		transaction.setItems(items);
+		assertNotNull(transaction);
+		try {
+			store.setTransaction(transaction);
+			Assert.fail("Should throw InvalidTransactionException");
+		} catch (InvalidTransactionException e) {
+			assertEquals(TransactionConstant.PRODUCT_ID_NULL,e.getMessage());
+		}		
+	}
+	
+	@Test
+	public void testSetTransactionWithNullProductPrice() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		transaction.setDate(dateFormat.format(date3));
+		Customer customer = new Customer();
+		transaction.setCustomer(customer);
+		ArrayList<Item> items = new ArrayList<>();
+		Item item = new Item();
+		Product product = new Product();
+		product.setId("PHN/1");
+		item.setProduct(product);
+		items.add(item);
+		transaction.setItems(items);
+		assertNotNull(transaction);
+		try {
+			store.setTransaction(transaction);
+			Assert.fail("Should throw InvalidTransactionException");
+		} catch (InvalidTransactionException e) {
+			assertEquals(TransactionConstant.ITEM_PRICE_NULL,e.getMessage());
+		}		
+	}
+	
+	@Test
+	public void testSetTransactionWithNullProductQuantity() throws AccessDeniedException, CreationFailedException, IOException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		transaction.setDate(dateFormat.format(date3));
+		Customer customer = new Customer();
+		transaction.setCustomer(customer);
+		ArrayList<Item> items = new ArrayList<>();
+		Item item = new Item();
+		Product product = new Product();
+		product.setId("PHN/1");
+		item.setProduct(product);
+		item.setPrice(24.05f);
+		items.add(item);
+		items.add(item);
+		transaction.setItems(items);
+		assertNotNull(transaction);
+		try {
+			store.setTransaction(transaction);
+			Assert.fail("Should throw InvalidTransactionException");
+		} catch (InvalidTransactionException e) {
+			assertEquals(TransactionConstant.ITEM_QUANTITY_NULL,e.getMessage());
+		}		
+	}
+	
+	
+	
+	@Test
+	public void testSetTransactionWithValidTransaction() throws AccessDeniedException, CreationFailedException, IOException, DataLoadFailedException, ParseException, RemoveFailedException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		transaction.setDate(dateFormat.format(date3));
+		Customer customer = new Customer();
+		transaction.setCustomer(customer);
+		ArrayList<Item> items = new ArrayList<>();
+		Item item = new Item();
+		Product product = new Product();
+		product.setId("PHN/1");
+		item.setProduct(product);
+		item.setPrice(24.05f);
+		item.setQuantity(24);
+		items.add(item);
+		items.add(item);
+		transaction.setItems(items);
+		assertNotNull(transaction);
+		try {
+			store.setTransaction(transaction);			
+		} catch (InvalidTransactionException e) {
+			Assert.fail("Should not throw InvalidTransactionException");
+		}
+		
+		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();	
+		assertNotNull(transactionMap);
+		assertTrue("Transaction Not present in the Map", transactionMap.containsKey(date3));
+		
+		ArrayList<Transaction> transactions = transactionMap.get(date3);
+		assertNotNull(transactions);
+		assertEquals(1,transactions.size());
+		assertTrue(transactions.contains(transaction));
+		
+		ds.remove(transaction);
+		
+	}
+	
+	@Test
+	public void testSetTransactionWithPreExistingDate() throws AccessDeniedException, CreationFailedException, IOException, DataLoadFailedException, ParseException, RemoveFailedException {
+		Transaction transaction = new Transaction();
+		transaction.setId(55);
+		transaction.setDate(dateFormat.format(date2));
+		Customer customer = new Customer();
+		transaction.setCustomer(customer);
+		ArrayList<Item> items = new ArrayList<>();
+		Item item = new Item();
+		Product product = new Product();
+		product.setId("PHN/1");
+		item.setProduct(product);
+		item.setPrice(24.05f);
+		item.setQuantity(24);
+		items.add(item);
+		items.add(item);
+		transaction.setItems(items);
+		assertNotNull(transaction);
+		try {
+			store.setTransaction(transaction);			
+		} catch (InvalidTransactionException e) {
+			Assert.fail("Should not throw InvalidTransactionException");
+		}
+		
+		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();	
+		assertNotNull(transactionMap);
+		assertTrue("Transaction Not present in the Map", transactionMap.containsKey(date2));
+		
+		ArrayList<Transaction> transactions = transactionMap.get(date2);
+		assertNotNull(transactions);
+		assertEquals(3,transactions.size());
+		assertTrue(transactions.contains(transaction));		
+		ds.remove(transaction);
+		
+	}
 
 }
