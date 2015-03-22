@@ -83,12 +83,16 @@ public class TransactionDS extends DataStore
         }
 		return transactions;
 	}
+
 	
-
-
-	@Override
-	protected <T> boolean matchData(T obj, String data) {
-
-		return false;
-	}
+	 @Override
+	    protected <T> boolean matchData (T obj, String line) {
+		  if(obj!=null && line!=null && line.length()>0){
+	        int key = ((Transaction) obj).getId();
+	         if (line.indexOf(key + ",") == 0){
+	            return true;
+	         }
+		  }
+	       return false;
+	    }
 }
