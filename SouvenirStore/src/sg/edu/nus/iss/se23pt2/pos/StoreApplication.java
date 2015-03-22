@@ -26,6 +26,7 @@ public class StoreApplication {
 			public void run() {
 				try {
 					StoreAppWindow window = new StoreAppWindow();
+					window.setLocationRelativeTo(null); //show in center of screen
 					if (window.isSessionActive())
 						window.setVisible(true);
 					else

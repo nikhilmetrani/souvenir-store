@@ -22,15 +22,16 @@ public class LoginDialog extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-	private Session session = null;
 	private JTextField textUserName;
 	private JPasswordField textPassword;
-
+	private boolean okPerformed = false;
+	
 	/**
 	 * Create the dialog.
 	 */
-	public LoginDialog(Session session) {
-		this.session = session;
+	public LoginDialog(String userName) {
+		
+		LoginDialog.this.okPerformed = false;
 		setModal(true);
 		setLocationByPlatform(true);
 		setTitle("Souvenir store login");
@@ -48,6 +49,8 @@ public class LoginDialog extends JDialog {
 		}
 		
 		textUserName = new JTextField();
+		if (null != userName)
+			textUserName.setText(userName);
 		textUserName.setBounds(124, 8, 200, 20);
 		contentPanel.add(textUserName);
 		textUserName.setColumns(10);
@@ -67,21 +70,16 @@ public class LoginDialog extends JDialog {
 				JButton okButton = new JButton("Login");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						if (LoginDialog.this.getSession().authenticate(getUsername(), getPassword())) {
-		                    JOptionPane.showMessageDialog(LoginDialog.this,
-		                            LoginDialog.this.getUsername() + "! You have successfully logged in.",
-		                            "Login",
-		                            JOptionPane.INFORMATION_MESSAGE);
-		                    dispose();
-		                } else {
-		                    JOptionPane.showMessageDialog(LoginDialog.this,
-		                            "Error :: Invalid username or password!",
-		                            "Login",
-		                            JOptionPane.ERROR_MESSAGE);
-		                    // reset password
-		                    textPassword.setText("");
-
-		                }
+						if ((0 < LoginDialog.this.getUsername().length()) && (0 < LoginDialog.this.getPassword().length())) {
+							LoginDialog.this.okPerformed = true;
+							LoginDialog.this.setVisible(false);
+						}
+						else {
+							JOptionPane.showMessageDialog(null,
+			                        "Error :: Qualified username and password must be provided!",
+			                        "Login",
+			                        JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				});
 				okButton.setActionCommand("OK");
@@ -92,7 +90,7 @@ public class LoginDialog extends JDialog {
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						dispose();
+						LoginDialog.this.setVisible(false);
 					}
 				});
 				cancelButton.setActionCommand("Cancel");
@@ -100,10 +98,6 @@ public class LoginDialog extends JDialog {
 			}
 		}
 	}
-    
-    public Session getSession() {
-        return this.session;
-    }
 
     public String getUsername() {
         return textUserName.getText().trim();
@@ -113,4 +107,7 @@ public class LoginDialog extends JDialog {
         return new String(textPassword.getPassword());
     }
 
+    public boolean okPerformed() {
+    	return this.okPerformed;
+    }
 }

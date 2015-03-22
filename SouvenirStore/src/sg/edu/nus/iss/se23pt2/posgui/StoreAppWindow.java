@@ -168,35 +168,18 @@ public class StoreAppWindow extends JFrame {
 	public boolean isSessionActive() {
 		return this.session.isActive();
 	}
+	
 	private void login() {
-		LoginDialog loginDlg = new LoginDialog(session);
-		loginDlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		loginDlg.setLocationRelativeTo(StoreAppWindow.this);
-        loginDlg.setVisible(true);
+		session.authenticate();
         // if logon successfully
         if(session.isActive()){
-            mnLogin.setEnabled(false);
-            mnLogoff.setEnabled(true);
+        	activateSession();	
         }
-        activateSession();
 	}
 	
 	private void logoff() {
-		Object[] options = { "OK", "CANCEL" };
-		int n = JOptionPane.showOptionDialog(StoreAppWindow.this, "Are you sure you want to log off?\n\nClick OK to continue.", "Confirm",
-			JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-			null, options, options[0]);
-		if (0 == n)
-		{
-			session.logOff();
-			mnLogin.setEnabled(true);
-			mnLogoff.setEnabled(false);
-			JOptionPane.showMessageDialog(StoreAppWindow.this,
-                    "You have been successfully logged off.",
-                    "Login",
-                    JOptionPane.INFORMATION_MESSAGE);
+		if (session.logOff())
 			deactivateSession();
-		}
 	}
 	
 	private void activateSession() {
