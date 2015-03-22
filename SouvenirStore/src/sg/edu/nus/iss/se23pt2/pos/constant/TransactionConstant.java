@@ -8,6 +8,7 @@ package sg.edu.nus.iss.se23pt2.pos.constant;
  */
 
 public class TransactionConstant {
+	
 	public static final String TRANSACTION_NULL = "Transaction is null";
 	public static final String TRANSACTION_ID_NULL = "Transaction must have Transaction Id";;
 	public static final String ITEM_LIST_EMPTY = "Transaction must have Item list";
