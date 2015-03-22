@@ -92,22 +92,11 @@ public class StoreAppWindow extends JFrame {
 		
 		mnLogin = new JMenuItem("Login");
 		mnLogoff = new JMenuItem("Logoff");
-		mnLogin.setEnabled(true);
-		mnLogoff.setEnabled(false);
 		
 		mnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (mnLogin.isEnabled()) {
-					LoginDialog loginDlg = new LoginDialog(session);
-					loginDlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					loginDlg.setLocationRelativeTo(StoreAppWindow.this);
-	                loginDlg.setVisible(true);
-	                // if logon successfully
-	                if(session.isActive()){
-	                    mnLogin.setEnabled(false);
-	                    mnLogoff.setEnabled(true);
-	                }
-	                activateSession();
+					StoreAppWindow.this.login();
 				}
 			}
 		});
@@ -117,21 +106,7 @@ public class StoreAppWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (mnLogoff.isEnabled()) {
 					if (session.isActive()) {
-						Object[] options = { "OK", "CANCEL" };
-						int n = JOptionPane.showOptionDialog(StoreAppWindow.this, "Are you sure you want to log off?\n\nClick OK to continue.", "Confirm",
-							JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-							null, options, options[0]);
-						if (0 == n)
-						{
-							session.logOff();
-							mnLogin.setEnabled(true);
-							mnLogoff.setEnabled(false);
-							JOptionPane.showMessageDialog(StoreAppWindow.this,
-		                            "You have been successfully logged off.",
-		                            "Login",
-		                            JOptionPane.INFORMATION_MESSAGE);
-							deactivateSession();
-						}
+						StoreAppWindow.this.logoff();
 					}
 				}
 			}
@@ -174,7 +149,11 @@ public class StoreAppWindow extends JFrame {
 		
 		menuBar.add(mnReports);
 		
-		this.deactivateSession();
+		this.login();
+		if (this.session.isActive())
+			this.activateSession();
+		else
+			this.deactivateSession();
 	}
 	
 	public void updateUserInTitle () {
@@ -183,6 +162,40 @@ public class StoreAppWindow extends JFrame {
 		}
 		else {
 			this.setTitle(title);
+		}
+	}
+	
+	public boolean isSessionActive() {
+		return this.session.isActive();
+	}
+	private void login() {
+		LoginDialog loginDlg = new LoginDialog(session);
+		loginDlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		loginDlg.setLocationRelativeTo(StoreAppWindow.this);
+        loginDlg.setVisible(true);
+        // if logon successfully
+        if(session.isActive()){
+            mnLogin.setEnabled(false);
+            mnLogoff.setEnabled(true);
+        }
+        activateSession();
+	}
+	
+	private void logoff() {
+		Object[] options = { "OK", "CANCEL" };
+		int n = JOptionPane.showOptionDialog(StoreAppWindow.this, "Are you sure you want to log off?\n\nClick OK to continue.", "Confirm",
+			JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+			null, options, options[0]);
+		if (0 == n)
+		{
+			session.logOff();
+			mnLogin.setEnabled(true);
+			mnLogoff.setEnabled(false);
+			JOptionPane.showMessageDialog(StoreAppWindow.this,
+                    "You have been successfully logged off.",
+                    "Login",
+                    JOptionPane.INFORMATION_MESSAGE);
+			deactivateSession();
 		}
 	}
 	
