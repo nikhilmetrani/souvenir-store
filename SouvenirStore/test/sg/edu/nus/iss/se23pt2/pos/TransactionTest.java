@@ -3,8 +3,11 @@ package sg.edu.nus.iss.se23pt2.pos;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,6 +21,8 @@ import org.junit.Test;
 
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStore;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
+import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
 
 /**
  * 
@@ -67,7 +72,7 @@ public class TransactionTest {
 		
 		transaction1.setDate("2013-09-28");
 		transaction1.setItems(items);
-		transaction1.setId(21389);
+		transaction1.setId(11);
 		transaction1.setCustomer(cust);     
 		
 		
@@ -117,9 +122,25 @@ public class TransactionTest {
 
 	@After
 	public void tearDown() throws Exception {
+		if(transaction1!=null){
+			ds.remove(transaction1);
+		}
+		if(transaction2!=null){
+			ds.remove(transaction2);
+		}
+		if(transaction3!=null){
+			ds.remove(transaction3);
+		}		
+	}
+	
+	@Test
+	public void testRemoveAndLoadTransactions() throws RemoveFailedException, AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		ds.remove(transaction1);
 		ds.remove(transaction2);
 		ds.remove(transaction3);
+		store.loadTransactions();
+		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();		
+		assertEquals(0,transactionMap.size());		
 	}
 
 	@Test

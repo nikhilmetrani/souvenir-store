@@ -41,7 +41,6 @@ public class SouvenirStore{
     
     public SouvenirStore(){
         storeKeepers = new HashMap<String, StoreKeeper>();
-        transactions = new HashMap<Date, ArrayList<Transaction>>();
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.categories = new HashMap<String, Category>();
         this.loadData();
@@ -136,6 +135,7 @@ public class SouvenirStore{
 	public void loadTransactions()
 			throws DataLoadFailedException, AccessDeniedException, IOException,
 			ParseException {
+		transactions = new HashMap<Date, ArrayList<Transaction>>();
 		ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
 		ArrayList<Transaction> tempTransactionList;
 		Date date;
