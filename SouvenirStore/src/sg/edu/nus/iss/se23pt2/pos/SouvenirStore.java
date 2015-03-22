@@ -44,7 +44,7 @@ public class SouvenirStore{
     
     public SouvenirStore(){
         this.storeKeepers = new HashMap<String, StoreKeeper>();
-        
+        this.transactions = new HashMap<Date, ArrayList<Transaction>>();
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.categories = new HashMap<String, Category>();
         this.products = new HashMap<String, Product>();
