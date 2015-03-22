@@ -22,6 +22,7 @@ public class LoginDialog extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
+	private Session session = null;
 	private JTextField textUserName;
 	private JPasswordField textPassword;
 
@@ -29,6 +30,7 @@ public class LoginDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public LoginDialog(Session session) {
+		this.session = session;
 		setModal(true);
 		setLocationByPlatform(true);
 		setTitle("Souvenir store login");
@@ -65,9 +67,9 @@ public class LoginDialog extends JDialog {
 				JButton okButton = new JButton("Login");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						if (session.authenticate(getUsername(), getPassword())) {
+						if (LoginDialog.this.getSession().authenticate(getUsername(), getPassword())) {
 		                    JOptionPane.showMessageDialog(LoginDialog.this,
-		                            getUsername() + "! You have successfully logged in.",
+		                            LoginDialog.this.getUsername() + "! You have successfully logged in.",
 		                            "Login",
 		                            JOptionPane.INFORMATION_MESSAGE);
 		                    dispose();
@@ -98,8 +100,12 @@ public class LoginDialog extends JDialog {
 			}
 		}
 	}
-	
-	public String getUsername() {
+    
+    public Session getSession() {
+        return this.session;
+    }
+
+    public String getUsername() {
         return textUserName.getText().trim();
     }
 
