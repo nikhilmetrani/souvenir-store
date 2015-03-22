@@ -9,40 +9,42 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class CategoryPanel extends JPanel {
+public class ProductPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
 	private Inventory        		inventory;
-    private java.util.List<Category> 	categories;
-    private java.awt.List          	categoryList;
+    private java.util.List<Product> 	products;
+    private java.awt.List          	productList;
     private JFrame					parent;
     
-    public CategoryPanel (Inventory inventory, JFrame parent) {
+    public ProductPanel (Inventory inventory, JFrame parent) {
         this.inventory = inventory;
         this.parent = parent;
         setLayout (new BorderLayout());
-        categoryList = new java.awt.List (5);
-        categoryList.setMultipleMode (false);
-        add ("North", new JLabel ("Categories"));
-        add ("Center", categoryList);
+        productList = new java.awt.List (5);
+        productList.setMultipleMode (false);
+        add ("North", new JLabel ("Products"));
+        add ("Center", productList);
         add ("East", createButtonPanel());
     }
 
     public void refresh () {
-    	categories = inventory.getAllCategories();
-        categoryList.removeAll();
-        Category cat = null;
-        Iterator<Category> i = categories.iterator();
-        while (i.hasNext()) {
-        	cat = i.next();
-        	categoryList.add (cat.getCode() + " - " + cat.getName());
-        }
+    	products = inventory.getAllProducts();
+    	if (null != products) {
+	    	productList.removeAll();
+	    	Product prod = null;
+	        Iterator<Product> i = products.iterator();
+	        while (i.hasNext()) {
+	        	prod = i.next();
+	        	productList.add (prod.getId() + " - " + prod.getName());
+	        }
+    	}
     }
 
-    public Category getSelectedCategory () {
-        int idx = categoryList.getSelectedIndex();
-        return (idx == -1) ? null : categories.get(idx);
+    public Product getSelectedProduct() {
+        int idx = productList.getSelectedIndex();
+        return (idx == -1) ? null : products.get(idx);
     }
 
     private JPanel createButtonPanel () {
@@ -52,12 +54,12 @@ public class CategoryPanel extends JPanel {
         JButton b = new JButton ("Add");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-                AddEditCategoryDialog d = new AddEditCategoryDialog(CategoryPanel.this.inventory, CategoryPanel.this.parent);
-                d.setLocationRelativeTo(CategoryPanel.this.parent);
+            	AddEditProductDialog d = new AddEditProductDialog(ProductPanel.this.inventory, ProductPanel.this.parent);
+                d.setLocationRelativeTo(ProductPanel.this.parent);
                 d.setModal(true);
                 d.pack();
                 d.setVisible (true);
-                CategoryPanel.this.refresh();
+                ProductPanel.this.refresh();
             }
         });
         p.add (b);
@@ -65,8 +67,8 @@ public class CategoryPanel extends JPanel {
         b = new JButton ("Remove");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-                inventory.removeCategory(CategoryPanel.this.getSelectedCategory().getCode());
-            	CategoryPanel.this.refresh();
+                inventory.removeProduct(ProductPanel.this.getSelectedProduct().getId());
+                ProductPanel.this.refresh();
             }
         });
         p.add (b);
@@ -74,12 +76,14 @@ public class CategoryPanel extends JPanel {
         b = new JButton ("Edit");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-            	AddEditCategoryDialog d = new AddEditCategoryDialog(CategoryPanel.this.getSelectedCategory(), CategoryPanel.this.parent);
-            	d.setLocationRelativeTo(CategoryPanel.this.parent);
+            	AddEditProductDialog d = new AddEditProductDialog(ProductPanel.this.getSelectedProduct(),
+            											ProductPanel.this.inventory,
+            											ProductPanel.this.parent);
+            	d.setLocationRelativeTo(ProductPanel.this.parent);
             	d.setModal(true);
                 d.pack();
                 d.setVisible (true);
-                CategoryPanel.this.refresh();
+                ProductPanel.this.refresh();
             }
         });
         p.add (b);

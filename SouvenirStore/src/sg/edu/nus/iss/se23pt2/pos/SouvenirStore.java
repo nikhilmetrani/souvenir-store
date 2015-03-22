@@ -138,6 +138,20 @@ public class SouvenirStore{
         }
    }
     
+    private void loadProducts() {
+   	 try{
+            ArrayList<Product> list = dsFactory.getProductDS().load(this);
+            Iterator<Product> iterator = list.iterator();
+            Product product = null;
+            while(iterator.hasNext()){
+            	product = iterator.next();
+                this.products.put( product.getId(), product);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+   }
+    
     private void loadCategories() {
     	 try{
              ArrayList<Category> list = dsFactory.getCategoryDS().load(this);

@@ -132,6 +132,14 @@ public class StoreAppWindow extends JFrame {
 		mntmVendors = new JMenuItem("Vendors");
 		mnInventory.add(mntmVendors);
 		mntmProducts = new JMenuItem("Products");
+		mntmProducts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ProductDialog pd = new ProductDialog(StoreAppWindow.this.store.getInventory());
+				pd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				pd.setLocationRelativeTo(StoreAppWindow.this);
+				pd.setVisible(true);
+			}
+		});
 		mnInventory.add(mntmProducts);
 		
 		mntmDiscounts = new JMenuItem("Discounts");

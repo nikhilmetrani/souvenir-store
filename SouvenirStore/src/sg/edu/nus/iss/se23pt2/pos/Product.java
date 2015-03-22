@@ -33,7 +33,7 @@ public class Product {
     private Float price;
     
     /** */
-    private String barcodeNumber;
+    private String barcode;
     
     /** */
     private Integer reorderThresholdQuantity;
@@ -99,7 +99,7 @@ public class Product {
     	this.quantity = quantity;
     	this.reorderThresholdQuantity = reorderThresholdQuantity;
     	this.price = price;
-    	this.barcodeNumber = barcode;
+    	this.barcode = barcode;
     	this.orderQuantity = orderQuantity;
     	this.setCategory(category);
     }
@@ -211,11 +211,11 @@ public class Product {
 
     public void setBarcode(String barcode) {
     	if (null != barcode)
-    		this.barcodeNumber = barcode;
+    		this.barcode = barcode;
     }
     /** */
     public String getBarcode() {
-    	return this.barcodeNumber;
+    	return this.barcode;
     }
     
     /** */
