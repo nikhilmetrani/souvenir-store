@@ -138,20 +138,19 @@ public class TransactionTest {
 		ds.remove(transaction1);
 		ds.remove(transaction2);
 		ds.remove(transaction3);
-		store.loadTransactions();
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();		
 		assertEquals(0,transactionMap.size());		
 	}
 
 	@Test
-	public void testTransactionMapSize() {
+	public void testTransactionMapSize() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		assertEquals(2,transactionMap.size());		
 	}
 	
 	@Test
-	public void testTransactionMapDate() {
+	public void testTransactionMapDate() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		Set<Date> dateSet = transactionMap.keySet();
@@ -166,7 +165,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testTransactionsForParticularDate() {
+	public void testTransactionsForParticularDate() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		Set<Date> dateSet = transactionMap.keySet();
@@ -179,7 +178,7 @@ public class TransactionTest {
 	
 	
 	@Test
-	public void testMultipleTransactionForParticularDate() {
+	public void testMultipleTransactionForParticularDate() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		Set<Date> dateSet = transactionMap.keySet();
@@ -193,7 +192,7 @@ public class TransactionTest {
 	
 	
 	@Test
-	public void testTransactionItemForParticularDate() {
+	public void testTransactionItemForParticularDate() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		Set<Date> dateSet = transactionMap.keySet();
@@ -210,7 +209,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testSortingOfTransactionItemForParticularDate() {
+	public void testSortingOfTransactionItemForParticularDate() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		Set<Date> dateSet = transactionMap.keySet();
@@ -231,7 +230,7 @@ public class TransactionTest {
 	
 	
 	@Test
-	public void testTransactionBetweenDatesBoundaryCondition() {
+	public void testTransactionBetweenDatesBoundaryCondition() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		Date startDate = null;
@@ -259,7 +258,7 @@ public class TransactionTest {
 	
 	
 	@Test
-	public void testTransactionBetweenDates_Date1() {
+	public void testTransactionBetweenDates_Date1() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		Date startDate = null;
@@ -286,7 +285,7 @@ public class TransactionTest {
 	
 	
 	@Test
-	public void testTransactionBetweenDates_Date2() {
+	public void testTransactionBetweenDates_Date2() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		Date startDate = null;
@@ -313,7 +312,7 @@ public class TransactionTest {
 	
 	
 	@Test
-	public void testTransactionBetweenSameStartAndEndDates() {
+	public void testTransactionBetweenSameStartAndEndDates() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		Date startDate = null;
@@ -339,7 +338,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testTransactionOutOfRangeStartAndEndDates() {
+	public void testTransactionOutOfRangeStartAndEndDates() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		Date startDate = null;

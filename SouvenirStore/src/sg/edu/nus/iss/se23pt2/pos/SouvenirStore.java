@@ -132,7 +132,7 @@ public class SouvenirStore{
          }
     }
 
-	public void loadTransactions()
+	private void loadTransactions()
 			throws DataLoadFailedException, AccessDeniedException, IOException,
 			ParseException {
 		transactions = new HashMap<Date, ArrayList<Transaction>>();
@@ -153,7 +153,8 @@ public class SouvenirStore{
 		}
 	}
 
-	public Map<Date, ArrayList<Transaction>> getTransactions() {
+	public Map<Date, ArrayList<Transaction>> getTransactions() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
+		loadTransactions();
 		return transactions;
 	}
 
