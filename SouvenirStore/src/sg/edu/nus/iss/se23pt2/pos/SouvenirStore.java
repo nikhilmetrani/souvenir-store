@@ -37,6 +37,7 @@ public class SouvenirStore{
     private String                   loginUserName;
     private SimpleDateFormat 		 dateFormat;
     private Inventory                inventory = null;
+    private DataStoreFactory 		 dsFactory = DataStoreFactory.getInstance();
     
     public SouvenirStore(){
         storeKeepers = new HashMap<String, StoreKeeper>();
@@ -103,7 +104,6 @@ public class SouvenirStore{
     }
 
     public void loadData(){
-        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
         try{
             ArrayList<StoreKeeper> list = dsFactory.getStoreKeeperDS().load(this);
             Iterator<StoreKeeper> iterator = list.iterator();
@@ -113,14 +113,13 @@ public class SouvenirStore{
                 this.storeKeepers.put( storeKeeper.getName().toLowerCase(), storeKeeper);
             }
             loadCategories();
-            loadTransactions(dsFactory);
+            loadTransactions();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
     
     private void loadCategories() {
-    	DataStoreFactory dsFactory = DataStoreFactory.getInstance();
     	 try{
              ArrayList<Category> list = dsFactory.getCategoryDS().load(this);
              Iterator<Category> iterator = list.iterator();
@@ -134,7 +133,7 @@ public class SouvenirStore{
          }
     }
 
-	private void loadTransactions(DataStoreFactory dsFactory)
+	public void loadTransactions()
 			throws DataLoadFailedException, AccessDeniedException, IOException,
 			ParseException {
 		ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
