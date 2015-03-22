@@ -37,10 +37,17 @@ public class Inventory {
     }
     
     /** */
-    public ArrayList<Product> getAllProducts() {
+    public List<Product> getAllProducts() {
     	//TO-DO
-    	ArrayList<Product> pr = new ArrayList<Product>();
-    	return pr;
+    	//TO-DO
+    	if (null == this.products)
+    		return null;
+    	ArrayList<Product> p = new ArrayList<Product>();
+    	Iterator<Product> ip = this.products.values().iterator();
+    	while (ip.hasNext()) {
+    		p.add(ip.next());
+    	}
+    	return p;
     }
     
     /** */
@@ -72,17 +79,22 @@ public class Inventory {
     }
     
     /** */
-    public Product addProduct(String catId, String name) {
+    public Product addProduct(Product product) {
     	//TO-DO
-    	Product pr = new Product();
-    	return pr;
+    	if (this.products.containsKey(product.getId()))
+    		return this.products.get(product.getId());
+    	this.products.put(product.getId(), product);
+    	return product;
     }
     
     /** */
-    public Product removeProduct(String prodId, Integer quantity) {
+    public boolean removeProduct(String prodId) {
     	//TO-DO
-    	Product pr = new Product();
-    	return pr;
+    	if (this.products.containsKey(prodId)) {
+    		this.products.remove(prodId);
+    		return true;
+    	}
+    	return false;
     }
     
     /** */
@@ -127,5 +139,14 @@ public class Inventory {
     	this.categories.put(category.getCode(), category);
     	return category;
     }
-    
+ 
+    /** */
+    public boolean removeCategory(String catId) {
+    	//TO-DO
+    	if (this.categories.containsKey(catId)) {
+    		this.categories.remove(catId);
+    		return true;
+    	}
+    	return false;
+    }
 }

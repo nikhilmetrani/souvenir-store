@@ -15,13 +15,13 @@ public class AddEditCategoryDialog extends OkCancelDialog {
 	    private boolean editMode = false;
 
 	    public AddEditCategoryDialog (Inventory inventory, JFrame parent) {
-	        super(parent, "Add Member");
+	        super(parent, "Add Category");
 	        this.inventory = inventory;
 	        this.category = null;
 	    }
 	    
 	    public AddEditCategoryDialog (Category category, JFrame parent) {
-	    	super(parent, "Edit Member");
+	    	super(parent, "Edit Category");
 	    	this.editMode = true;
 	        this.inventory = null;
 	        this.category = category;

@@ -40,9 +40,11 @@ public class SouvenirStore{
     private DataStoreFactory 		 dsFactory = DataStoreFactory.getInstance();
     
     public SouvenirStore(){
-        storeKeepers = new HashMap<String, StoreKeeper>();
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        this.storeKeepers = new HashMap<String, StoreKeeper>();
+        this.transactions = new HashMap<Date, ArrayList<Transaction>>();
+        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.categories = new HashMap<String, Category>();
+        this.products = new HashMap<String, Product>();
         this.loadData();
         this.inventory = new Inventory(this.products, this.categories, this.vendors);
     }
@@ -112,11 +114,26 @@ public class SouvenirStore{
                 this.storeKeepers.put( storeKeeper.getName().toLowerCase(), storeKeeper);
             }
             loadCategories();
+            loadProducts();
             loadTransactions();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+    
+    private void loadProducts() {
+   	 try{
+            ArrayList<Product> list = dsFactory.getProductDS().load(this);
+            Iterator<Product> iterator = list.iterator();
+            Product product = null;
+            while(iterator.hasNext()){
+            	product = iterator.next();
+                this.products.put( product.getId(), product);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+   }
     
     private void loadCategories() {
     	 try{
