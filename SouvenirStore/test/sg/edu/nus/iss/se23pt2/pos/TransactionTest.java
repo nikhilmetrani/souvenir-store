@@ -431,7 +431,7 @@ public class TransactionTest {
 		assertNotNull(transaction);
 		try {
 			store.setTransaction(transaction);
-			Assert.fail("Should throw InvalidTransactionException");
+			Assert.fail("Should throw InvalidTransactionException ");
 		} catch (InvalidTransactionException e) {
 			assertEquals(TransactionConstant.TRANSACTION_DATE_NULL,e.getMessage());
 		}		
