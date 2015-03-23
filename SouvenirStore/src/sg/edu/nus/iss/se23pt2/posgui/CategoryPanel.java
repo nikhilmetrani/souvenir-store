@@ -13,20 +13,23 @@ public class CategoryPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Inventory        		inventory;
+	private Inventory        			inventory;
     private java.util.List<Category> 	categories;
     private JList<Category>          	categoryList;
-    private JFrame					parent;
+    private JFrame						parent;
+    private JScrollPane 				scrollPane;
     
     public CategoryPanel (Inventory inventory, JFrame parent) {
         this.inventory = inventory;
         this.parent = parent;
-        setLayout (new BorderLayout());
-        categoryList = new JList<Category>(); //java.awt.List (5);
-        categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); //.setMultipleMode (false);
+        setLayout (new BorderLayout(5,5));
+        this.categoryList = new JList<Category>();
+        this.categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        this.scrollPane = new JScrollPane();
+        this.scrollPane.setViewportView(this.categoryList);
         add ("North", new JLabel ("Categories"));
-        add ("Center", categoryList);
-        add ("East", createButtonPanel());
+        add ("Center", this.scrollPane);
+        add ("East", this.createButtonPanel());
     }
 
     public void refresh () {
@@ -38,7 +41,6 @@ public class CategoryPanel extends JPanel {
         while (i.hasNext()) {
         	cat = i.next();
         	listModel.addElement(cat);
-        	//categoryList.;.add(cat);// (cat.getCode() + " - " + cat.getName());
         }
         categoryList.setModel(listModel);
     }
@@ -50,7 +52,7 @@ public class CategoryPanel extends JPanel {
 
     private JPanel createButtonPanel () {
 
-        JPanel p = new JPanel (new GridLayout (0, 1));
+        JPanel p = new JPanel (new GridLayout (0, 1, 5, 5));
 
         JButton b = new JButton ("Add");
         b.addActionListener (new ActionListener () {
