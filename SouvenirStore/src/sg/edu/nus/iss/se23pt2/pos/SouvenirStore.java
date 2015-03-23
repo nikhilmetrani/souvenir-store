@@ -34,8 +34,9 @@ public class SouvenirStore{
     private Map<String, Category>    categories;
     private Map<String, Product>     products;
     private Map<String, Vendor>      vendors;
+    private Map<String, Discount>    discounts;
     private ArrayList<Member>        members;
-    private ArrayList<Discount>      discounts;
+    
     private Map<Date,ArrayList<Transaction>>        transactions;
     private String                   loginUserName;
     private SimpleDateFormat 		 dateFormat;
@@ -47,8 +48,9 @@ public class SouvenirStore{
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.categories = new HashMap<String, Category>();
         this.products = new HashMap<String, Product>();
+        this.discounts = new HashMap<String, Discount>();
         this.loadData();
-        this.inventory = new Inventory(this.products, this.categories, this.vendors);
+        this.inventory = new Inventory(this.products, this.categories, this.vendors, this.discounts);
     }
     
     public Inventory getInventory() {
@@ -81,23 +83,6 @@ public class SouvenirStore{
     	Member mem  = new Member(memName, memId);
     	members.add(mem);
     }
-
-    // Add a new discount to the list of discounts
-    public void addDiscount (String discCode, String description, String startDate
-    		, String periodInDays, double discPct, String applicableTo) {
-    	Discount disc = new Discount(discCode, description, startDate, periodInDays, discPct, applicableTo);
-    	discounts.add(disc);
-    }
-    
-    // Update discount percentage for a certain code
-    public void updateDiscount (String discCode, Integer discPct) {
-    	for (int i = 1; i <= discounts.size(); i++) {
-    		if (discounts.get(i).getDiscountCode().equals(discCode)) {
-    			discounts.get(i).setDiscPct(discPct);
-    			break;
-    		}
-    	}
-    }
     
     public void validateLogin (String userName, String password) {
     }
@@ -118,6 +103,7 @@ public class SouvenirStore{
             loadCategories();
             loadProducts();
             loadTransactions();
+            loadDiscounts();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -135,7 +121,7 @@ public class SouvenirStore{
         }catch(Exception e){
             e.printStackTrace();
         }
-   }
+    }
     
     private void loadCategories() {
     	 try{
@@ -150,7 +136,21 @@ public class SouvenirStore{
              e.printStackTrace();
          }
     }
-
+    
+    private void loadDiscounts() {
+   	 try{
+            ArrayList<Discount> list = dsFactory.getDiscountDS().load(this);
+            Iterator<Discount> iterator = list.iterator();
+            Discount disc = null;
+            while(iterator.hasNext()){
+            	disc = iterator.next();
+            	this.discounts.put(disc.getDiscCode(), disc);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
 	private void loadTransactions()
 			throws DataLoadFailedException, AccessDeniedException, IOException,
 			ParseException {
@@ -186,7 +186,6 @@ public class SouvenirStore{
 		dsFactory.getTransactionDS().create(transaction);		
 	}
 	
-
 	public ArrayList<Transaction> getTransactionsBetweenDates(Date startDate,Date endDate) {
 		if(startDate==null || endDate ==null){
 			return null;
@@ -200,7 +199,6 @@ public class SouvenirStore{
 		}		
 		return filterTransactions;
 	}
-	
 	
 	private void validateTransaction(Transaction transaction)
 			throws InvalidTransactionException {

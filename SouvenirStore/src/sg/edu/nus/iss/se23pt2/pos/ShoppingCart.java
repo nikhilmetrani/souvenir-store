@@ -119,7 +119,7 @@ public class ShoppingCart {
     	} else {
     		for(int i = 1; i <= discounts.size(); i++) {
     			// Public are only eligible for discounts that applicable to all customers
-    			if(discounts.get(i).getApplicableTo().equals('A')) {
+    			if(discounts.get(i).getAppTo().equals('A')) {
     				disc = discounts.get(i);
     				
     				if(disc.isValid(disc, transDate)) {
