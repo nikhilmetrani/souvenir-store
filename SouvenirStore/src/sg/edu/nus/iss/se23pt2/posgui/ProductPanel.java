@@ -64,8 +64,10 @@ public class ProductPanel extends JPanel {
         b = new JButton ("Remove");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-                inventory.removeProduct(ProductPanel.this.getSelectedProduct().getId());
-                ProductPanel.this.refresh();
+            	if (null != ProductPanel.this.getSelectedProduct()) {
+            		inventory.removeProduct(ProductPanel.this.getSelectedProduct().getId());
+            		ProductPanel.this.refresh();
+            	}
             }
         });
         p.add (b);
@@ -73,11 +75,13 @@ public class ProductPanel extends JPanel {
         b = new JButton ("Edit");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-            	AddEditProductDialog d = new AddEditProductDialog(ProductPanel.this.getSelectedProduct(),
-            											ProductPanel.this.inventory,
-            											ProductPanel.this.parent);
-                d.setVisible (true);
-                ProductPanel.this.refresh();
+            	if (null != ProductPanel.this.getSelectedProduct()) {
+	            	AddEditProductDialog d = new AddEditProductDialog(ProductPanel.this.getSelectedProduct(),
+	            											ProductPanel.this.inventory,
+	            											ProductPanel.this.parent);
+	                d.setVisible (true);
+	                ProductPanel.this.refresh();
+            	}
             }
         });
         p.add (b);

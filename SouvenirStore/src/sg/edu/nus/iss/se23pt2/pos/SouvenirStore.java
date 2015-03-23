@@ -92,7 +92,31 @@ public class SouvenirStore{
     }
 
     public void loadData(){
-        try{
+    	
+    	loadStoreKeepers();
+        loadCategories(); //Must be called before loadProducts() to amke list of categories available
+        loadProducts();
+        try {
+        	loadTransactions();
+        }
+        catch (DataLoadFailedException dlex) {
+        	dlex.printStackTrace();
+        }
+        catch (AccessDeniedException adex) {
+        	adex.printStackTrace();
+        }
+        catch (IOException ioex) {
+        	ioex.printStackTrace();
+        }
+        catch (ParseException pex) {
+        	pex.printStackTrace();
+        }
+        
+        loadDiscounts();
+    }
+    
+    private void loadStoreKeepers() {
+    	try{
             ArrayList<StoreKeeper> list = dsFactory.getStoreKeeperDS().load(this);
             Iterator<StoreKeeper> iterator = list.iterator();
             StoreKeeper storeKeeper = null;
@@ -100,15 +124,11 @@ public class SouvenirStore{
                 storeKeeper = iterator.next();
                 this.storeKeepers.put( storeKeeper.getName().toLowerCase(), storeKeeper);
             }
-            loadCategories();
-            loadProducts();
-            loadTransactions();
-            loadDiscounts();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
-       
+    
     private void loadProducts() {
    	 try{
             ArrayList<Product> list = dsFactory.getProductDS().load(this);
@@ -116,6 +136,9 @@ public class SouvenirStore{
             Product product = null;
             while(iterator.hasNext()){
             	product = iterator.next();
+            	// DS does not assign category to product, so lets try to assign valid category
+            	if (null != product.getCategoryCode())
+            		product.setCategory(this.categories.get(product.getCategoryCode()));
                 this.products.put( product.getId(), product);
             }
         }catch(Exception e){

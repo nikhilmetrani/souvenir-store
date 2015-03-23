@@ -165,6 +165,18 @@ public class Product {
     	return this.category;
     }
     
+    /** Returns category code, if category is not set, it will return code (first three letters) from ID */
+    public String getCategoryCode() {
+    	if (null == this.category) {
+    		if (this.id.contains("/")) 
+    			return this.id.substring(0, 3);
+    		else
+    			return null;
+    	}
+    	else
+    		return this.category.getCode();
+    }
+    
     /** */
     public void setPrice(Float price) {
     	if (null != price)

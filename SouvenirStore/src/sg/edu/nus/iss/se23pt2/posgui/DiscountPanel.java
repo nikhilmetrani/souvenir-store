@@ -69,8 +69,10 @@ public class DiscountPanel extends JPanel {
         b = new JButton ("Remove");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-                inventory.removeCategory(DiscountPanel.this.getSelectedDiscount().getDiscCode());
-            	DiscountPanel.this.refresh();
+            	if (null != DiscountPanel.this.getSelectedDiscount()) {
+            		inventory.removeCategory(DiscountPanel.this.getSelectedDiscount().getDiscCode());
+            		DiscountPanel.this.refresh();
+            	}
             }
         });
         p.add (b);
@@ -78,9 +80,11 @@ public class DiscountPanel extends JPanel {
         b = new JButton ("Edit");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-            	AddEditDiscountDialog d = new AddEditDiscountDialog(DiscountPanel.this.getSelectedDiscount(), DiscountPanel.this.parent);
-                d.setVisible (true);
-                DiscountPanel.this.refresh();
+            	if (null != DiscountPanel.this.getSelectedDiscount()) {
+	            	AddEditDiscountDialog d = new AddEditDiscountDialog(DiscountPanel.this.getSelectedDiscount(), DiscountPanel.this.parent);
+	                d.setVisible (true);
+	                DiscountPanel.this.refresh();
+            	}
             }
         });
         p.add (b);

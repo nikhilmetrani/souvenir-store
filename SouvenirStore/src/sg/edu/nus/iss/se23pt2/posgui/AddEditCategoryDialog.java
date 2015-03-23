@@ -63,10 +63,14 @@ public class AddEditCategoryDialog extends OkCancelDialog {
 		        if ((0 == code.length()) || (0 == name.length())) {
 		            return false;
 		        }
-		        Category cat = new Category(categoryCodeField.getText(), categoryNameField.getText());
-		        this.inventory.addCategory(cat);
+		        this.category = new Category(categoryCodeField.getText(), categoryNameField.getText());
+		        this.inventory.addCategory(this.category);
 	    	}
 	        return true;
+	    }
+	    
+	    public Category getCategory() {
+	    	return this.category;
 	    }
 
 	}
