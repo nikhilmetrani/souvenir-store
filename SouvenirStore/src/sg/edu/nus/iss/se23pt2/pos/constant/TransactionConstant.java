@@ -19,7 +19,8 @@ public class TransactionConstant {
 	public static final String TRANSACTION_CUST_NULL = "Transaction must have customer";
 	public static final String TRANSACTION_CUST_ID_NULL = "Transaction must have customer id";
 	public static final String TRANSACTION_DATE_NULL = "Transaction must have a date";
-	
-	
+	public static final String START_DATE_NULL = "Start date is null";
+	public static final String END_DATE_NULL = "End date is null";
+	public static final String INVALID_DATE_ORDER = "Start date is greater than end date";	
 
 }

@@ -196,10 +196,8 @@ public class SouvenirStore{
 		dsFactory.getTransactionDS().create(transaction);		
 	}
 	
-	public ArrayList<Transaction> getTransactionsBetweenDates(Date startDate,Date endDate) {
-		if(startDate==null || endDate ==null){
-			return null;
-		}
+	public ArrayList<Transaction> getTransactionsBetweenDates(Date startDate,Date endDate) throws InvalidTransactionException {
+		validateTransactionDate(startDate, endDate);		
 		ArrayList<Transaction> filterTransactions = new ArrayList<Transaction>();
 		Set<Date> dateSet = transactions.keySet();		
 		for(Date date : dateSet){
@@ -208,6 +206,19 @@ public class SouvenirStore{
 			}
 		}		
 		return filterTransactions;
+	}
+
+	private void validateTransactionDate(Date startDate, Date endDate)
+			throws InvalidTransactionException {
+		if(startDate==null){
+			throw new InvalidTransactionException(TransactionConstant.START_DATE_NULL);
+		}
+		if(endDate ==null){
+			throw new InvalidTransactionException(TransactionConstant.END_DATE_NULL);
+		}
+		if(endDate.compareTo(startDate) < 0){
+			throw new InvalidTransactionException(TransactionConstant.INVALID_DATE_ORDER);
+		}
 	}
 	
 	private void validateTransaction(Transaction transaction)
