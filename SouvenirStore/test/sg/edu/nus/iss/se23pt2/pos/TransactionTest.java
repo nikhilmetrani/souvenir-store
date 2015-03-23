@@ -234,12 +234,13 @@ public class TransactionTest {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
 		Date startDate = null;
-		Date endDate = dateFormat.parse("2013-09-28");		 
+		Date endDate = dateFormat.parse("2013-09-27");		 
 		try {
-			store.getTransactionsBetweenDates(startDate,endDate);
-			Assert.fail("Should throw an exception");
+			ArrayList<Transaction> transactionList=store.getTransactions(startDate,endDate);
+			assertNotNull(transactionList);
+			assertEquals(2, transactionList.size());
 		} catch (InvalidTransactionException e) {
-			assertEquals(TransactionConstant.START_DATE_NULL,e.getMessage());
+			Assert.fail("Should not throw an exception");
 		}		
 	}
 	
@@ -247,13 +248,29 @@ public class TransactionTest {
 	public void testTransactionWithNullEndDate() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
 		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
 		assertNotNull(transactionMap);
-		Date startDate = dateFormat.parse("2013-09-28");
+		Date startDate = dateFormat.parse("2012-02-13");
 		Date endDate = null;		 
 		try {
-			store.getTransactionsBetweenDates(startDate,endDate);
-			Assert.fail("Should throw an exception");
+			ArrayList<Transaction> transactionList=store.getTransactions(startDate,endDate);
+			assertNotNull(transactionList);
+			assertEquals(1, transactionList.size());
 		} catch (InvalidTransactionException e) {
-			assertEquals(TransactionConstant.END_DATE_NULL,e.getMessage());
+			Assert.fail("Should not throw an exception");
+		}		
+	}
+	
+	@Test
+	public void testTransactionWithNullStartAndEndDate() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
+		Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
+		assertNotNull(transactionMap);
+		Date startDate = null;
+		Date endDate = null;		 
+		try {
+			ArrayList<Transaction> transactionList=store.getTransactions(startDate,endDate);
+			assertNotNull(transactionList);
+			assertEquals(3, transactionList.size());
+		} catch (InvalidTransactionException e) {
+			Assert.fail("Should not throw an exception");
 		}		
 	}
 	
@@ -264,7 +281,7 @@ public class TransactionTest {
 		Date startDate = dateFormat.parse("2015-09-28");
 		Date endDate = dateFormat.parse("2013-09-28");		 
 		try {
-			store.getTransactionsBetweenDates(startDate,endDate);
+			store.getTransactions(startDate,endDate);
 			Assert.fail("Should throw an exception");
 		} catch (InvalidTransactionException e) {
 			assertEquals(TransactionConstant.INVALID_DATE_ORDER,e.getMessage());
@@ -284,7 +301,7 @@ public class TransactionTest {
 			assertTrue("Cannot parse the date",false);
 		}
 		
-		ArrayList<Transaction> transactionList = store.getTransactionsBetweenDates(startDate,endDate);
+		ArrayList<Transaction> transactionList = store.getTransactions(startDate,endDate);
 		assertNotNull(transactionList);
 		assertEquals(3,transactionList.size());
 		assertTrue(transactionList.contains(transaction1));
@@ -312,7 +329,7 @@ public class TransactionTest {
 			assertTrue("Cannot parse the date",false);
 		}
 		
-		ArrayList<Transaction> transactionList = store.getTransactionsBetweenDates(startDate,endDate);
+		ArrayList<Transaction> transactionList = store.getTransactions(startDate,endDate);
 		assertNotNull(transactionList);
 		assertEquals(1,transactionList.size());
 		assertTrue(transactionList.contains(transaction1));
@@ -339,7 +356,7 @@ public class TransactionTest {
 			assertTrue("Cannot parse the date",false);
 		}
 		
-		ArrayList<Transaction> transactionList = store.getTransactionsBetweenDates(startDate,endDate);
+		ArrayList<Transaction> transactionList = store.getTransactions(startDate,endDate);
 		assertNotNull(transactionList);
 		assertEquals(2,transactionList.size());
 		assertFalse(transactionList.contains(transaction1));
@@ -366,7 +383,7 @@ public class TransactionTest {
 			assertTrue("Cannot parse the date",false);
 		}
 		
-		ArrayList<Transaction> transactionList = store.getTransactionsBetweenDates(startDate,endDate);
+		ArrayList<Transaction> transactionList = store.getTransactions(startDate,endDate);
 		assertNotNull(transactionList);
 		assertEquals(2,transactionList.size());
 		assertFalse(transactionList.contains(transaction1));
@@ -392,7 +409,7 @@ public class TransactionTest {
 			assertTrue("Cannot parse the date",false);
 		}
 		
-		ArrayList<Transaction> transactionList = store.getTransactionsBetweenDates(startDate,endDate);
+		ArrayList<Transaction> transactionList = store.getTransactions(startDate,endDate);
 		assertNotNull(transactionList);
 		assertEquals(0,transactionList.size());
 		assertFalse(transactionList.contains(transaction1));

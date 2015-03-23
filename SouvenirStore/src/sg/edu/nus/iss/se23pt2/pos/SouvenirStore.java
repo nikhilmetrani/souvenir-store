@@ -219,27 +219,36 @@ public class SouvenirStore{
 		dsFactory.getTransactionDS().create(transaction);		
 	}
 	
-	public ArrayList<Transaction> getTransactionsBetweenDates(Date startDate,Date endDate) throws InvalidTransactionException {
+	public ArrayList<Transaction> getTransactions(Date startDate,Date endDate) throws InvalidTransactionException, AccessDeniedException, DataLoadFailedException, IOException, ParseException {
+		
+		loadTransactions();		
 		validateTransactionDate(startDate, endDate);		
 		ArrayList<Transaction> filterTransactions = new ArrayList<Transaction>();
-		Set<Date> dateSet = transactions.keySet();		
-		for(Date date : dateSet){
-			if((date.compareTo(startDate)>=0)  &&  (date.compareTo(endDate)<=0)){
-				filterTransactions.addAll(transactions.get(date));
-			}
-		}		
+		Set<Date> dateSet = transactions.keySet();
+		if(startDate==null && endDate==null){
+			 return dsFactory.getTransactionDS().load(this);
+		}else if(endDate==null){
+			for(Date date : dateSet){
+				if(date.compareTo(startDate)>=0)
+					filterTransactions.addAll(transactions.get(date));
+			}			
+		}else if(startDate==null){
+			for(Date date : dateSet){
+				if(date.compareTo(endDate)<=0)
+					filterTransactions.addAll(transactions.get(date));				
+			}			
+		}else{
+			for(Date date : dateSet){
+				if((date.compareTo(startDate)>=0)  &&  (date.compareTo(endDate)<=0))
+					filterTransactions.addAll(transactions.get(date));				
+			}		
+		}	
 		return filterTransactions;
 	}
 
 	private void validateTransactionDate(Date startDate, Date endDate)
 			throws InvalidTransactionException {
-		if(startDate==null){
-			throw new InvalidTransactionException(TransactionConstant.START_DATE_NULL);
-		}
-		if(endDate ==null){
-			throw new InvalidTransactionException(TransactionConstant.END_DATE_NULL);
-		}
-		if(endDate.compareTo(startDate) < 0){
+		if(startDate!=null && endDate!=null && endDate.compareTo(startDate) < 0){
 			throw new InvalidTransactionException(TransactionConstant.INVALID_DATE_ORDER);
 		}
 	}
