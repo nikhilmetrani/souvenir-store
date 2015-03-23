@@ -18,6 +18,9 @@ public class AddEditCategoryDialog extends OkCancelDialog {
 	        super(parent, "Add Category");
 	        this.inventory = inventory;
 	        this.category = null;
+	        this.setLocationRelativeTo(parent);
+	        this.setModal(true);
+	        this.pack();
 	    }
 	    
 	    public AddEditCategoryDialog (Category category, JFrame parent) {
@@ -27,6 +30,9 @@ public class AddEditCategoryDialog extends OkCancelDialog {
 	        this.category = category;
 			categoryCodeField.setText(this.category.getCode());
 			categoryNameField.setText(this.category.getName());
+			this.setLocationRelativeTo(parent);
+	        this.setModal(true);
+	        this.pack();
 	    }
 
 	    protected JPanel createFormPanel () {

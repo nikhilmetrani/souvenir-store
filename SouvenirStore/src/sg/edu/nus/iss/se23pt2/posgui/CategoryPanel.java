@@ -53,9 +53,6 @@ public class CategoryPanel extends JPanel {
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
                 AddEditCategoryDialog d = new AddEditCategoryDialog(CategoryPanel.this.inventory, CategoryPanel.this.parent);
-                d.setLocationRelativeTo(CategoryPanel.this.parent);
-                d.setModal(true);
-                d.pack();
                 d.setVisible (true);
                 CategoryPanel.this.refresh();
             }
@@ -74,12 +71,11 @@ public class CategoryPanel extends JPanel {
         b = new JButton ("Edit");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-            	AddEditCategoryDialog d = new AddEditCategoryDialog(CategoryPanel.this.getSelectedCategory(), CategoryPanel.this.parent);
-            	d.setLocationRelativeTo(CategoryPanel.this.parent);
-            	d.setModal(true);
-                d.pack();
-                d.setVisible (true);
-                CategoryPanel.this.refresh();
+            	if (null != CategoryPanel.this.getSelectedCategory()) {
+	            	AddEditCategoryDialog d = new AddEditCategoryDialog(CategoryPanel.this.getSelectedCategory(), CategoryPanel.this.parent);
+	            	d.setVisible (true);
+	                CategoryPanel.this.refresh();
+            	}
             }
         });
         p.add (b);

@@ -55,9 +55,6 @@ public class ProductPanel extends JPanel {
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
             	AddEditProductDialog d = new AddEditProductDialog(ProductPanel.this.inventory, ProductPanel.this.parent);
-                d.setLocationRelativeTo(ProductPanel.this.parent);
-                d.setModal(true);
-                d.pack();
                 d.setVisible (true);
                 ProductPanel.this.refresh();
             }
@@ -79,9 +76,6 @@ public class ProductPanel extends JPanel {
             	AddEditProductDialog d = new AddEditProductDialog(ProductPanel.this.getSelectedProduct(),
             											ProductPanel.this.inventory,
             											ProductPanel.this.parent);
-            	d.setLocationRelativeTo(ProductPanel.this.parent);
-            	d.setModal(true);
-                d.pack();
                 d.setVisible (true);
                 ProductPanel.this.refresh();
             }
