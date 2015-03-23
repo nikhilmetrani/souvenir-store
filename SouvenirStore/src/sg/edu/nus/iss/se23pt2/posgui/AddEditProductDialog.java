@@ -30,6 +30,9 @@ public class AddEditProductDialog extends OkCancelDialog {
 	        this.inventory = inventory;
 	        this.product = null;
 	        loadCategories();
+	        this.setLocationRelativeTo(parent);
+	        this.setModal(true);
+	        this.pack();
 	    }
 	    
 	    public AddEditProductDialog (Product product, Inventory inventory, JFrame parent) {
@@ -39,6 +42,9 @@ public class AddEditProductDialog extends OkCancelDialog {
 	        this.product = product;
 	        loadCategories();
 			loadProductDetails();
+			this.setLocationRelativeTo(parent);
+	        this.setModal(true);
+	        this.pack();
 	    }
 
 	    private void loadCategories() {

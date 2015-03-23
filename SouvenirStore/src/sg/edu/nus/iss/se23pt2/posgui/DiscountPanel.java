@@ -60,9 +60,6 @@ public class DiscountPanel extends JPanel {
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
                 AddEditDiscountDialog d = new AddEditDiscountDialog(DiscountPanel.this.inventory, DiscountPanel.this.parent);
-                d.setLocationRelativeTo(DiscountPanel.this.parent);
-                d.setModal(true);
-                d.pack();
                 d.setVisible (true);
                 DiscountPanel.this.refresh();
             }
@@ -82,9 +79,6 @@ public class DiscountPanel extends JPanel {
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
             	AddEditDiscountDialog d = new AddEditDiscountDialog(DiscountPanel.this.getSelectedDiscount(), DiscountPanel.this.parent);
-            	d.setLocationRelativeTo(DiscountPanel.this.parent);
-            	d.setModal(true);
-                d.pack();
                 d.setVisible (true);
                 DiscountPanel.this.refresh();
             }

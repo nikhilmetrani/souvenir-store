@@ -25,6 +25,9 @@ public class AddEditDiscountDialog extends OkCancelDialog {
 	        super(parent, "Add Discount");
 	        this.inventory = inventory;
 	        this.disc = null;
+	        this.setLocationRelativeTo(parent);
+	        this.setModal(true);
+	        this.pack();
 	    }
 	    
 	    public AddEditDiscountDialog (Discount disc, JFrame parent) {
@@ -38,6 +41,9 @@ public class AddEditDiscountDialog extends OkCancelDialog {
 	        periodInDaysField.setText(this.disc.getPeriodInDays());
 	        discPctField.setText(this.disc.getDiscPct()+"");
 	        appToField.setSelectedItem(this.disc.getAppTo());
+	        this.setLocationRelativeTo(parent);
+	        this.setModal(true);
+	        this.pack();
 	    }
 
 	    protected JPanel createFormPanel () {
