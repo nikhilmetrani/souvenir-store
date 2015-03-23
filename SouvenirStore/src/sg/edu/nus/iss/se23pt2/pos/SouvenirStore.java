@@ -181,6 +181,16 @@ public class SouvenirStore{
 		this.transactions = transactions;
 	}
 	
+	public Transaction getTransactionById(int id) throws AccessDeniedException, DataLoadFailedException, IOException{
+		ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
+		for(Transaction transaction:transactionList){
+			if(id==transaction.getId()){
+				return transaction;
+			}
+		}
+		return null;
+	}
+	
 	public void setTransaction(Transaction transaction) throws InvalidTransactionException, AccessDeniedException, CreationFailedException, IOException{
 		validateTransaction(transaction);
 		dsFactory.getTransactionDS().create(transaction);		

@@ -634,7 +634,19 @@ public class TransactionTest {
 		assertNotNull(transactions);
 		assertEquals(3,transactions.size());
 		assertTrue(transactions.contains(transaction));		
-		ds.remove(transaction);
+		ds.remove(transaction);		
+	}
 		
+	@Test
+	public void testGetTransactionById() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
+		Transaction transaction = store.getTransactionById(22);
+		assertNotNull(transaction);
+		assertEquals(transaction2,transaction);
+	}
+	
+	@Test
+	public void testGetTransactionByInvalidId() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
+		Transaction transaction = store.getTransactionById(222);
+		assertNull(transaction);
 	}
 }
