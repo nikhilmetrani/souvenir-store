@@ -34,6 +34,9 @@ public class VendorDS extends DataStore
         ArrayList<Vendor> vendors = new ArrayList<Vendor>();
         try {
             while ((line = this.read()) != null) {
+                if(line.trim().isEmpty())
+                    continue;
+
                 elements = line.split(",");
                 vendor = new Vendor(elements[0], elements[1]);
                 vendors.add(vendor);

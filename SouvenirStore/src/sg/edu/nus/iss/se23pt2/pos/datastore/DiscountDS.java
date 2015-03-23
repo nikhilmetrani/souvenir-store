@@ -37,6 +37,9 @@ public class DiscountDS extends DataStore
         ArrayList<Discount> discounts = new ArrayList<Discount>();
         try {
             while ((line = this.read()) != null) {
+                if(line.trim().isEmpty())
+                    continue;
+
                if(line.length()>0){
 	            	elements = line.split(",");
 	                if(elements[5].equals("M"))

@@ -88,6 +88,9 @@ public class CategoryDS extends DataStore
         ArrayList<Category> categories = new ArrayList<Category>();
         try {
             while ((line = this.read()) != null) {
+                if(line.trim().isEmpty())
+                    continue;
+
                 elements = line.split(",");
                 category = new Category(elements[0], elements[1]);
                 try{

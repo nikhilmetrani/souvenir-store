@@ -36,6 +36,9 @@ public class MemberDS extends DataStore
         ArrayList<Member> members = new ArrayList<Member>();
         try {
             while ((line = this.read()) != null) {
+                if(line.trim().isEmpty())
+                    continue;
+
                 elements = line.split(",");
                 member = new Member(elements[1], elements[0]);
                 member.addLoyaltyPoints(Integer.parseInt(elements[2]));

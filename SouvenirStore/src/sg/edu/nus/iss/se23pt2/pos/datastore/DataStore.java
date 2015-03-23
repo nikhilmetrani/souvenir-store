@@ -76,8 +76,8 @@ public abstract class DataStore {
     }
 
     protected void write (String data) throws IOException {
-        this.getWriter().write(data);
         this.getWriter().newLine();
+        this.getWriter().write(data);
     }
 
     protected String read () throws IOException {
@@ -135,11 +135,12 @@ public abstract class DataStore {
                         continue;
 
                     bw.append(obj.toString());
+                    bw.newLine();
                     recordFound = true;
                 } else {
                     bw.append(line);
+                    bw.newLine();
                 }
-                bw.newLine();
             }
             bw.close();
             this.close();

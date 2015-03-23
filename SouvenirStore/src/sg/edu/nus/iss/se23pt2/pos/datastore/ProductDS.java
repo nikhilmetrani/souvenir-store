@@ -36,6 +36,9 @@ public class ProductDS extends DataStore
         ArrayList<Product> products = new ArrayList<Product>();
         try {
             while ((line = this.read()) != null) {
+                if(line.trim().isEmpty())
+                    continue;
+
                 elements = line.split(",");
                 product = new Product(elements[0], elements[1]);
                 product.setDescription(elements[2]); 

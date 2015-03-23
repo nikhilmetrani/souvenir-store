@@ -45,7 +45,9 @@ public class TransactionDS extends DataStore
         int quantityPurchased;
 		try {
             while ((line = this.read()) != null) {
-            	if(line.length()>0){
+                if(line.trim().isEmpty())
+                    continue;
+
             	 elements = line.split(",");
                  if(elements!=null){                	
                 	transactionId = elements[0];
@@ -73,7 +75,6 @@ public class TransactionDS extends DataStore
                 	transaction.setItems(items);
                 	transactionMap.put(transactionId, transaction);                	
                  }
-              } 	
            }
             transactions =  new ArrayList<Transaction>(transactionMap.values());
         } catch (IOException e) {

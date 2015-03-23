@@ -35,6 +35,9 @@ public class StoreKeeperDS extends DataStore {
         ArrayList<StoreKeeper> storeKeepers = new ArrayList<StoreKeeper>();
         try {
             while ((line = this.read()) != null) {
+                if(line.trim().isEmpty())
+                    continue;
+
                 elements = line.split(",");
                 storeKeeper = new StoreKeeper(elements[0], elements[1]);
                 storeKeepers.add(storeKeeper);
