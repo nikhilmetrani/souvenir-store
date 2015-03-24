@@ -13,31 +13,36 @@ public class CategoryPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Inventory        		inventory;
+	private Inventory        			inventory;
     private java.util.List<Category> 	categories;
-    private java.awt.List          	categoryList;
-    private JFrame					parent;
+    private JList<Category>          	categoryList;
+    private JFrame						parent;
+    private JScrollPane 				scrollPane;
     
     public CategoryPanel (Inventory inventory, JFrame parent) {
         this.inventory = inventory;
         this.parent = parent;
-        setLayout (new BorderLayout());
-        categoryList = new java.awt.List (5);
-        categoryList.setMultipleMode (false);
+        setLayout (new BorderLayout(5,5));
+        this.categoryList = new JList<Category>();
+        this.categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        this.scrollPane = new JScrollPane();
+        this.scrollPane.setViewportView(this.categoryList);
         add ("North", new JLabel ("Categories"));
-        add ("Center", categoryList);
-        add ("East", createButtonPanel());
+        add ("Center", this.scrollPane);
+        add ("East", this.createButtonPanel());
     }
 
     public void refresh () {
     	categories = inventory.getAllCategories();
         categoryList.removeAll();
         Category cat = null;
+        DefaultListModel<Category> listModel = new DefaultListModel<Category>();
         Iterator<Category> i = categories.iterator();
         while (i.hasNext()) {
         	cat = i.next();
-        	categoryList.add (cat.getCode() + " - " + cat.getName());
+        	listModel.addElement(cat);
         }
+        categoryList.setModel(listModel);
     }
 
     public Category getSelectedCategory () {
@@ -47,17 +52,17 @@ public class CategoryPanel extends JPanel {
 
     private JPanel createButtonPanel () {
 
-        JPanel p = new JPanel (new GridLayout (0, 1));
+        JPanel p = new JPanel (new GridLayout (0, 1, 5, 5));
 
         JButton b = new JButton ("Add");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
                 AddEditCategoryDialog d = new AddEditCategoryDialog(CategoryPanel.this.inventory, CategoryPanel.this.parent);
-                d.setLocationRelativeTo(CategoryPanel.this.parent);
-                d.setModal(true);
-                d.pack();
                 d.setVisible (true);
-                CategoryPanel.this.refresh();
+                if (null != d.getCategory()) {
+                	CategoryPanel.this.refresh();
+                	CategoryPanel.this.categoryList.setSelectedValue(d.getCategory(), true);
+                }
             }
         });
         p.add (b);
@@ -65,8 +70,19 @@ public class CategoryPanel extends JPanel {
         b = new JButton ("Remove");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-                inventory.removeCategory(CategoryPanel.this.getSelectedCategory().getCode());
-            	CategoryPanel.this.refresh();
+            	if (null != CategoryPanel.this.getSelectedCategory()) {
+            		int index = CategoryPanel.this.categoryList.getSelectedIndex();
+	                inventory.removeCategory(CategoryPanel.this.getSelectedCategory().getCode());
+	            	CategoryPanel.this.refresh();
+	            	if (1 <= index) {
+	            		index -= 1;
+	            		CategoryPanel.this.categoryList.setSelectedIndex(index);
+	            	}
+	            	else {
+	            		if ( CategoryPanel.this.categoryList.getModel().getSize() >= 1)
+	            			CategoryPanel.this.categoryList.setSelectedIndex(0);
+	            	}
+            	}
             }
         });
         p.add (b);
@@ -74,12 +90,14 @@ public class CategoryPanel extends JPanel {
         b = new JButton ("Edit");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-            	AddEditCategoryDialog d = new AddEditCategoryDialog(CategoryPanel.this.getSelectedCategory(), CategoryPanel.this.parent);
-            	d.setLocationRelativeTo(CategoryPanel.this.parent);
-            	d.setModal(true);
-                d.pack();
-                d.setVisible (true);
-                CategoryPanel.this.refresh();
+            	if (null != CategoryPanel.this.getSelectedCategory()) {
+	            	AddEditCategoryDialog d = new AddEditCategoryDialog(CategoryPanel.this.getSelectedCategory(), CategoryPanel.this.parent);
+	            	d.setVisible (true);
+	            	if (null != d.getCategory()) {
+	                	CategoryPanel.this.refresh();
+	                	CategoryPanel.this.categoryList.setSelectedValue(d.getCategory(), true);
+	                }
+            	}
             }
         });
         p.add (b);

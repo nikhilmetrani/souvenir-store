@@ -29,8 +29,6 @@ public class CategoryDialog extends JFrame {
 		
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setResizable(false);
-		//setModal(true);
-		//setModalityType(ModalityType.APPLICATION_MODAL);
 		setTitle("Manage categories");
 		setBounds(100, 100, 287, 310);
 		getContentPane().setLayout(null);
@@ -41,19 +39,8 @@ public class CategoryDialog extends JFrame {
         p.setLayout (new GridLayout(0, 1));
         p.add (catPanel);
 		
-        p.setBounds(10, 10, 267, 260);
+        p.setBounds(5, 10, 270, 260);
 		getContentPane().add(p);
 
-	}
-	
-	private void UpdateJList(){
-		/*
-	    ListModel<String> model = new ListModel<String>();
-	    ArrayList<Category> catList = this.inventory.getAllCategories();
-	    for(Category c : catList){
-	        model.addElement(c.toString());
-	    }
-	    .setModel(model);
-	    clientJList.setSelectedIndex(0);*/
 	}
 }

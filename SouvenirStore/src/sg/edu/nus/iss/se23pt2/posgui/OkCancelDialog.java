@@ -16,10 +16,16 @@ public abstract class OkCancelDialog extends JDialog {
         super (parent, title);
         add ("Center", createFormPanel());
         add ("South",  createButtonPanel());
+        this.setLocationRelativeTo(parent);
+        this.setModal(true);
+        this.pack();
     }
 
     public OkCancelDialog (JFrame parent) {
         this (parent, "");
+        this.setLocationRelativeTo(parent);
+        this.setModal(true);
+        this.pack();
     }
 
     private JPanel createButtonPanel () {

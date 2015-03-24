@@ -144,9 +144,18 @@ public class StoreAppWindow extends JFrame {
 		
 		mntmDiscounts = new JMenuItem("Discounts");
 		mnManage.add(mntmDiscounts);
+		mntmDiscounts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				DiscountDialog dd = new DiscountDialog(StoreAppWindow.this.store.getInventory());
+				dd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dd.setLocationRelativeTo(StoreAppWindow.this);
+				dd.setVisible(true);
+			}
+		});
+		mnInventory.add(mntmDiscounts);
+		
 		mntmMembers = new JMenuItem("Members");
 		mnManage.add(mntmMembers);
-		
 		menuBar.add(mnManage);
 		
 		mnReports = new JMenu("Reports");

@@ -34,8 +34,9 @@ public class SouvenirStore{
     private Map<String, Category>    categories;
     private Map<String, Product>     products;
     private Map<String, Vendor>      vendors;
+    private Map<String, Discount>    discounts;
     private ArrayList<Member>        members;
-    private ArrayList<Discount>      discounts;
+    
     private Map<Date,ArrayList<Transaction>>        transactions;
     private String                   loginUserName;
     private SimpleDateFormat 		 dateFormat;
@@ -47,8 +48,9 @@ public class SouvenirStore{
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.categories = new HashMap<String, Category>();
         this.products = new HashMap<String, Product>();
+        this.discounts = new HashMap<String, Discount>();
         this.loadData();
-        this.inventory = new Inventory(this.products, this.categories, this.vendors);
+        this.inventory = new Inventory(this.products, this.categories, this.vendors, this.discounts);
     }
     
     public Inventory getInventory() {
@@ -81,23 +83,6 @@ public class SouvenirStore{
     	Member mem  = new Member(memName, memId);
     	members.add(mem);
     }
-
-    // Add a new discount to the list of discounts
-    public void addDiscount (String discCode, String description, String startDate
-    		, String periodInDays, double discPct, String applicableTo) {
-    	Discount disc = new Discount(discCode, description, startDate, periodInDays, discPct, applicableTo);
-    	discounts.add(disc);
-    }
-    
-    // Update discount percentage for a certain code
-    public void updateDiscount (String discCode, Integer discPct) {
-    	for (int i = 1; i <= discounts.size(); i++) {
-    		if (discounts.get(i).getDiscountCode().equals(discCode)) {
-    			discounts.get(i).setDiscPct(discPct);
-    			break;
-    		}
-    	}
-    }
     
     public void validateLogin (String userName, String password) {
     }
@@ -107,7 +92,31 @@ public class SouvenirStore{
     }
 
     public void loadData(){
-        try{
+    	
+    	loadStoreKeepers();
+        loadCategories(); //Must be called before loadProducts() to amke list of categories available
+        loadProducts();
+        try {
+        	loadTransactions();
+        }
+        catch (DataLoadFailedException dlex) {
+        	dlex.printStackTrace();
+        }
+        catch (AccessDeniedException adex) {
+        	adex.printStackTrace();
+        }
+        catch (IOException ioex) {
+        	ioex.printStackTrace();
+        }
+        catch (ParseException pex) {
+        	pex.printStackTrace();
+        }
+        
+        loadDiscounts();
+    }
+    
+    private void loadStoreKeepers() {
+    	try{
             ArrayList<StoreKeeper> list = dsFactory.getStoreKeeperDS().load(this);
             Iterator<StoreKeeper> iterator = list.iterator();
             StoreKeeper storeKeeper = null;
@@ -115,14 +124,11 @@ public class SouvenirStore{
                 storeKeeper = iterator.next();
                 this.storeKeepers.put( storeKeeper.getName().toLowerCase(), storeKeeper);
             }
-            loadCategories();
-            loadProducts();
-            loadTransactions();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
-       
+    
     private void loadProducts() {
    	 try{
             ArrayList<Product> list = dsFactory.getProductDS().load(this);
@@ -130,12 +136,15 @@ public class SouvenirStore{
             Product product = null;
             while(iterator.hasNext()){
             	product = iterator.next();
+            	// DS does not assign category to product, so lets try to assign valid category
+            	if (null != product.getCategoryCode())
+            		product.setCategory(this.categories.get(product.getCategoryCode()));
                 this.products.put( product.getId(), product);
             }
         }catch(Exception e){
             e.printStackTrace();
         }
-   }
+    }
     
     private void loadCategories() {
     	 try{
@@ -150,7 +159,21 @@ public class SouvenirStore{
              e.printStackTrace();
          }
     }
-
+    
+    private void loadDiscounts() {
+   	 try{
+            ArrayList<Discount> list = dsFactory.getDiscountDS().load(this);
+            Iterator<Discount> iterator = list.iterator();
+            Discount disc = null;
+            while(iterator.hasNext()){
+            	disc = iterator.next();
+            	this.discounts.put(disc.getDiscCode(), disc);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
 	private void loadTransactions()
 			throws DataLoadFailedException, AccessDeniedException, IOException,
 			ParseException {
@@ -181,26 +204,54 @@ public class SouvenirStore{
 		this.transactions = transactions;
 	}
 	
+	public Transaction getTransactionById(int id) throws AccessDeniedException, DataLoadFailedException, IOException{
+		ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
+		for(Transaction transaction:transactionList){
+			if(id==transaction.getId()){
+				return transaction;
+			}
+		}
+		return null;
+	}
+	
 	public void setTransaction(Transaction transaction) throws InvalidTransactionException, AccessDeniedException, CreationFailedException, IOException{
 		validateTransaction(transaction);
 		dsFactory.getTransactionDS().create(transaction);		
 	}
 	
-
-	public ArrayList<Transaction> getTransactionsBetweenDates(Date startDate,Date endDate) {
-		if(startDate==null || endDate ==null){
-			return null;
-		}
+	public ArrayList<Transaction> getTransactions(Date startDate,Date endDate) throws InvalidTransactionException, AccessDeniedException, DataLoadFailedException, IOException, ParseException {
+		
+		loadTransactions();		
+		validateTransactionDate(startDate, endDate);		
 		ArrayList<Transaction> filterTransactions = new ArrayList<Transaction>();
-		Set<Date> dateSet = transactions.keySet();		
-		for(Date date : dateSet){
-			if((date.compareTo(startDate)>=0)  &&  (date.compareTo(endDate)<=0)){
-				filterTransactions.addAll(transactions.get(date));
-			}
-		}		
+		Set<Date> dateSet = transactions.keySet();
+		if(startDate==null && endDate==null){
+			 return dsFactory.getTransactionDS().load(this);
+		}else if(endDate==null){
+			for(Date date : dateSet){
+				if(date.compareTo(startDate)>=0)
+					filterTransactions.addAll(transactions.get(date));
+			}			
+		}else if(startDate==null){
+			for(Date date : dateSet){
+				if(date.compareTo(endDate)<=0)
+					filterTransactions.addAll(transactions.get(date));				
+			}			
+		}else{
+			for(Date date : dateSet){
+				if((date.compareTo(startDate)>=0)  &&  (date.compareTo(endDate)<=0))
+					filterTransactions.addAll(transactions.get(date));				
+			}		
+		}	
 		return filterTransactions;
 	}
-	
+
+	private void validateTransactionDate(Date startDate, Date endDate)
+			throws InvalidTransactionException {
+		if(startDate!=null && endDate!=null && endDate.compareTo(startDate) < 0){
+			throw new InvalidTransactionException(TransactionConstant.INVALID_DATE_ORDER);
+		}
+	}
 	
 	private void validateTransaction(Transaction transaction)
 			throws InvalidTransactionException {
