@@ -92,30 +92,34 @@ public class SouvenirStore{
     }
 
     public void loadData(){
-    	
-    	loadStoreKeepers();
-        loadCategories(); //Must be called before loadProducts() to amke list of categories available
-        loadProducts();
         try {
-        	loadTransactions();
+            loadSequence();
+            loadStoreKeepers();
+            loadCategories(); //Must be called before loadProducts() to amke list of categories available
+            loadProducts();
+            loadDiscounts();
+            loadTransactions();
         }
         catch (DataLoadFailedException dlex) {
         	dlex.printStackTrace();
+        	System.exit(0); // Exit Application if data load failed
         }
-        catch (AccessDeniedException adex) {
-        	adex.printStackTrace();
-        }
-        catch (IOException ioex) {
-        	ioex.printStackTrace();
-        }
-        catch (ParseException pex) {
-        	pex.printStackTrace();
-        }
-        
-        loadDiscounts();
     }
-    
-    private void loadStoreKeepers() {
+
+    private void loadSequence() throws DataLoadFailedException{
+        try{
+            ArrayList<Sequence> list = dsFactory.getSequenceDS().load(this);
+            Iterator<Sequence> iterator = list.iterator();
+            while(iterator.hasNext()){
+                SequenceGenerator.getInstance().addSequence(iterator.next());
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new DataLoadFailedException(e.getMessage());
+        }
+    }
+
+    private void loadStoreKeepers() throws DataLoadFailedException{
     	try{
             ArrayList<StoreKeeper> list = dsFactory.getStoreKeeperDS().load(this);
             Iterator<StoreKeeper> iterator = list.iterator();
@@ -126,10 +130,11 @@ public class SouvenirStore{
             }
         }catch(Exception e){
             e.printStackTrace();
+            throw new DataLoadFailedException(e.getMessage());
         }
     }
     
-    private void loadProducts() {
+    private void loadProducts() throws DataLoadFailedException{
    	 try{
             ArrayList<Product> list = dsFactory.getProductDS().load(this);
             Iterator<Product> iterator = list.iterator();
@@ -143,10 +148,11 @@ public class SouvenirStore{
             }
         }catch(Exception e){
             e.printStackTrace();
+            throw new DataLoadFailedException(e.getMessage());
         }
     }
     
-    private void loadCategories() {
+    private void loadCategories() throws DataLoadFailedException{
     	 try{
              ArrayList<Category> list = dsFactory.getCategoryDS().load(this);
              Iterator<Category> iterator = list.iterator();
@@ -157,10 +163,11 @@ public class SouvenirStore{
              }
          }catch(Exception e){
              e.printStackTrace();
+             throw new DataLoadFailedException(e.getMessage());
          }
     }
     
-    private void loadDiscounts() {
+    private void loadDiscounts() throws DataLoadFailedException{
    	 try{
             ArrayList<Discount> list = dsFactory.getDiscountDS().load(this);
             Iterator<Discount> iterator = list.iterator();
@@ -171,28 +178,33 @@ public class SouvenirStore{
             }
         }catch(Exception e){
             e.printStackTrace();
+            throw new DataLoadFailedException(e.getMessage());
         }
     }
     
 	private void loadTransactions()
-			throws DataLoadFailedException, AccessDeniedException, IOException,
-			ParseException {
-		transactions = new HashMap<Date, ArrayList<Transaction>>();
-		ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
-		ArrayList<Transaction> tempTransactionList;
-		Date date;
-		for(Transaction transaction:transactionList){
-			date = dateFormat.parse(transaction.getDate());
-			if(transactions!=null && transactions.containsKey(date)){
-				tempTransactionList = transactions.get(date);            		
-			}else{
-				tempTransactionList = new ArrayList<Transaction>();
-			}
-			tempTransactionList.add(transaction);
-			if(transactions!=null){
-			  transactions.put(date,tempTransactionList);
-			}
-		}
+			throws DataLoadFailedException {
+	    try{
+    		transactions = new HashMap<Date, ArrayList<Transaction>>();
+    		ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
+    		ArrayList<Transaction> tempTransactionList;
+    		Date date;
+    		for(Transaction transaction:transactionList){
+    			date = dateFormat.parse(transaction.getDate());
+    			if(transactions!=null && transactions.containsKey(date)){
+    				tempTransactionList = transactions.get(date);            		
+    			}else{
+    				tempTransactionList = new ArrayList<Transaction>();
+    			}
+    			tempTransactionList.add(transaction);
+    			if(transactions!=null){
+    			  transactions.put(date,tempTransactionList);
+    			}
+    		}
+	    }catch(Exception e){
+	        e.printStackTrace();
+	        throw new DataLoadFailedException(e.getMessage());
+	    }
 	}
 
 	public Map<Date, ArrayList<Transaction>> getTransactions() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {

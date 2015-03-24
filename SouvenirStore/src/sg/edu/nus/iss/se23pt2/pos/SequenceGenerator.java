@@ -35,7 +35,7 @@ public class SequenceGenerator
 	    if(sequences.containsKey(sequenceType)){
 	        retVal = sequences.get(sequenceType).getNextSequence();
 	        try {
-                DataStoreFactory.getInstance().getSequenceGeneratorDS().update(sequences.get(sequenceType));
+                DataStoreFactory.getInstance().getSequenceDS().update(sequences.get(sequenceType));
             } catch (Exception e) {
                 e.printStackTrace();
             }

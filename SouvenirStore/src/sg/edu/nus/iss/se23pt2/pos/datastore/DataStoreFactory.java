@@ -82,7 +82,7 @@ public class DataStoreFactory
         return transactionDS;
 	}
 	
-	public DataStore getSequenceGeneratorDS() throws AccessDeniedException, IOException
+	public DataStore getSequenceDS() throws AccessDeniedException, IOException
 	{
         if(sequenceDS == null)
             sequenceDS = new SequenceDS();

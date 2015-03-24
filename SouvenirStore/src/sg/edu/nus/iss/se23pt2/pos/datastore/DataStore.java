@@ -130,6 +130,9 @@ public abstract class DataStore {
             bw = new BufferedWriter(new FileWriter(tmpFile, true));
 
             while ((line = br.readLine()) != null) {
+                if(line.trim().isEmpty())
+                    continue;
+
                 if (!recordFound && this.matchData(obj, line)) {
                     if (deleteFlag)
                         continue;

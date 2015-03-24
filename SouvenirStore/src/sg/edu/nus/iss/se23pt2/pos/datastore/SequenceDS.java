@@ -46,7 +46,7 @@ public class SequenceDS extends DataStore {
     @Override
     protected <T> boolean matchData(T obj, String data) {
         String key = ((Sequence) obj).getSequenceType();
-        if (data.indexOf( key + ",") > 0)
+        if (data.indexOf( key + ",") == 0)
             return true;
         return false;
     }
