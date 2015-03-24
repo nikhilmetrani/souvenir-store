@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sg.edu.nus.iss.se23pt2.pos.Category;
+import sg.edu.nus.iss.se23pt2.pos.Sequence;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.Vendor;
 import sg.edu.nus.iss.se23pt2.pos.exception.CreationFailedException;
@@ -40,6 +41,18 @@ public class CategoryDS extends DataStore
         Category category = (Category) obj;
         List<Vendor> venodrs = category.getAllVendors();
         DataStore ds = null;
+        try{
+            Sequence seq = new Sequence(category.getCode().toUpperCase());
+            seq.setPrefix(category.getCode().toUpperCase()+"/");
+            ds = dsFactory.getSequenceDS();
+            ds.create(seq);
+        }catch(IOException e){
+            throw new CreationFailedException(e.getMessage());
+        }finally{
+            if(ds!=null)
+                ds.close();
+        }
+
         try{
             ds = dsFactory.getVendorDS(category.getCode());
             for(Vendor vendor:venodrs){
@@ -141,5 +154,14 @@ public class CategoryDS extends DataStore
                 ds.close();
         }
         super.remove(obj);
+        try{
+            ds = dsFactory.getSequenceDS(); 
+            ds.remove(new Sequence(category.getCode().toUpperCase()));
+        }catch(IOException e){
+            throw new RemoveFailedException(e.getMessage());
+        }finally{
+            if(ds!=null)
+                ds.close();
+        }
     }
 }
