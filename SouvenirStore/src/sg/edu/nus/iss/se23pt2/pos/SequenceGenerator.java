@@ -11,27 +11,40 @@
 
 package sg.edu.nus.iss.se23pt2.pos;
 
+import java.util.HashMap;
 import java.util.Map;
+
+import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 
 public class SequenceGenerator
 {
-	private static SequenceGenerator sequenceGenerator;
-	private Map<String, Sequence> sequences;
-	private void createSequenceGenerator()
+	private static final SequenceGenerator sequenceGenerator = new SequenceGenerator();
+	private Map<String, Sequence> sequences = new HashMap<String, Sequence>();
+	private SequenceGenerator()
 	{
 	}
 	
 	public static SequenceGenerator getInstance()
 	{
-	    return new SequenceGenerator();
+	    return sequenceGenerator;
 	}
 	
-	public Sequence getSequence(String sequenceType)
+	public synchronized String getNextSequence(String sequenceType)
 	{
-	    return null;
+	    String retVal = "";
+	    if(sequences.containsKey(sequenceType)){
+	        retVal = sequences.get(sequenceType).getNextSequence();
+	        try {
+                DataStoreFactory.getInstance().getSequenceGeneratorDS().update(sequences.get(sequenceType));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+	    }
+	    return retVal;
 	}
 	
 	public void addSequence(Sequence sequence)
 	{
+	    sequences.put(sequence.getSequenceType(), sequence);
 	}
 }

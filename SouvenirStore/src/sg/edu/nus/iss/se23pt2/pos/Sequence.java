@@ -14,42 +14,66 @@ package sg.edu.nus.iss.se23pt2.pos;
 public class Sequence
 {
 	private String sequenceType;
-	private String prefix;
+	private String prefix="";
 	private Integer nextNumber = 1;
 	private Integer incrementBy = 1;
-	public void createSequence(String sequenceType)
+
+	public Sequence(String sequenceType)
 	{
+	    this.sequenceType = sequenceType;
 	}
 	
 	public void setPrefix(String prefix)
 	{
+	    this.prefix = prefix;
 	}
 	
 	public void setNextNumber(Integer nextNumber)
 	{
+	    this.nextNumber = nextNumber;
 	}
 	
 	public void setIncrementBy(Integer incrementBy)
 	{
+	    this.incrementBy = incrementBy;
 	}
 	
 	public String getSequenceType()
 	{
-	    return null;
+	    return this.sequenceType;
 	}
 	
 	public String getPrefix()
 	{
-	    return null;
+	    return this.prefix;
 	}
 	
 	public Integer getNextNumber()
 	{
-	    return 0;
+	    return this.nextNumber;
 	}
 	
 	public Integer getIncrementBy()
 	{
-	    return 0;
+	    return this.incrementBy;
+	}
+	
+	public String getNextSequence(){
+	    String retVal = prefix + this.nextNumber;
+	    this.nextNumber = this.nextNumber + this.incrementBy;
+	    return retVal;
+	}
+	
+	@Override
+	public String toString(){
+	    return this.sequenceType + "," + this.prefix + "," + this.nextNumber + "," + this.incrementBy;
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+        if(obj instanceof Sequence){
+            return this.sequenceType.equals(((Sequence)obj).sequenceType);
+        }
+        return false;
 	}
 }

@@ -19,7 +19,7 @@ import java.util.Map;
 public class DataStoreFactory
 {
 	private static DataStoreFactory dataStoreFactory = new DataStoreFactory();
-	private DataStore storeKeeperDS, categoryDS, productDS, memberDS, discountDS, transactionDS;
+	private DataStore storeKeeperDS, categoryDS, productDS, memberDS, discountDS, transactionDS, sequenceDS;
 	private Map<String, VendorDS> vendorDS;
 
 
@@ -82,4 +82,10 @@ public class DataStoreFactory
         return transactionDS;
 	}
 	
+	public DataStore getSequenceGeneratorDS() throws AccessDeniedException, IOException
+	{
+        if(sequenceDS == null)
+            sequenceDS = new SequenceDS();
+        return sequenceDS;
+	}
 }
