@@ -179,7 +179,7 @@ public class Category {
     @Override
     public boolean equals(Object obj) {
     	if (obj instanceof Category) {
-	    	if (this.code.equals(((Category)obj).getCode()) && this.name.equals(((Category)obj).getName()))
+	    	if (this.code.equals(((Category)obj).getCode()))
 	    		return true;
     	}
     	return false;
