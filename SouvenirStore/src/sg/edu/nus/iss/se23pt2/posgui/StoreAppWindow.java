@@ -10,6 +10,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -121,10 +122,17 @@ public class StoreAppWindow extends JFrame {
 		mntmCategories = new JMenuItem("Categories");
 		mntmCategories.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+			    /*
 				CategoryDialog cd = new CategoryDialog(StoreAppWindow.this.store.getInventory());
 				cd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				cd.setLocationRelativeTo(StoreAppWindow.this);
 				cd.setVisible(true);
+				*/
+			    JPanel panel = new CategoryPanel(StoreAppWindow.this.store.getInventory(), StoreAppWindow.this);
+			    StoreAppWindow.this.setContentPane(panel);
+                //StoreAppWindow.this.repaint();
+                StoreAppWindow.this.setSize(650, 453);
+                StoreAppWindow.this.setSize(651, 453);
 			}
 		});
 		mnInventory.add(mntmCategories);
@@ -171,6 +179,8 @@ public class StoreAppWindow extends JFrame {
 			this.activateSession();
 		else
 			this.deactivateSession();
+		
+		this.setContentPane(new EmptyPanel(this));
 	}
 	
 	public void updateUserInTitle () {

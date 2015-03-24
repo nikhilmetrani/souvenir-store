@@ -86,7 +86,7 @@ public class CategoryPanel extends JPanel {
             }
         });
         p.add (b);
-        
+
         b = new JButton ("Edit");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
@@ -98,6 +98,15 @@ public class CategoryPanel extends JPanel {
 	                	CategoryPanel.this.categoryList.setSelectedValue(d.getCategory(), true);
 	                }
             	}
+            }
+        });
+        p.add (b);
+
+        b = new JButton ("Close");
+        b.addActionListener (new ActionListener () {
+            public void actionPerformed (ActionEvent e) {
+                CategoryPanel.this.parent.setContentPane(new EmptyPanel(CategoryPanel.this.parent));
+                CategoryPanel.this.parent.repaint();
             }
         });
         p.add (b);
