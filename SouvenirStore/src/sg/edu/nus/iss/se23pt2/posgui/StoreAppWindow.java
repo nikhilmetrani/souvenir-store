@@ -128,7 +128,8 @@ public class StoreAppWindow extends JFrame {
 				cd.setLocationRelativeTo(StoreAppWindow.this);
 				cd.setVisible(true);
 				*/
-			    JPanel panel = new CategoryPanel(StoreAppWindow.this.store.getInventory(), StoreAppWindow.this);
+			    CategoryPanel panel = new CategoryPanel(StoreAppWindow.this.store.getInventory(), StoreAppWindow.this);
+			    panel.refresh();
 			    StoreAppWindow.this.setContentPane(panel);
                 //StoreAppWindow.this.repaint();
                 StoreAppWindow.this.setSize(650, 453);
