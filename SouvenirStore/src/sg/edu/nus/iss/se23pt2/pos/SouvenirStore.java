@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 
 import sg.edu.nus.iss.se23pt2.pos.constant.TransactionConstant;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
@@ -57,10 +58,7 @@ public class SouvenirStore{
     
     public Inventory getInventory() {
     	return this.inventory;
-    }
-    
-    public void addStoreKeeper (String userName, String password) {
-    }
+    }    
 
     public void addCategory (String categoryCode, String categoryName) {
     }
@@ -321,5 +319,28 @@ public class SouvenirStore{
              throw new DataLoadFailedException(e.getMessage());
          }
 	}
+	
+	public List<StoreKeeper> getAllStoreKeepers() {
+    	if (null == this.storeKeepers)
+    		return null;
+    	ArrayList<StoreKeeper> c = new ArrayList<StoreKeeper>();
+    	Iterator<StoreKeeper> ic = this.storeKeepers.values().iterator();
+    	while (ic.hasNext()) {
+    		c.add(ic.next());
+    	}
+    	return c;
+    }
+    
+    public StoreKeeper addStoreKeeper(String name, String password) {
+    	StoreKeeper storeKeeper = new StoreKeeper(name, password);
+    	return this.addStoreKeeper(storeKeeper);
+    }
+    
+    public StoreKeeper addStoreKeeper(StoreKeeper storeKeeper) {
+    	if (this.storeKeepers.containsKey(storeKeeper.getName()))
+    		return this.storeKeepers.get(storeKeeper.getName());
+    	this.storeKeepers.put(storeKeeper.getName(), storeKeeper);
+    	return storeKeeper;
+    }
     
 }

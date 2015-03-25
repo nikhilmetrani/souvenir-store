@@ -54,6 +54,7 @@ public class StoreAppWindow extends JFrame {
 	JMenu 					mnReports = null;
 	JMenuItem 				mntmTransactions = null;
 	JMenuItem 				mntmProductBelowThreshold = null;
+	JMenuItem				mntmStoreKeepers = null;
 	
 	private String title = "Souvenir Store - SE23PT2";
 	
@@ -176,6 +177,19 @@ public class StoreAppWindow extends JFrame {
 		
 		mntmMembers = new JMenuItem("Members");
 		mnManage.add(mntmMembers);
+		
+		mntmStoreKeepers = new JMenuItem("StoreKeepers");
+		mntmStoreKeepers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {			    
+			    StoreKeeperPanel panel = new StoreKeeperPanel(StoreAppWindow.this.store, StoreAppWindow.this);
+			    panel.refresh();
+			    StoreAppWindow.this.setContentPane(panel);                
+                StoreAppWindow.this.setSize(650, 453);
+                StoreAppWindow.this.setSize(651, 453);
+			}
+		});
+		mnManage.add(mntmStoreKeepers);
+		
 		menuBar.add(mnManage);
 		
 		mnReports = new JMenu("Reports");
@@ -231,6 +245,7 @@ public class StoreAppWindow extends JFrame {
         mntmProducts.setEnabled(true);
         mntmTransactions.setEnabled(true);
         mntmVendors.setEnabled(true);
+        mntmStoreKeepers.setEnabled(true);
         this.updateUserInTitle ();
 	}
 	
@@ -244,6 +259,7 @@ public class StoreAppWindow extends JFrame {
         mntmProducts.setEnabled(false);
         mntmTransactions.setEnabled(false);
         mntmVendors.setEnabled(false);
+        mntmStoreKeepers.setEnabled(false);
         this.updateUserInTitle ();
 	}
 }
