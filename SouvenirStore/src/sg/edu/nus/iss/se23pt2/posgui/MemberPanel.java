@@ -57,7 +57,6 @@ public class MemberPanel extends JPanel {
                 d.setVisible (true);
                 if (null != d.getMember()) {
                 	MemberPanel.this.refresh();
-//                	MemberPanel.this.memberList.setSelectedValue(d.getCategory(), true);
                 }
             }
         });
@@ -72,11 +71,8 @@ public class MemberPanel extends JPanel {
 	                MemberPanel.this.refresh();
 	            	if (1 <= index) {
 	            		index -= 1;
-//	            		MemberPanel.this.memberList.setSelectedIndex(index);
 	            	}
 	            	else {
-//	            		if ( MemberPanel.this.memberList.getModel().getSize() >= 1)
-//	            			MemberPanel.this.memberList.setSelectedIndex(0);
 	            	}
             	}
             }
@@ -91,7 +87,6 @@ public class MemberPanel extends JPanel {
 	            	d.setVisible (true);
 	            	if (null != d.getMember()) {
 	                	MemberPanel.this.refresh();
-//	                	MemberPanel.this.memberList.setSelectedValue(d.getCategory(), true);
 	                }
             	}
             }
