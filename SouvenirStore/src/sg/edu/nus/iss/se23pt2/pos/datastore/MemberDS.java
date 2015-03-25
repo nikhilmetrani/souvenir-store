@@ -40,7 +40,7 @@ public class MemberDS extends DataStore
                     continue;
 
                 elements = line.split(",");
-                member = new Member(elements[1], elements[0]);
+                member = new Member(elements[0], elements[1]);
                 member.addLoyaltyPoints(Integer.parseInt(elements[2]));
                 members.add(member);
             }

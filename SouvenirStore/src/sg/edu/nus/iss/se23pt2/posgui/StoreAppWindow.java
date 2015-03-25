@@ -176,6 +176,16 @@ public class StoreAppWindow extends JFrame {
 		mnInventory.add(mntmDiscounts);
 		
 		mntmMembers = new JMenuItem("Members");
+		mntmMembers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MemberPanel panel = new MemberPanel(StoreAppWindow.this.store.getMember(), StoreAppWindow.this);
+			    panel.refresh();
+			    StoreAppWindow.this.setContentPane(panel);
+                //StoreAppWindow.this.repaint();
+                StoreAppWindow.this.setSize(650, 453);
+                StoreAppWindow.this.setSize(651, 453);
+			}
+		});
 		mnManage.add(mntmMembers);
 		
 		mntmStoreKeepers = new JMenuItem("StoreKeepers");

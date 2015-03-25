@@ -52,6 +52,7 @@ public class SouvenirStore{
         this.products = new HashMap<String, Product>();
         this.discounts = new HashMap<String, Discount>();
         this.vendors=new HashMap<String,ArrayList<Vendor>>();
+        this.members = new ArrayList<Member>();
         this.loadData();
         this.inventory = new Inventory(this.products, this.categories, this.vendors, this.discounts);
     }
@@ -59,6 +60,10 @@ public class SouvenirStore{
     public Inventory getInventory() {
     	return this.inventory;
     }    
+    
+    public ArrayList<Member> getMember() {
+    	return this.members;
+    }
 
     public void addCategory (String categoryCode, String categoryName) {
     }
@@ -100,6 +105,7 @@ public class SouvenirStore{
             loadDiscounts();
             loadTransactions();
             loadVendors();
+            loadMembers();
         }
         catch (DataLoadFailedException dlex) {
         	dlex.printStackTrace();
@@ -206,6 +212,22 @@ public class SouvenirStore{
 	        e.printStackTrace();
 	        throw new DataLoadFailedException(e.getMessage());
 	    }
+	}
+	
+	private void loadMembers() throws DataLoadFailedException {
+		try{
+			this.members = new ArrayList<Member>();
+            ArrayList<Member> list = dsFactory.getMemberDS().load(this);
+            Iterator<Member> iterator = list.iterator();
+            Member member = null;
+            while(iterator.hasNext()){
+                member = iterator.next();
+                this.members.add(member);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new DataLoadFailedException(e.getMessage());
+        }
 	}
 
 	public Map<Date, ArrayList<Transaction>> getTransactions() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
