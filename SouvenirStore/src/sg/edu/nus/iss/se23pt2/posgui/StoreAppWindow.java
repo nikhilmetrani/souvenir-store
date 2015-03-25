@@ -136,10 +136,21 @@ public class StoreAppWindow extends JFrame {
                 StoreAppWindow.this.setSize(651, 453);
 			}
 		});
-		mnInventory.add(mntmCategories);
+		mnInventory.add(mntmCategories);	
 		
 		mntmVendors = new JMenuItem("Vendors");
+		mntmVendors.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				VendorPanel panel = new VendorPanel(StoreAppWindow.this.store.getInventory(), StoreAppWindow.this);
+			    panel.refresh();
+			    StoreAppWindow.this.setContentPane(panel);
+                //StoreAppWindow.this.repaint();
+                StoreAppWindow.this.setSize(650, 453);
+                StoreAppWindow.this.setSize(651, 453);
+			}
+		});		
 		mnInventory.add(mntmVendors);
+		
 		mntmProducts = new JMenuItem("Products");
 		mntmProducts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
