@@ -8,6 +8,7 @@
 // @Author : Jaya Vignesh
 // @Author: Niu Yiming (addMember, addDiscount, updateDiscount) 
 // @Author: Rushabh Shah(Transaction API)
+// @Author: Jing Dong(Vendor API)
 
 package sg.edu.nus.iss.se23pt2.pos;
 
@@ -33,7 +34,7 @@ public class SouvenirStore{
     private Map<String, StoreKeeper> storeKeepers;
     private Map<String, Category>    categories;
     private Map<String, Product>     products;
-    private Map<String, Vendor>      vendors;
+    private Map<String, ArrayList<Vendor>>      vendors;
     private Map<String, Discount>    discounts;
     private ArrayList<Member>        members;
     
@@ -49,6 +50,7 @@ public class SouvenirStore{
         this.categories = new HashMap<String, Category>();
         this.products = new HashMap<String, Product>();
         this.discounts = new HashMap<String, Discount>();
+        this.vendors=new HashMap<String,ArrayList<Vendor>>();
         this.loadData();
         this.inventory = new Inventory(this.products, this.categories, this.vendors, this.discounts);
     }
@@ -99,6 +101,7 @@ public class SouvenirStore{
             loadProducts();
             loadDiscounts();
             loadTransactions();
+            loadVendors();
         }
         catch (DataLoadFailedException dlex) {
         	dlex.printStackTrace();
@@ -302,5 +305,21 @@ public class SouvenirStore{
 			}
 		}
 	}    
+	
+	public void loadVendors() throws DataLoadFailedException{
+		 try{
+             ArrayList<Category> list = dsFactory.getCategoryDS().load(this);
+             Iterator<Category> iterator = list.iterator(); 
+             String code;
+             while(iterator.hasNext()){
+            	 code = iterator.next().getCode();
+            	 ArrayList<Vendor> vendorList=dsFactory.getVendorDS(code).load(this);
+            	 this.vendors.put(code, vendorList);
+             }
+         }catch(Exception e){
+        	 e.printStackTrace();
+             throw new DataLoadFailedException(e.getMessage());
+         }
+	}
     
 }

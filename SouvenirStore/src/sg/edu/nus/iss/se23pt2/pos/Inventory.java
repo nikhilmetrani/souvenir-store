@@ -17,6 +17,7 @@ import sg.edu.nus.iss.se23pt2.pos.exception.VendorExistsException;
 //  @ Date : 3/8/2015
 //  @ Author : Nikhil Metrani
 //	@ Author : Niu Yiming (Added inventory for discounts)
+//  @ Author : Jing Dong (Add Vendor API)
 //
 
 
@@ -24,7 +25,7 @@ public class Inventory {
  
 	private Map<String, Category>   categories;
     private Map<String, Product>    products;
-    private Map<String, Vendor>     vendors;
+    private Map<String, ArrayList<Vendor>>     vendors;
     private Map<String, Discount>	discounts;
     
     public Inventory () {
@@ -32,7 +33,7 @@ public class Inventory {
     }
     
     public Inventory (Map<String, Product> products, Map<String, Category> categories
-    		, Map<String, Vendor> vendors, Map<String, Discount> discounts) {
+    		, Map<String, ArrayList<Vendor>> vendors, Map<String, Discount> discounts) {
     	this.products = products;
     	this.categories = categories;
     	this.vendors = vendors;
@@ -157,4 +158,59 @@ public class Inventory {
     	}
     	return false;
     } 
+    
+    public ArrayList<Vendor> getVendorsForCategory(String categoryCode) {
+    	if (null == this.vendors)
+    		return null;
+    
+    	if (this.vendors.containsKey(categoryCode))
+    		return this.vendors.get(categoryCode);
+    	else
+    		return null;
+    }
+    
+    public boolean addVendor(String categoryCode,Vendor vendor){
+    	if (this.vendors.containsKey(categoryCode)){
+    		ArrayList<Vendor> vendorsForCategory=vendors.get(categoryCode);
+    		if(isExsitingVendor(vendorsForCategory,vendor)){
+    			return false;
+    		}
+    		else{
+    			vendorsForCategory.add(vendor);
+    		}    			
+    	}
+    	else{
+    		ArrayList<Vendor> vendorsForCategory=new ArrayList<>();
+    		vendorsForCategory.add(vendor);
+    		vendors.put(categoryCode, vendorsForCategory);
+    	}
+    	return false;	
+    }
+    
+    private boolean isExsitingVendor(ArrayList<Vendor> vendorsForCategory, Vendor vendor){
+    	boolean isExisted=false;
+    	for (int i = 0; i < vendorsForCategory.size(); i++) {
+    		String nameInList=vendorsForCategory.get(i).getName().toUpperCase();
+    		String nameToBeRemoved=vendor.getName().toUpperCase();
+    		 if(nameInList.equals(nameToBeRemoved)){
+    	    	isExisted=true;
+    	    	break;
+    	    }
+    	}
+    	return isExisted;
+    }
+    
+    public boolean removeVendor(String categoryCode, Vendor vendor) {
+    	ArrayList<Vendor> vendorsForCategory=vendors.get(categoryCode);
+    	for (int i = 0; i < vendorsForCategory.size(); i++) {    	
+    		String nameInList=vendorsForCategory.get(i).getName().toUpperCase();
+    		String nameToBeRemoved=vendor.getName().toUpperCase();
+    	    if(nameInList.equals(nameToBeRemoved)){
+    	    	vendorsForCategory.remove(i);
+    	    	return true;
+    	    }
+    	}
+    	return false;
+    }
 }
+
