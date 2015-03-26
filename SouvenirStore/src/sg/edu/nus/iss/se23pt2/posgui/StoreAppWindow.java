@@ -203,6 +203,7 @@ public class StoreAppWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				TransactionPanel panel  = new TransactionPanel(StoreAppWindow.this,StoreAppWindow.this.store);			   
 			    StoreAppWindow.this.setContentPane(panel);
+                StoreAppWindow.this.setSize(650, 453);
                 StoreAppWindow.this.setSize(651, 453);
 			}
 		});
