@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 
 import sg.edu.nus.iss.se23pt2.pos.constant.TransactionConstant;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
@@ -239,7 +239,7 @@ public class SouvenirStore{
 		this.transactions = transactions;
 	}
 	
-	public Transaction getTransactionById(int id) throws AccessDeniedException, DataLoadFailedException, IOException{
+	public Transaction getTransactionById(int id) throws DataLoadFailedException, IOException{
 		ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
 		for(Transaction transaction:transactionList){
 			if(id==transaction.getId()){
@@ -254,7 +254,7 @@ public class SouvenirStore{
 		dsFactory.getTransactionDS().create(transaction);		
 	}
 	
-	public ArrayList<Transaction> getTransactions(Date startDate,Date endDate) throws InvalidTransactionException, AccessDeniedException, DataLoadFailedException, IOException, ParseException {
+	public ArrayList<Transaction> getTransactions(Date startDate,Date endDate) throws InvalidTransactionException, AccessDeniedException, DataLoadFailedException, IOException {
 		
 		loadTransactions();		
 		validateTransactionDate(startDate, endDate);		
