@@ -1,21 +1,16 @@
 package sg.edu.nus.iss.se23pt2.posgui;
 
-import sg.edu.nus.iss.se23pt2.pos.*;
-
-import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import sg.edu.nus.iss.se23pt2.pos.Session;
+import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 
 /**
  * @author Nikhil Metrani
@@ -204,6 +199,13 @@ public class StoreAppWindow extends JFrame {
 		
 		mnReports = new JMenu("Reports");
 		mntmTransactions = new JMenuItem("Transactions");
+		mntmTransactions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TransactionPanel panel  = new TransactionPanel(StoreAppWindow.this,StoreAppWindow.this.store);			   
+			    StoreAppWindow.this.setContentPane(panel);
+                StoreAppWindow.this.setSize(651, 453);
+			}
+		});
 		mnReports.add(mntmTransactions);
 		mntmProductBelowThreshold = new JMenuItem("Products below threshold quantity");
 		mnReports.add(mntmProductBelowThreshold);
