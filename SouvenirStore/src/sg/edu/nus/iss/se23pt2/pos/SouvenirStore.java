@@ -6,7 +6,7 @@
 // @File Name : SouvenirStore.java
 // @Date : 06/03/2015
 // @Author : Jaya Vignesh
-// @Author: Niu Yiming (addMember, addDiscount, updateDiscount) 
+// @Author: Niu Yiming (addMember, addDiscount, updateDiscount)
 // @Author: Rushabh Shah(Transaction API)
 // @Author: Jing Dong(Vendor API)
 
@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 
 import sg.edu.nus.iss.se23pt2.pos.constant.TransactionConstant;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
@@ -38,13 +38,13 @@ public class SouvenirStore{
     private Map<String, ArrayList<Vendor>>      vendors;
     private Map<String, Discount>    discounts;
     private ArrayList<Member>        members;
-    
+
     private Map<Date,ArrayList<Transaction>>        transactions;
     private String                   loginUserName;
     private SimpleDateFormat 		 dateFormat;
     private Inventory                inventory = null;
     private DataStoreFactory 		 dsFactory = DataStoreFactory.getInstance();
-    
+    private ArrayList<Discount> discountList = null;
     public SouvenirStore(){
         this.storeKeepers = new HashMap<String, StoreKeeper>();
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -56,18 +56,26 @@ public class SouvenirStore{
         this.loadData();
         this.inventory = new Inventory(this.products, this.categories, this.vendors, this.discounts);
     }
-    
+
     public Inventory getInventory() {
     	return this.inventory;
-    }    
-    
+    }
+
     public ArrayList<Member> getMember() {
     	return this.members;
     }
 
+	public ArrayList<Discount> getDiscounts() {
+		return discountList;
+	}
+
+	public void setDiscounts(ArrayList<Discount> discountList) {
+		this.discountList = discountList;
+	}
+
     public void addCategory (String categoryCode, String categoryName) {
     }
-    
+
     public void addVendor (String vendorName, String description) {
     }
 
@@ -75,20 +83,20 @@ public class SouvenirStore{
             Integer availableQty, Float price, Integer reorderThresholdQty,
             Integer orderQty) {
     }
-    
+
     public StoreKeeper getStoreKeeper(String name) {
     	if (storeKeepers.containsKey(name))
     		return storeKeepers.get(name);
     	else
     		return null;
     }
-    
+
     // Add a member to the list of members
     public void addMember (String memName, String memId) {
     	Member mem  = new Member(memName, memId);
     	members.add(mem);
     }
-    
+
     public void validateLogin (String userName, String password) {
     }
 
@@ -140,7 +148,7 @@ public class SouvenirStore{
             throw new DataLoadFailedException(e.getMessage());
         }
     }
-    
+
     private void loadProducts() throws DataLoadFailedException{
    	 try{
             ArrayList<Product> list = dsFactory.getProductDS().load(this);
@@ -158,7 +166,7 @@ public class SouvenirStore{
             throw new DataLoadFailedException(e.getMessage());
         }
     }
-    
+
     private void loadCategories() throws DataLoadFailedException{
     	 try{
              ArrayList<Category> list = dsFactory.getCategoryDS().load(this);
@@ -173,7 +181,7 @@ public class SouvenirStore{
              throw new DataLoadFailedException(e.getMessage());
          }
     }
-    
+
     private void loadDiscounts() throws DataLoadFailedException{
    	 try{
             ArrayList<Discount> list = dsFactory.getDiscountDS().load(this);
@@ -188,7 +196,7 @@ public class SouvenirStore{
             throw new DataLoadFailedException(e.getMessage());
         }
     }
-    
+
 	private void loadTransactions()
 			throws DataLoadFailedException {
 	    try{
@@ -199,7 +207,7 @@ public class SouvenirStore{
     		for(Transaction transaction:transactionList){
     			date = dateFormat.parse(transaction.getDate());
     			if(transactions!=null && transactions.containsKey(date)){
-    				tempTransactionList = transactions.get(date);            		
+    				tempTransactionList = transactions.get(date);
     			}else{
     				tempTransactionList = new ArrayList<Transaction>();
     			}
@@ -213,7 +221,7 @@ public class SouvenirStore{
 	        throw new DataLoadFailedException(e.getMessage());
 	    }
 	}
-	
+
 	private void loadMembers() throws DataLoadFailedException {
 		try{
 			this.members = new ArrayList<Member>();
@@ -238,8 +246,8 @@ public class SouvenirStore{
 	public void setTransactions(Map<Date, ArrayList<Transaction>> transactions) {
 		this.transactions = transactions;
 	}
-	
-	public Transaction getTransactionById(int id) throws DataLoadFailedException, IOException{
+
+	public Transaction getTransactionById(int id) throws AccessDeniedException, DataLoadFailedException, IOException{
 		ArrayList<Transaction> transactionList = dsFactory.getTransactionDS().load(this);
 		for(Transaction transaction:transactionList){
 			if(id==transaction.getId()){
@@ -248,16 +256,16 @@ public class SouvenirStore{
 		}
 		return null;
 	}
-	
+
 	public void setTransaction(Transaction transaction) throws InvalidTransactionException, AccessDeniedException, CreationFailedException, IOException{
 		validateTransaction(transaction);
-		dsFactory.getTransactionDS().create(transaction);		
+		dsFactory.getTransactionDS().create(transaction);
 	}
-	
-	public ArrayList<Transaction> getTransactions(Date startDate,Date endDate) throws InvalidTransactionException, AccessDeniedException, DataLoadFailedException, IOException {
-		
-		loadTransactions();		
-		validateTransactionDate(startDate, endDate);		
+
+	public ArrayList<Transaction> getTransactions(Date startDate,Date endDate) throws InvalidTransactionException, AccessDeniedException, DataLoadFailedException, IOException, ParseException {
+
+		loadTransactions();
+		validateTransactionDate(startDate, endDate);
 		ArrayList<Transaction> filterTransactions = new ArrayList<Transaction>();
 		Set<Date> dateSet = transactions.keySet();
 		if(startDate==null && endDate==null){
@@ -266,18 +274,18 @@ public class SouvenirStore{
 			for(Date date : dateSet){
 				if(date.compareTo(startDate)>=0)
 					filterTransactions.addAll(transactions.get(date));
-			}			
+			}
 		}else if(startDate==null){
 			for(Date date : dateSet){
 				if(date.compareTo(endDate)<=0)
-					filterTransactions.addAll(transactions.get(date));				
-			}			
+					filterTransactions.addAll(transactions.get(date));
+			}
 		}else{
 			for(Date date : dateSet){
 				if((date.compareTo(startDate)>=0)  &&  (date.compareTo(endDate)<=0))
-					filterTransactions.addAll(transactions.get(date));				
-			}		
-		}	
+					filterTransactions.addAll(transactions.get(date));
+			}
+		}
 		return filterTransactions;
 	}
 
@@ -287,10 +295,10 @@ public class SouvenirStore{
 			throw new InvalidTransactionException(TransactionConstant.INVALID_DATE_ORDER);
 		}
 	}
-	
+
 	private void validateTransaction(Transaction transaction)
 			throws InvalidTransactionException {
-		
+
 		if(transaction==null){
 			throw new InvalidTransactionException(TransactionConstant.TRANSACTION_NULL);
 		}
@@ -319,17 +327,17 @@ public class SouvenirStore{
 			}
 			if(item.getPrice()==null || item.getPrice()==0.0f ){
 				throw new InvalidTransactionException(TransactionConstant.ITEM_PRICE_NULL);
-			}			
+			}
 			if(item.getQuantity()==null || item.getQuantity()==0){
 				throw new InvalidTransactionException(TransactionConstant.ITEM_QUANTITY_NULL);
 			}
 		}
-	}    
-	
+	}
+
 	public void loadVendors() throws DataLoadFailedException{
 		 try{
              ArrayList<Category> list = dsFactory.getCategoryDS().load(this);
-             Iterator<Category> iterator = list.iterator(); 
+             Iterator<Category> iterator = list.iterator();
              String code;
              while(iterator.hasNext()){
             	 code = iterator.next().getCode();
@@ -341,7 +349,7 @@ public class SouvenirStore{
              throw new DataLoadFailedException(e.getMessage());
          }
 	}
-	
+
 	public List<StoreKeeper> getAllStoreKeepers() {
     	if (null == this.storeKeepers)
     		return null;
@@ -352,17 +360,17 @@ public class SouvenirStore{
     	}
     	return c;
     }
-    
+
     public StoreKeeper addStoreKeeper(String name, String password) {
     	StoreKeeper storeKeeper = new StoreKeeper(name, password);
     	return this.addStoreKeeper(storeKeeper);
     }
-    
+
     public StoreKeeper addStoreKeeper(StoreKeeper storeKeeper) {
     	if (this.storeKeepers.containsKey(storeKeeper.getName()))
     		return this.storeKeepers.get(storeKeeper.getName());
     	this.storeKeepers.put(storeKeeper.getName(), storeKeeper);
     	return storeKeeper;
     }
-    
+
 }
