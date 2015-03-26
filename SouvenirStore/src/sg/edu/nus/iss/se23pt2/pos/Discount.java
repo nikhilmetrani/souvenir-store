@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import sg.edu.nus.iss.se23pt2.pos.exception.VendorExistsException;
 
@@ -96,24 +97,18 @@ public class Discount
 	
 	// To determine the time validity of a certain discount
 	public boolean isValid(Discount disc, String transDate) throws ParseException {
-			
-			Calendar cal = Calendar.getInstance();
-	    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-	    	int transDateYear = Integer.parseInt(transDate.substring(0, 4));
-	    	int transDateMonth = Integer.parseInt(transDate.substring(5, 7));
-	    	int transDateDay = Integer.parseInt(transDate.substring(8));
-	    	cal.set(transDateYear, transDateMonth, transDateDay);
-	    	
-			if(disc.getPeriodInDays().equals("ALWAYS"))
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    	Date startDate = df.parse(disc.getStartDate());
+		if(disc.getPeriodInDays().equals("ALWAYS"))
+			return true;
+		else {
+			Date endDate = new Date((startDate.getTime()+Long.parseLong(disc.getPeriodInDays())*86400000));
+			if (df.parse(transDate).after(startDate) && df.parse(transDate).before(endDate)) {
 				return true;
-			else {
-				cal.add(cal.DAY_OF_YEAR, Integer.parseInt(disc.getPeriodInDays()));
-				if (df.parse(transDate).before(cal.getTime())) {
-					return true;
-				}
 			}
-			return false;
 		}
+		return false;
+	}
 	
 	public String toString() {		
 		StringBuilder stb = new StringBuilder();
