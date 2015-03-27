@@ -61,7 +61,7 @@ public class SouvenirStore{
     	return this.inventory;
     }
 
-    public ArrayList<Member> getMember() {
+    public ArrayList<Member> getMembers() {
     	return this.members;
     }
 

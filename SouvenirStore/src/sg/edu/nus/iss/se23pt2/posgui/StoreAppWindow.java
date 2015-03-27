@@ -173,7 +173,7 @@ public class StoreAppWindow extends JFrame {
 		mntmMembers = new JMenuItem("Members");
 		mntmMembers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MemberPanel panel = new MemberPanel(StoreAppWindow.this.store.getMember(), StoreAppWindow.this);
+				MemberPanel panel = new MemberPanel(StoreAppWindow.this.store.getMembers(), StoreAppWindow.this);
 			    panel.refresh();
 			    StoreAppWindow.this.setContentPane(panel);
                 //StoreAppWindow.this.repaint();
