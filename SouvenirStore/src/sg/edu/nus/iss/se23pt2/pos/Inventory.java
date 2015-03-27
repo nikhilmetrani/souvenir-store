@@ -52,8 +52,13 @@ public class Inventory {
     }
     
     public Product getProduct(String prodId) {
-    	Product pr = new Product();
-    	return pr;
+        if(this.products != null){
+            for(Product product : this.products.values()){
+                if(product.getId().equals(prodId))
+                    return product;
+            }
+        }
+    	return null;
     }
     
     public ArrayList<Product> getProducts(String catId) {
