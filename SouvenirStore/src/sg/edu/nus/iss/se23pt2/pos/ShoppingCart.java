@@ -24,7 +24,6 @@ public class ShoppingCart {
     private int points;
     private String date;
     private double totalPriceBeforeDisc = 0.0;
-    private List<Item> finalItemList = null;
 
     public ShoppingCart() {
 		this.items = new ArrayList<Item>();
@@ -76,6 +75,20 @@ public class ShoppingCart {
 		this.date = date;
 	}
 
+	public Item addToCart(Item item){
+	    this.items.add(item);
+	    return item;
+	}
+
+	public void removeFromCart(Item item){
+	    this.items.remove(item);
+	}
+
+
+	public void removeFromCart(int index){ 
+	    this.items.remove(index);
+	}
+
     public Item addToCart(Product p, int quantity) {
 		//TO-DO
 		Item item = new Item();
@@ -95,40 +108,55 @@ public class ShoppingCart {
 
 	public Member getMember() {
 		//TO-DO - type cast customer to member
-		return (Member)this.customer;
+	    if(this.customer instanceof Member)
+	        return (Member)this.customer;
+	    else
+	        return null;
     }
 
 
     // Get the highest discount based on customer type and shopping date
 	// Get the highest discount based on customer type and shopping date
     public double getHighestDiscount(Customer cust, ArrayList<Discount> discounts
-    		, String transDate) throws ParseException {
+    		, String transDate) {
 
     	Discount disc;
     	double highestDesc = 0;
-    	// Members are eligible for all discounts
-    	if (cust instanceof Member) {
-    		for(int i = 0; i <= discounts.size()-1; i++) {
-    			disc = discounts.get(i);
-    			if(disc.isValid(disc, transDate) && disc.getDiscPct() > highestDesc) {
-    				highestDesc = disc.getDiscPct();
-    			}
-    		}
-    		return highestDesc;
-    	} else {
-    		for(int i = 0; i <= discounts.size()-1; i++) {
-    			// Public are only eligible for discounts that applicable to all customers
-    			if(discounts.get(i).getAppTo().equals("A")) {
-    				disc = discounts.get(i);
-    				if(disc.isValid(disc, transDate) && disc.getDiscPct() > highestDesc) {
+    	try{
+        	// Members are eligible for all discounts
+        	if (cust instanceof Member) {
+        		for(int i = 0; i <= discounts.size()-1; i++) {
+        			disc = discounts.get(i);
+        			if(disc.isValid(disc, transDate) && disc.getDiscPct() > highestDesc) {
         				highestDesc = disc.getDiscPct();
+        				this.discount = disc;
         			}
-    			}
-    		}
-    		return highestDesc;
+        		}
+        		return highestDesc;
+        	} else {
+        		for(int i = 0; i <= discounts.size()-1; i++) {
+        			// Public are only eligible for discounts that applicable to all customers
+        			if(discounts.get(i).getAppTo().equals("A")) {
+        				disc = discounts.get(i);
+        				if(disc.isValid(disc, transDate) && disc.getDiscPct() > highestDesc) {
+            				highestDesc = disc.getDiscPct();
+            				this.discount = disc;
+            			}
+        			}
+        		}
+        		return highestDesc;
+        	}
+    	}catch(ParseException e){
+    	    e.printStackTrace();
+    	    this.discount = null;
+    	    return 0;
     	}
     }
 
+    /** Created by JV to use instance objects**/
+    public double getHighestDiscount(ArrayList<Discount> discounts, String transDate) {
+        return this.getHighestDiscount( this.customer, discounts, transDate);
+    }
 
     //returns total price of the items after final check out
     public Double getTotalPriceBeforeDiscount(List<Item> finalItemList) {
@@ -143,11 +171,31 @@ public class ShoppingCart {
     	return totalPriceBeforeDisc;
     }
 
+    /** Created by JV to use instance objects**/
+    public Double getTotalPriceBeforeDiscount() {
+        //iterate the list of items to fetch the total price of the items
+        double totalPriceBeforeDisc = 0;
+        if(this.items != null && !this.items.isEmpty()){
+            for(Item item : this.items){
+                if(item != null){
+                    totalPriceBeforeDisc = totalPriceBeforeDisc+item.getPrice()*item.getQuantity();
+                }
+            }
+        }
+        return totalPriceBeforeDisc;
+    }
+
     // To calculate the discounted payment amount
     public double getTotalPriceAfterDiscount(Customer cust, double totalPriceBeforeDisc
     		, ArrayList<Discount> discounts,String transactionDate) throws ParseException {
     	double finalDiscount = this.getHighestDiscount(cust, discounts,transactionDate);
     	return totalPriceBeforeDisc*(100-finalDiscount)/100;
+    }
+
+    /** Created by JV to use instance objects**/
+    public double getTotalPriceAfterDiscount() {
+        double finalDiscount = (this.discount!=null)?discount.getDiscPct():0;
+        return getTotalPriceBeforeDiscount()*(100-finalDiscount)/100;
     }
 
     // To calculate the final payment based on member's decision if or not redeeming loyalty points
@@ -175,6 +223,28 @@ public class ShoppingCart {
     	}
     }
 
+    /** Created by JV to use instance objects**/
+    public double calcFinalPmt(int pointsRedeemed) {
+        if (pointsRedeemed > 0 && this.getMember() != null) {
+            if (this.getMember().getLoyaltyPoints() >= pointsRedeemed) {
+                double newLoyaltyPoints = getTotalPriceAfterDiscount()-((5/100)*pointsRedeemed); //According to Requirement $5=100 Points redeemed
+
+                //Update the member's loyalty points
+                this.getMember().deductLoyaltyPoints(pointsRedeemed);
+
+                System.out.println("Member "+this.getMember().getName()+": "+pointsRedeemed+" Loyalty Points have been redeemed!");
+                System.out.println("Member "+this.getMember().getName()+": "+newLoyaltyPoints+" Loyalty Points remained!");
+                //TO-DO: Display the same message on UI.
+                return newLoyaltyPoints;
+            } else {
+                System.out.println("Member: "+this.getMember().getName()+"'s Loyalty Points not enough for redemption!");
+                //TO-DO: Display the same message on UI.
+                return getTotalPriceAfterDiscount();
+            }
+        } else {
+            return getTotalPriceAfterDiscount();
+        }
+    }
 
     // Calculate the discounted payment based on customer type
     public double getPayableAmount(Customer customer,double totalPriceAfterDisc,boolean isRedeemable,int pointsRedeemed) {
@@ -191,6 +261,28 @@ public class ShoppingCart {
 
 		}
     	return finalAmountToBePaid;
+    }
+
+    /** Created by JV to use instance objects**/
+    public double getPayableAmount(int pointsRedeemed) {
+        double finalAmountToBePaid = this.getTotalPriceAfterDiscount();
+        //if Member wants to redeem the points then this block of code will be executed to calculate the final amount
+        if(this.getMember() != null){
+            if(this.getMember().getLoyaltyPoints() >= pointsRedeemed){
+                finalAmountToBePaid = finalAmountToBePaid - ((5/100)*pointsRedeemed); //According to Requirement $5=100 Points redeemed
+                if(finalAmountToBePaid > 0)
+                    return finalAmountToBePaid;
+                else{ 
+                    /* This means all payment is covered by Loyalty points. 
+                     * On confirmation of the payment, the excess points needs to be calcualted and 
+                     * should be added back to the member.loyaltyPoints 
+                     * 
+                     */
+                    return 0;  
+                }
+            }
+        }
+        return finalAmountToBePaid;
     }
 
     private double calculateNewPoints(Double price,int pointsRedeemed,int currentLoyalityPoints,Member member){
