@@ -276,7 +276,6 @@ public class ShoppingCartTest {
 
 	@Test
 	public void testMaximumNonMemberDiscountWithBoundaryConditions() {
-		try {
 		    //dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			String transDate = shoppingCart.getDate();
 			Double expectedDiscount = 10.5;
@@ -305,17 +304,14 @@ public class ShoppingCartTest {
 			//should be 0.0
 			assertEquals(expectedDiscount, maxDiscount);
 
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 	}
 
 
 
 	@Test
 	public void testMaximumMemberDiscountWithBoundaryConditions() {
-		try {
+
 		    //dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			String transDate = shoppingCart1.getDate();
 			Double expectedDiscount = 20.5;
@@ -343,10 +339,7 @@ public class ShoppingCartTest {
 			maxDiscount = shoppingCart9.getHighestDiscount(shoppingCart9.getCustomer(), souvenirStore9.getDiscounts(), transDate);
 			//should be 0.0
 			assertEquals(expectedDiscount, maxDiscount);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 	}
 
 	@Test
