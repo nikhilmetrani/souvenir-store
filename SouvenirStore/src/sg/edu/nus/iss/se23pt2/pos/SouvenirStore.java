@@ -65,6 +65,14 @@ public class SouvenirStore{
     	return this.members;
     }
 
+    public Member getMember(String memberId){
+        for(Member member : this.members){
+            if(member.getId().equalsIgnoreCase(memberId))
+                return member;
+        }
+        return null;
+    }
+
 	public ArrayList<Discount> getDiscounts() {
 		return discountList;
 	}
