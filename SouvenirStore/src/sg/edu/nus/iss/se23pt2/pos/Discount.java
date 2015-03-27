@@ -98,10 +98,10 @@ public class Discount
 	// To determine the time validity of a certain discount
 	public boolean isValid(Discount disc, String transDate) throws ParseException {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    	Date startDate = df.parse(disc.getStartDate());
-		if(disc.getPeriodInDays().equals("ALWAYS"))
+		if("ALWAYS".equals(disc.getStartDate()) && "ALWAYS".equals(disc.getPeriodInDays()))
 			return true;
 		else {
+		    Date startDate = df.parse(disc.getStartDate());
 			Date endDate = new Date((startDate.getTime()+Long.parseLong(disc.getPeriodInDays())*86400000));
 			if (df.parse(transDate).after(startDate) && df.parse(transDate).before(endDate)) {
 				return true;
