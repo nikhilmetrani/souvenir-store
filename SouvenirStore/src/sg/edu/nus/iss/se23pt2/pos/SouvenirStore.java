@@ -74,7 +74,7 @@ public class SouvenirStore{
     }
 
 	public ArrayList<Discount> getDiscounts() {
-		return discountList;
+		return new ArrayList<Discount>(discounts.values());
 	}
 
 	public void setDiscounts(ArrayList<Discount> discountList) {
