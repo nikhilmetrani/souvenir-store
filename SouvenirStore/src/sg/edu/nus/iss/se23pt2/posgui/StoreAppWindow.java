@@ -49,6 +49,8 @@ public class StoreAppWindow extends JFrame {
 	JMenu 					mnReports = null;
 	JMenuItem 				mntmTransactions = null;
 	JMenuItem 				mntmProductBelowThreshold = null;
+    JMenu                   mnTransaction = null;
+    JMenuItem               mntmBill = null;
 	JMenuItem				mntmStoreKeepers = null;
 	
 	private String title = "Souvenir Store - SE23PT2";
@@ -118,18 +120,10 @@ public class StoreAppWindow extends JFrame {
 		mntmCategories = new JMenuItem("Categories");
 		mntmCategories.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			    /*
-				CategoryDialog cd = new CategoryDialog(StoreAppWindow.this.store.getInventory());
-				cd.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				cd.setLocationRelativeTo(StoreAppWindow.this);
-				cd.setVisible(true);
-				*/
 			    CategoryPanel panel = new CategoryPanel(StoreAppWindow.this.store.getInventory(), StoreAppWindow.this);
 			    panel.refresh();
 			    StoreAppWindow.this.setContentPane(panel);
-                //StoreAppWindow.this.repaint();
-                StoreAppWindow.this.setSize(650, 453);
-                StoreAppWindow.this.setSize(651, 453);
+			    StoreAppWindow.this.makeContentVisible();
 			}
 		});
 		mnInventory.add(mntmCategories);	
@@ -140,9 +134,7 @@ public class StoreAppWindow extends JFrame {
 				VendorPanel panel = new VendorPanel(StoreAppWindow.this.store.getInventory(), StoreAppWindow.this);
 			    panel.refresh();
 			    StoreAppWindow.this.setContentPane(panel);
-                //StoreAppWindow.this.repaint();
-                StoreAppWindow.this.setSize(650, 453);
-                StoreAppWindow.this.setSize(651, 453);
+			    StoreAppWindow.this.makeContentVisible();
 			}
 		});		
 		mnInventory.add(mntmVendors);
@@ -176,21 +168,31 @@ public class StoreAppWindow extends JFrame {
 				MemberPanel panel = new MemberPanel(StoreAppWindow.this.store.getMembers(), StoreAppWindow.this);
 			    panel.refresh();
 			    StoreAppWindow.this.setContentPane(panel);
-                //StoreAppWindow.this.repaint();
-                StoreAppWindow.this.setSize(650, 453);
-                StoreAppWindow.this.setSize(651, 453);
+			    StoreAppWindow.this.makeContentVisible();
 			}
 		});
 		mnManage.add(mntmMembers);
-		
+
+        mnTransaction = new JMenu("Transaction");
+        menuBar.add(mnTransaction);
+        mntmBill = new JMenuItem("Billing");
+        mntmBill.addActionListener(new ActionListener() {
+            public void actionPerformed (ActionEvent arg0) {
+                ShoppingCartPanel panel = new ShoppingCartPanel(
+                        StoreAppWindow.this.store, StoreAppWindow.this);
+                StoreAppWindow.this.setContentPane(panel);
+                StoreAppWindow.this.makeContentVisible();
+            }
+        });
+        mnTransaction.add(mntmBill);
+
 		mntmStoreKeepers = new JMenuItem("StoreKeepers");
 		mntmStoreKeepers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {			    
 			    StoreKeeperPanel panel = new StoreKeeperPanel(StoreAppWindow.this.store, StoreAppWindow.this);
 			    panel.refresh();
 			    StoreAppWindow.this.setContentPane(panel);                
-                StoreAppWindow.this.setSize(650, 453);
-                StoreAppWindow.this.setSize(651, 453);
+			    StoreAppWindow.this.makeContentVisible();
 			}
 		});
 		mnManage.add(mntmStoreKeepers);
@@ -203,8 +205,7 @@ public class StoreAppWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				TransactionPanel panel  = new TransactionPanel(StoreAppWindow.this,StoreAppWindow.this.store);			   
 			    StoreAppWindow.this.setContentPane(panel);
-                StoreAppWindow.this.setSize(650, 453);
-                StoreAppWindow.this.setSize(651, 453);
+			    StoreAppWindow.this.makeContentVisible();
 			}
 		});
 		mnReports.add(mntmTransactions);
@@ -275,4 +276,10 @@ public class StoreAppWindow extends JFrame {
         mntmStoreKeepers.setEnabled(false);
         this.updateUserInTitle ();
 	}
+
+    private void makeContentVisible () {
+        // StoreAppWindow.this.repaint();
+        this.setSize(this.getWidth(), getHeight() - 1);
+        this.setSize(this.getWidth(), getHeight() + 1);
+    }
 }
