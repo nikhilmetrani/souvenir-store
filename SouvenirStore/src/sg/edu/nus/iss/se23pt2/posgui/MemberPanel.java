@@ -27,7 +27,7 @@ public class MemberPanel extends JPanel {
         this.scrollPane = new JScrollPane();
         this.scrollPane.setViewportView(this.memberList);
         add ("North", new JLabel ("Members"));
-        add ("Center", this.scrollPane);
+        add ("Center", this.memberList);
         add ("East", this.createButtonPanel());
     }
 
