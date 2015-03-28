@@ -80,7 +80,7 @@ public class StoreAppWindow extends JFrame {
 		
 		//storeAppWindow = new JFrame();
 		this.setTitle(title);
-		this.setBounds(100, 100, 651, 453);
+		this.setBounds(100, 100, 700, 500);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		menuBar = new JMenuBar();
