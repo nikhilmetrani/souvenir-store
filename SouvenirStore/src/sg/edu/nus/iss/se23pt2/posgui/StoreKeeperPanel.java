@@ -11,8 +11,7 @@ public class StoreKeeperPanel extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private JList<StoreKeeper> storeKeeperList;
-	private JScrollPane scrollPane;
+	private java.awt.List storeKeeperList;	
 	private java.util.List<StoreKeeper> storeKeepers;
 	private SouvenirStore souvenirStore;
 	private JFrame parent;
@@ -23,26 +22,22 @@ public class StoreKeeperPanel extends JPanel {
         this.parent = parent;
     	
 		setLayout(new BorderLayout(5, 5));
-		this.storeKeeperList = new JList<StoreKeeper>();
-		this.storeKeeperList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        this.scrollPane = new JScrollPane();
-        this.scrollPane.setViewportView(this.storeKeeperList);
+		this.storeKeeperList = new java.awt.List (5);		
+		storeKeeperList.setMultipleMode (false);        
         add ("North", new JLabel ("Store Keepers"));
-        add ("Center", this.scrollPane);
+        add ("Center", this.storeKeeperList);
         add ("East", this.createButtonPanel());
 	}
     
     public void refresh () {
     	storeKeepers = souvenirStore.getAllStoreKeepers();
     	storeKeeperList.removeAll();
-        StoreKeeper storeKeeper = null;
-        DefaultListModel<StoreKeeper> listModel = new DefaultListModel<StoreKeeper>();
+        StoreKeeper storeKeeper = null;        
         Iterator<StoreKeeper> i = storeKeepers.iterator();
         while (i.hasNext()) {
         	storeKeeper = i.next();
-        	listModel.addElement(storeKeeper);
-        }
-        storeKeeperList.setModel(listModel);
+        	storeKeeperList.add(storeKeeper.getName());
+        }        
     }
     
     public StoreKeeper getSelectedStoreKeeper () {
@@ -58,10 +53,7 @@ public class StoreKeeperPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				AddEditStoreKeeperDialog d = new AddEditStoreKeeperDialog(StoreKeeperPanel.this.souvenirStore, StoreKeeperPanel.this.parent);
                 d.setVisible (true);
-                if (null != d.getStoreKeeper()) {
-                	StoreKeeperPanel.this.refresh();
-                	StoreKeeperPanel.this.storeKeeperList.setSelectedValue(d.getStoreKeeper(), true);
-                }
+                StoreKeeperPanel.this.refresh();                
 			}
 		});
 		p.add (b);
@@ -73,10 +65,7 @@ public class StoreKeeperPanel extends JPanel {
 				if (null != StoreKeeperPanel.this.getSelectedStoreKeeper()) {
 	            	AddEditStoreKeeperDialog d = new AddEditStoreKeeperDialog(StoreKeeperPanel.this.getSelectedStoreKeeper(), StoreKeeperPanel.this.parent);
 	            	d.setVisible (true);
-	            	if (null != d.getStoreKeeper()) {
-	            		StoreKeeperPanel.this.refresh();
-	            		StoreKeeperPanel.this.storeKeeperList.setSelectedValue(d.getStoreKeeper(), true);
-	                }
+	            	StoreKeeperPanel.this.refresh();	            	
             	}
 			}
 		});
