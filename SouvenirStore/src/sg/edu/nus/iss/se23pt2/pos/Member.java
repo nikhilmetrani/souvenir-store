@@ -62,4 +62,7 @@ public class Member extends Customer {
     	if(tempPts >= 0) this.loyaltyPoints = tempPts;
     }
 
+    public String toString(){
+    	return this.name + "," + this.id + "," + this.loyaltyPoints;
+    }
 }
