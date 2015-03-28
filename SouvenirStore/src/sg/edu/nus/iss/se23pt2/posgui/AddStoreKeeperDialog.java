@@ -1,20 +1,22 @@
 package sg.edu.nus.iss.se23pt2.posgui;
 
-import javax.swing.*;
-import sg.edu.nus.iss.se23pt2.pos.*;
 import java.awt.GridLayout;
+import javax.swing.*;
 
-public class AddEditStoreKeeperDialog extends OkCancelDialog {
+import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
+import sg.edu.nus.iss.se23pt2.pos.StoreKeeper;
+
+public class AddStoreKeeperDialog extends OkCancelDialog {
 
 	private static final long serialVersionUID = 1L;
 	
 	private SouvenirStore souvenirStore;
 	private StoreKeeper storeKeeper; 
     private JTextField storeKeeperPasswordField;
+    private JTextField storeKeeperConfirmPasswordField;
     private JTextField storeKeeperNameField;
-    private boolean editMode = false;   
     
-	public AddEditStoreKeeperDialog(SouvenirStore souvenirStore, JFrame parent) {
+    public AddStoreKeeperDialog(SouvenirStore souvenirStore, JFrame parent) {
 		super(parent, "Add StoreKeeper");
         this.souvenirStore = souvenirStore;
         this.storeKeeper = null;
@@ -22,18 +24,6 @@ public class AddEditStoreKeeperDialog extends OkCancelDialog {
         this.setModal(true);
         this.pack();
 	}	
-	
-	public AddEditStoreKeeperDialog(StoreKeeper storeKeeper, JFrame parent) {
-    	super(parent, "Edit StoreKeeper");
-    	this.editMode = true;
-        this.souvenirStore = null;
-        this.storeKeeper = storeKeeper;
-        storeKeeperPasswordField.setText("");
-		storeKeeperNameField.setText(this.storeKeeper.getName());
-		this.setLocationRelativeTo(parent);
-        this.setModal(true);
-        this.pack();
-    }
 	
 	@Override
 	protected JPanel createFormPanel() {
@@ -45,29 +35,25 @@ public class AddEditStoreKeeperDialog extends OkCancelDialog {
         p.add (new JLabel ("StoreKeeper password:"));
         storeKeeperPasswordField = new JTextField (20);
         p.add (storeKeeperPasswordField);
+        p.add (new JLabel ("StoreKeeper confirm password:"));
+        storeKeeperConfirmPasswordField = new JTextField (20);
+        p.add (storeKeeperConfirmPasswordField);
         return p;
 	}
 
 	@Override
-	protected boolean performOkAction() {
-		if (this.editMode) {
-    		String password = this.storeKeeperPasswordField.getText().toUpperCase();
+	protected boolean performOkAction() {		
+	        String password = this.storeKeeperPasswordField.getText().toUpperCase();
+	        String confirmPassword = this.storeKeeperConfirmPasswordField.getText().toUpperCase();
 	        String name = this.storeKeeperNameField.getText();
 	        if ((0 == password.length()) || (0 == name.length())) {
 	            return false;
 	        }
-	        this.storeKeeper.setName(name);
-	        this.storeKeeper.setPassword("", password, "");	        
-    	}
-    	else {
-	        String password = this.storeKeeperPasswordField.getText().toUpperCase();
-	        String name = this.storeKeeperNameField.getText();
-	        if ((0 == password.length()) || (0 == name.length())) {
-	            return false;
+	        if(!password.equals(confirmPassword)){
+	        	return false;
 	        }
 	        this.storeKeeper = new StoreKeeper(storeKeeperNameField.getText(), storeKeeperPasswordField.getText());
-	        this.souvenirStore.addStoreKeeper(this.storeKeeper);
-    	}
+	        this.souvenirStore.addStoreKeeper(this.storeKeeper);    	
         return true;
 	}
 	

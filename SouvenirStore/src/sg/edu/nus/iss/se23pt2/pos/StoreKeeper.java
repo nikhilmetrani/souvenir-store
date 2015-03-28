@@ -56,6 +56,15 @@ public class StoreKeeper {
         this.password = newPassword;
 		return false;
     }
+    
+    public Boolean isPasswordValid(String currentPassword, String newPassword, String confirmNewPassword) {
+		if (this.password.equals(currentPassword)) {
+			if (newPassword.equals(confirmNewPassword)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
     @Override
     public String toString(){

@@ -51,7 +51,7 @@ public class StoreKeeperPanel extends JPanel {
 		JButton b = new JButton ("Add");
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AddEditStoreKeeperDialog d = new AddEditStoreKeeperDialog(StoreKeeperPanel.this.souvenirStore, StoreKeeperPanel.this.parent);
+				AddStoreKeeperDialog d = new AddStoreKeeperDialog(StoreKeeperPanel.this.souvenirStore, StoreKeeperPanel.this.parent);
                 d.setVisible (true);
                 StoreKeeperPanel.this.refresh();                
 			}
@@ -63,7 +63,7 @@ public class StoreKeeperPanel extends JPanel {
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (null != StoreKeeperPanel.this.getSelectedStoreKeeper()) {
-	            	AddEditStoreKeeperDialog d = new AddEditStoreKeeperDialog(StoreKeeperPanel.this.getSelectedStoreKeeper(), StoreKeeperPanel.this.parent);
+	            	EditStoreKeeperDialog d = new EditStoreKeeperDialog(StoreKeeperPanel.this.getSelectedStoreKeeper(), StoreKeeperPanel.this.parent);
 	            	d.setVisible (true);
 	            	StoreKeeperPanel.this.refresh();	            	
             	}
