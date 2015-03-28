@@ -14,16 +14,14 @@ import sg.edu.nus.iss.se23pt2.pos.*;
  * @author Nikhil Metrani
  *
  */
-public class ProductTableModel extends AbstractTableModel {
+public class ProductTableModel extends AbstractStoreTableModel<Product> {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private final List<Product> productList;
     
-    private final String[] columnHeaders = new String[] {
+	private final String[] columnHeaders = new String[] {
             "Product Id", "Product name", "Description", "Quantity", "Price", "Barcode", "Threshold", "Reorder quantity", "Category"
     };
     
@@ -34,7 +32,7 @@ public class ProductTableModel extends AbstractTableModel {
 
     public ProductTableModel(List<Product> productList)
     {
-        this.productList = productList;
+        super(productList);
     }
     
     @Override
@@ -56,15 +54,9 @@ public class ProductTableModel extends AbstractTableModel {
     }
 
     @Override
-    public int getRowCount()
-    {
-        return productList.size();
-    }
-
-    @Override
     public Object getValueAt(int rowIndex, int columnIndex)
     {
-        Product row = productList.get(rowIndex);
+        Product row = super.list.get(rowIndex);
         switch (columnIndex) {
         case 0:
             return row.getId();
@@ -100,7 +92,7 @@ public class ProductTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex)
     {
-        Product row = productList.get(rowIndex);
+        Product row = super.list.get(rowIndex);
         
         switch (columnIndex) {
         //case 0:
@@ -137,28 +129,5 @@ public class ProductTableModel extends AbstractTableModel {
             fireTableChanged(e);
         }
     }
-    
-    public boolean add(Product product) {
-    	return this.productList.add(product);
-    }
-    
-    public boolean remove(Product product){
-    	return this.productList.remove(product);
-    }
-    
-    public Product remove(int index){
-    	if ((0 > index) || (index >= this.productList.size()))
-    		return null;
-    	return this.productList.remove(index);
-    }
-    
-    public Product get(int index) {
-    	if ((0 > index) || (index >= this.productList.size()))
-    		return null;
-    	return this.productList.get(index);
-    }
-    
-    public int size() {
-    	return this.productList.size();
-    }
+
 }

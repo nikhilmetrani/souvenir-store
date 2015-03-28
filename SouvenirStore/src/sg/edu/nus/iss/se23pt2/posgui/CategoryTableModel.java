@@ -14,15 +14,13 @@ import sg.edu.nus.iss.se23pt2.pos.*;
  * @author Nikhil Metrani
  *
  */
-public class CategoryTableModel extends AbstractTableModel {
+public class CategoryTableModel extends AbstractStoreTableModel<Category> {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final List<Category> categoryList;
-    
     private final String[] columnHeaders = new String[] {
             "Category code", "Category name"
     };
@@ -34,7 +32,7 @@ public class CategoryTableModel extends AbstractTableModel {
 
     public CategoryTableModel(List<Category> categoryList)
     {
-        this.categoryList = categoryList;
+        super(categoryList);
     }
     
     @Override
@@ -56,15 +54,9 @@ public class CategoryTableModel extends AbstractTableModel {
     }
 
     @Override
-    public int getRowCount()
-    {
-        return categoryList.size();
-    }
-
-    @Override
     public Object getValueAt(int rowIndex, int columnIndex)
     {
-        Category row = categoryList.get(rowIndex);
+        Category row = super.list.get(rowIndex);
         if(0 == columnIndex) {
             return row.getCode();
         }
@@ -85,36 +77,12 @@ public class CategoryTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex)
     {
-        Category row = categoryList.get(rowIndex);
+        Category row = super.list.get(rowIndex);
         //We don't allow editing of Category code, let's just update the name 
         if(1 == columnIndex) {
             row.setName((String) aValue);
             TableModelEvent e = new TableModelEvent(this, rowIndex);
             fireTableChanged(e);
         }
-    }
-    
-    public boolean add(Category category) {
-    	return this.categoryList.add(category);
-    }
-    
-    public boolean remove(Category category){
-    	return this.categoryList.remove(category);
-    }
-    
-    public Category remove(int index){
-    	if ((0 > index) || (index >= this.categoryList.size()))
-    		return null;
-    	return this.categoryList.remove(index);
-    }
-    
-    public Category get(int index) {
-    	if ((0 > index) || (index >= this.categoryList.size()))
-    		return null;
-    	return this.categoryList.get(index);
-    }
-    
-    public int size() {
-    	return this.categoryList.size();
     }
 }

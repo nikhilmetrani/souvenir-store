@@ -73,7 +73,12 @@ public class CategoryDS extends DataStore
         List<Vendor> vendors = category.getAllVendors();
         DataStore ds = null;
         
-        if (null != vendors) { //Newly added category may not have vendors
+        /**
+        * Nikhil Metrani
+        *Newly added category may not have vendors
+        *Null check required
+        */
+        if (null != vendors) {
 	        try{ 
 	            ds = dsFactory.getVendorDS(category.getCode());
 	            ds.deleteAll();
@@ -148,7 +153,11 @@ public class CategoryDS extends DataStore
         List<Vendor> vendors = category.getAllVendors();
         DataStore ds = null;
         
-        //Let's make sure vendors is not null
+        /**
+         * Nikhil Metrani
+         * Category may not have vendors
+         * Null check required
+         */
         if (null != vendors) {
 	        try{
 	            ds = dsFactory.getVendorDS(category.getCode());
