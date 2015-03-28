@@ -3,6 +3,9 @@
  */
 package sg.edu.nus.iss.se23pt2.pos;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
@@ -23,10 +26,12 @@ public class Session {
 	private SouvenirStore store = null;
 	private StoreKeeper loggedInUser = null;
 	private boolean isActive = false;
+	private Map<String, Object> attributes = null;
 	
 	private Session(SouvenirStore store) {
 		// TODO Auto-generated constructor stub
 		this.store = store;
+		attributes = new HashMap<String, Object>();
 	}
 	
 	public static Session getInstance(SouvenirStore store) {
@@ -121,5 +126,18 @@ public class Session {
 			}
 		}
 		return false; //logoff fail
+	}
+
+	/** JV - To add/remove/get Attributes **/
+	public void setAttribute(String key, Object value){
+		this.attributes.put(key, value);
+	}
+
+	public Object removeAttribute(String key){
+		return this.attributes.remove(key);
+	}
+	
+	public Object getAttribute(String key){
+		return this.attributes.get(key);
 	}
 }
