@@ -3,12 +3,15 @@ package sg.edu.nus.iss.se23pt2.posgui;
 import sg.edu.nus.iss.se23pt2.pos.*;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 public class CategoryPanel extends JPanel {
 
@@ -30,6 +33,34 @@ public class CategoryPanel extends JPanel {
         this.scrollPane = new JScrollPane();
         this.model = new CategoryTableModel(this.inventory.getAllCategories());
         this.categoryTable = new JTable(model);
+        
+        this.categoryTable.getModel().addTableModelListener(new TableModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				if (TableModelEvent.UPDATE == e.getType()) {
+					System.out.println("e.getColumn(): " + e.getColumn());
+						DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+						
+				        try {
+				        	dsFactory.getCategoryDS().update(CategoryPanel.this.getSelectedCategory());
+				        }
+				        catch (UpdateFailedException ufe) {
+				        	JOptionPane.showMessageDialog(null,
+			                        "Error :: " + ufe.getMessage(),
+			                        "Error",
+			                        JOptionPane.ERROR_MESSAGE);
+				        }
+				        catch (IOException ioe) {
+				        	JOptionPane.showMessageDialog(null,
+			                        "Error :: " + ioe.getMessage(),
+			                        "Error",
+			                        JOptionPane.ERROR_MESSAGE);
+				        }
+					}
+				}
+		});
+
         this.scrollPane.setViewportView(this.categoryTable);
         
         add ("North", new JLabel ("Categories"));

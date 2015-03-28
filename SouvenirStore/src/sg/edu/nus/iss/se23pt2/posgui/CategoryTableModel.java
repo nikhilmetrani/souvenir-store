@@ -5,7 +5,9 @@ package sg.edu.nus.iss.se23pt2.posgui;
 
 import java.util.List;
 
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 import sg.edu.nus.iss.se23pt2.pos.*;
 
@@ -85,11 +87,11 @@ public class CategoryTableModel extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex)
     {
         Category row = categoryList.get(rowIndex);
-        if(0 == columnIndex) {
-            row.setCode((String)aValue);
-        }
-        else if(1 == columnIndex) {
+        //We don't allow editing of Category code, let's just update the name 
+        if(1 == columnIndex) {
             row.setName((String) aValue);
+            TableModelEvent e = new TableModelEvent(this, rowIndex);
+            fireTableChanged(e);
         }
     }
     
