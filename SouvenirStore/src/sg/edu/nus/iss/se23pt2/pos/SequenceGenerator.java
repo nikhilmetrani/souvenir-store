@@ -20,6 +20,9 @@ public class SequenceGenerator
 {
 	private static final SequenceGenerator sequenceGenerator = new SequenceGenerator();
 	private Map<String, Sequence> sequences = new HashMap<String, Sequence>();
+
+	public static final String TRANSACTION_SEQ = "TRANSACTION";
+
 	private SequenceGenerator()
 	{
 	}
