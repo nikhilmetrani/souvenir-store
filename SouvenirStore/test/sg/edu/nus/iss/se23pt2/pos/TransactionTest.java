@@ -418,7 +418,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testSetNullTransaction() throws AccessDeniedException, CreationFailedException, IOException {
+	public void testSetNullTransaction() throws Exception {
 		Transaction transaction = null;
 		assertNull(transaction);
 		try {
@@ -430,7 +430,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testSetNullTransactionId() throws AccessDeniedException, CreationFailedException, IOException {
+	public void testSetNullTransactionId() throws Exception {
 		Transaction transaction = new Transaction();
 		assertNotNull(transaction);
 		try {
@@ -442,7 +442,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testSetNullTransactionDate() throws AccessDeniedException, CreationFailedException, IOException {
+	public void testSetNullTransactionDate() throws Exception {
 		Transaction transaction = new Transaction();
 		transaction.setId(55);
 		assertNotNull(transaction);
@@ -455,7 +455,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testSetNullTransactionCustomer() throws AccessDeniedException, CreationFailedException, IOException {
+	public void testSetNullTransactionCustomer() throws Exception {
 		Transaction transaction = new Transaction();
 		transaction.setId(55);
 		transaction.setDate(dateFormat.format(date3));
@@ -481,7 +481,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testSetTransactionWithEmptyItems() throws AccessDeniedException, CreationFailedException, IOException {
+	public void testSetTransactionWithEmptyItems() throws Exception {
 		Transaction transaction = new Transaction();
 		transaction.setId(55);
 		transaction.setDate(dateFormat.format(date3));
@@ -496,7 +496,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testSetTransactionWithItemsLengthZero() throws AccessDeniedException, CreationFailedException, IOException {
+	public void testSetTransactionWithItemsLengthZero() throws Exception {
 		Transaction transaction = new Transaction();
 		transaction.setId(55);
 		transaction.setDate(dateFormat.format(date3));
@@ -514,7 +514,7 @@ public class TransactionTest {
 	}	
 		
 	@Test
-	public void testSetTransactionWithNullProduct() throws AccessDeniedException, CreationFailedException, IOException {
+	public void testSetTransactionWithNullProduct() throws Exception {
 		Transaction transaction = new Transaction();
 		transaction.setId(55);
 		transaction.setDate(dateFormat.format(date3));
@@ -534,7 +534,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testSetTransactionWithNullProductID() throws AccessDeniedException, CreationFailedException, IOException {
+	public void testSetTransactionWithNullProductID() throws Exception {
 		Transaction transaction = new Transaction();
 		transaction.setId(55);
 		transaction.setDate(dateFormat.format(date3));
@@ -556,7 +556,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testSetTransactionWithNullProductPrice() throws AccessDeniedException, CreationFailedException, IOException {
+	public void testSetTransactionWithNullProductPrice() throws Exception {
 		Transaction transaction = new Transaction();
 		transaction.setId(55);
 		transaction.setDate(dateFormat.format(date3));
@@ -579,7 +579,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testSetTransactionWithNullProductQuantity() throws AccessDeniedException, CreationFailedException, IOException {
+	public void testSetTransactionWithNullProductQuantity() throws Exception {
 		Transaction transaction = new Transaction();
 		transaction.setId(55);
 		transaction.setDate(dateFormat.format(date3));
@@ -606,7 +606,7 @@ public class TransactionTest {
 	
 	
 	@Test
-	public void testSetTransactionWithValidTransaction() throws AccessDeniedException, CreationFailedException, IOException, DataLoadFailedException, ParseException, RemoveFailedException {
+	public void testSetTransactionWithValidTransaction() throws Exception {
 		Transaction transaction = new Transaction();
 		transaction.setId(55);
 		transaction.setDate(dateFormat.format(date3));
@@ -643,7 +643,7 @@ public class TransactionTest {
 	}
 	
 	@Test
-	public void testSetTransactionWithPreExistingDate() throws AccessDeniedException, CreationFailedException, IOException, DataLoadFailedException, ParseException, RemoveFailedException {
+	public void testSetTransactionWithPreExistingDate() throws Exception {
 		Transaction transaction = new Transaction();
 		transaction.setId(55);
 		transaction.setDate(dateFormat.format(date2));
