@@ -145,6 +145,14 @@ public abstract class DataStore {
                     bw.newLine();
                 }
             }
+            
+            //if record was never found, let add obj at the end
+            //This must be done after the loop to avoid duplication of the record.
+            if (!recordFound && (null != obj) && !deleteFlag) {
+	            bw.append(obj.toString());
+	            bw.newLine();
+            }
+            
             bw.close();
             this.close();
 

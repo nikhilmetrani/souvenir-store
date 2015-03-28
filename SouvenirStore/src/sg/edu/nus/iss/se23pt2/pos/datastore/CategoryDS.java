@@ -70,23 +70,26 @@ public class CategoryDS extends DataStore
     public <T> void update (T obj) throws UpdateFailedException {
         super.update(obj);
         Category category = (Category) obj;
-        List<Vendor> venodrs = category.getAllVendors();
+        List<Vendor> vendors = category.getAllVendors();
         DataStore ds = null;
-        try{
-            ds = dsFactory.getVendorDS(category.getCode());
-            ds.deleteAll();
-            for(Vendor vendor:venodrs){
-                ds.create(vendor);
-            }
-        }catch(CreationFailedException e){
-            throw new UpdateFailedException(e.getMessage());
-        }catch(RemoveFailedException e){
-            throw new UpdateFailedException(e.getMessage());
-        }catch(IOException e){
-            throw new UpdateFailedException(e.getMessage());
-        }finally{
-            if(ds!=null)
-                ds.close();
+        
+        if (null != vendors) { //Newly added category may not have vendors
+	        try{ 
+	            ds = dsFactory.getVendorDS(category.getCode());
+	            ds.deleteAll();
+	            for(Vendor vendor:vendors){
+	                ds.create(vendor);
+	            }
+	        }catch(CreationFailedException e){
+	            throw new UpdateFailedException(e.getMessage());
+	        }catch(RemoveFailedException e){
+	            throw new UpdateFailedException(e.getMessage());
+	        }catch(IOException e){
+	            throw new UpdateFailedException(e.getMessage());
+	        }finally{
+	            if(ds!=null)
+	                ds.close();
+	        }
         }
     }
 
@@ -142,16 +145,20 @@ public class CategoryDS extends DataStore
     @Override
     public <T> void remove (T obj) throws RemoveFailedException {
         Category category = (Category) obj;
-        List<Vendor> venodrs = category.getAllVendors();
+        List<Vendor> vendors = category.getAllVendors();
         DataStore ds = null;
-        try{
-            ds = dsFactory.getVendorDS(category.getCode());
-            ds.deleteAll();
-        }catch(IOException e){
-            throw new RemoveFailedException(e.getMessage());
-        }finally{
-            if(ds!=null)
-                ds.close();
+        
+        //Let's make sure vendors is not null
+        if (null != vendors) {
+	        try{
+	            ds = dsFactory.getVendorDS(category.getCode());
+	            ds.deleteAll();
+	        }catch(IOException e){
+	            throw new RemoveFailedException(e.getMessage());
+	        }finally{
+	            if(ds!=null)
+	                ds.close();
+	        }
         }
         super.remove(obj);
         try{

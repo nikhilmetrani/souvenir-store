@@ -1,12 +1,14 @@
 package sg.edu.nus.iss.se23pt2.posgui;
 
-import java.awt.*;
-
 import javax.swing.*;
 
 public abstract class ConfirmDialog extends OkCancelDialog {
 
-    private JLabel       messageLabel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JLabel       messageLabel;
 
     public ConfirmDialog (JFrame parent, String title, String message) {
         super (parent, title);

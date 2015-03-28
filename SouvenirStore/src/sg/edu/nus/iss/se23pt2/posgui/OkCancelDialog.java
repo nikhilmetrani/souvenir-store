@@ -1,6 +1,5 @@
 package sg.edu.nus.iss.se23pt2.posgui;
 
-import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;

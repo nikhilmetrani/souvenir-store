@@ -116,7 +116,7 @@ public class SouvenirStore{
         try {
             loadSequence();
             loadStoreKeepers();
-            loadCategories(); //Must be called before loadProducts() to amke list of categories available
+            loadCategories(); //Must be called before loadProducts() to make list of categories available
             loadProducts();
             loadDiscounts();
             loadTransactions();

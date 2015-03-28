@@ -160,7 +160,7 @@ public class StoreAppWindow extends JFrame {
 				dd.setVisible(true);
 			}
 		});
-		mnInventory.add(mntmDiscounts);
+		mnManage.add(mntmDiscounts);
 		
 		mntmMembers = new JMenuItem("Members");
 		mntmMembers.addActionListener(new ActionListener() {
@@ -278,8 +278,7 @@ public class StoreAppWindow extends JFrame {
 	}
 
     private void makeContentVisible () {
-        // StoreAppWindow.this.repaint();
-        this.setSize(this.getWidth(), getHeight() - 1);
-        this.setSize(this.getWidth(), getHeight() + 1);
+    	this.getContentPane().setVisible(false);
+    	this.getContentPane().setVisible(true);
     }
 }
