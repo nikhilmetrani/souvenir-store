@@ -1,7 +1,15 @@
 package sg.edu.nus.iss.se23pt2.pos;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.file.AccessDeniedException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import sg.edu.nus.iss.se23pt2.pos.exception.CreationFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.InsufficientQuantityException;
+import sg.edu.nus.iss.se23pt2.pos.exception.InvalidTransactionException;
+import sg.edu.nus.iss.se23pt2.pos.util.DateUtil;
 
 //
 //
@@ -21,9 +29,10 @@ public class ShoppingCart {
     private ArrayList<Discount> discounts;
     private Discount discount;
     private Customer customer;
-    private int points;
+    private int points=0;
     private String date;
-    private double totalPriceBeforeDisc = 0.0;
+    private double totalPriceBeforeDisc = 0.0d;
+    private double amountPaid = 0.0d;
 
     public ShoppingCart() {
 		this.items = new ArrayList<Item>();
@@ -65,6 +74,14 @@ public class ShoppingCart {
 
 	public void setPoints(int points) {
 		this.points = points;
+	}
+
+	public void setAmountPaid(double amountPaid){
+		this.amountPaid = amountPaid;
+	}
+
+	public double getAmountPaid(){
+		return this.amountPaid;
 	}
 
 	public String getDate(){
@@ -154,8 +171,8 @@ public class ShoppingCart {
     }
 
     /** Created by JV to use instance objects**/
-    public double getHighestDiscount(ArrayList<Discount> discounts, String transDate) {
-        return this.getHighestDiscount( this.customer, discounts, transDate);
+    public double getHighestDiscount(ArrayList<Discount> discounts) {
+        return this.getHighestDiscount( this.customer, discounts, DateUtil.getCurrentDateAsString());
     }
 
     //returns total price of the items after final check out
@@ -174,11 +191,11 @@ public class ShoppingCart {
     /** Created by JV to use instance objects**/
     public Double getTotalPriceBeforeDiscount() {
         //iterate the list of items to fetch the total price of the items
-        double totalPriceBeforeDisc = 0;
+        double totalPriceBeforeDisc = 0.0d;
         if(this.items != null && !this.items.isEmpty()){
             for(Item item : this.items){
                 if(item != null){
-                    totalPriceBeforeDisc = totalPriceBeforeDisc+item.getPrice()*item.getQuantity();
+                    totalPriceBeforeDisc = totalPriceBeforeDisc+(item.getPrice()*item.getQuantity());
                 }
             }
         }
@@ -194,7 +211,7 @@ public class ShoppingCart {
 
     /** Created by JV to use instance objects**/
     public double getTotalPriceAfterDiscount() {
-        double finalDiscount = (this.discount!=null)?discount.getDiscPct():0;
+        double finalDiscount = (this.discount!=null)?discount.getDiscPct():0.0d;
         return getTotalPriceBeforeDiscount()*(100-finalDiscount)/100;
     }
 
@@ -224,26 +241,40 @@ public class ShoppingCart {
     }
 
     /** Created by JV to use instance objects**/
-    public double calcFinalPmt(int pointsRedeemed) {
-        if (pointsRedeemed > 0 && this.getMember() != null) {
-            if (this.getMember().getLoyaltyPoints() >= pointsRedeemed) {
-                double newLoyaltyPoints = getTotalPriceAfterDiscount()-((5/100)*pointsRedeemed); //According to Requirement $5=100 Points redeemed
+    public double calcFinalPmt() {
+    	int pointsToDollar = 0;
+    	int dollarsToPoints = 0;
+    	double payableAmount = this.getTotalPriceAfterDiscount();
+        double finalAmountToBePaid = 0.0d;
+        int pointsRedeemed = this.getPoints();
 
-                //Update the member's loyalty points
-                this.getMember().deductLoyaltyPoints(pointsRedeemed);
-
-                System.out.println("Member "+this.getMember().getName()+": "+pointsRedeemed+" Loyalty Points have been redeemed!");
-                System.out.println("Member "+this.getMember().getName()+": "+newLoyaltyPoints+" Loyalty Points remained!");
-                //TO-DO: Display the same message on UI.
-                return newLoyaltyPoints;
-            } else {
-                System.out.println("Member: "+this.getMember().getName()+"'s Loyalty Points not enough for redemption!");
-                //TO-DO: Display the same message on UI.
-                return getTotalPriceAfterDiscount();
+        //if Member wants to redeem the points then this block of code will be executed to calculate the final amount
+        if(this.getMember() != null){
+            if(this.getMember().getLoyaltyPoints() >= pointsRedeemed){
+            	pointsToDollar = (int) ((5d/100d)*pointsRedeemed);
             }
-        } else {
-            return getTotalPriceAfterDiscount();
         }
+
+        finalAmountToBePaid = BigDecimal.valueOf(payableAmount - pointsToDollar).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue(); //According to Requirement $5=100 Points redeemed
+
+        if(finalAmountToBePaid < 0){
+            /* This means all payment is covered by Loyalty points. 
+             * On confirmation of the payment, the excess points needs to be calcualted and 
+             * should be added back to the member.loyaltyPoints 
+             * 
+             */
+        	dollarsToPoints = (int)(Math.abs(finalAmountToBePaid) + payableAmount)/10;
+        }
+        else{
+        	dollarsToPoints = (int)payableAmount/10;
+        }
+        
+        if(this.getMember() != null){
+        	this.getMember().deductLoyaltyPoints(pointsRedeemed);
+        	this.getMember().addLoyaltyPoints(dollarsToPoints);
+        }
+
+        return finalAmountToBePaid;
     }
 
     // Calculate the discounted payment based on customer type
@@ -264,23 +295,24 @@ public class ShoppingCart {
     }
 
     /** Created by JV to use instance objects**/
-    public double getPayableAmount(int pointsRedeemed) {
+    public double getPayableAmount() {
+    	int pointsToDollar = 0;
         double finalAmountToBePaid = this.getTotalPriceAfterDiscount();
         //if Member wants to redeem the points then this block of code will be executed to calculate the final amount
         if(this.getMember() != null){
+        	int pointsRedeemed = this.getPoints();
             if(this.getMember().getLoyaltyPoints() >= pointsRedeemed){
-                finalAmountToBePaid = finalAmountToBePaid - ((5/100)*pointsRedeemed); //According to Requirement $5=100 Points redeemed
-                if(finalAmountToBePaid > 0)
-                    return finalAmountToBePaid;
-                else{ 
-                    /* This means all payment is covered by Loyalty points. 
-                     * On confirmation of the payment, the excess points needs to be calcualted and 
-                     * should be added back to the member.loyaltyPoints 
-                     * 
-                     */
-                    return 0;  
-                }
+            	pointsToDollar = (int) ((5d/100d)*pointsRedeemed);
             }
+        }
+        finalAmountToBePaid = BigDecimal.valueOf(finalAmountToBePaid - pointsToDollar).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue(); //According to Requirement $5=100 Points redeemed
+        if(finalAmountToBePaid < 0){
+            /* This means all payment is covered by Loyalty points. 
+             * On confirmation of the payment, the excess points needs to be calcualted and 
+             * should be added back to the member.loyaltyPoints 
+             * 
+             */
+        	finalAmountToBePaid = 0.0;
         }
         return finalAmountToBePaid;
     }
@@ -302,10 +334,32 @@ public class ShoppingCart {
 			return finalAmountToBePaid;
 		}else{
 			//updatedLoyalityPoints = price+currentLoyalityPoints;
-			member.addLoyaltyPoints((int)Math.round(price));
+			member.addLoyaltyPoints((int)Math.round(price/10d));  //According to requirement
 			finalAmountToBePaid = price;
 			return finalAmountToBePaid;
 		}
+    }
+
+    /** Created by JV to use instance objects**/
+    private double calculateNewPoints(int pointsRedeemed){
+        double finalAmountToBePaid = this.getTotalPriceAfterDiscount();
+        //if Member wants to redeem the points then this block of code will be executed to calculate the final amount
+        if(this.getMember() != null){
+            if(this.getMember().getLoyaltyPoints() >= pointsRedeemed){
+                finalAmountToBePaid = BigDecimal.valueOf(finalAmountToBePaid - ((5d/100d)*pointsRedeemed)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue(); //According to Requirement $5=100 Points redeemed
+                if(finalAmountToBePaid > 0)
+                    return finalAmountToBePaid;
+                else{ 
+                    /* This means all payment is covered by Loyalty points. 
+                     * On confirmation of the payment, the excess points needs to be calcualted and 
+                     * should be added back to the member.loyaltyPoints 
+                     * 
+                     */
+                    return 0;  
+                }
+            }
+        }
+        return finalAmountToBePaid;
     }
 
     public Transaction confirmTransaction(Customer customer,ArrayList<Item> itemList,Discount finalDiscount,String transactionDate) {
@@ -316,4 +370,29 @@ public class ShoppingCart {
 		transaction.setDate(transactionDate);
 		return transaction;
     }
+
+    /** Created by JV to use instance objects
+     * @throws IOException 
+     * @throws CreationFailedException 
+     * @throws InvalidTransactionException 
+     * @throws AccessDeniedException **/
+    public Transaction confirmTransaction(SouvenirStore store) throws InsufficientQuantityException, Exception {
+    	calcFinalPmt();
+    	deductInventory(store.getInventory());
+		Transaction transaction = new Transaction();
+		transaction.setId(Integer.parseInt(SequenceGenerator.getInstance().getNextSequence(SequenceGenerator.TRANSACTION_SEQ)));
+		transaction.setCustomer(this.customer);
+		transaction.setItems(this.items);
+		transaction.setDiscount(this.discount);
+		transaction.setDate(DateUtil.getCurrentDateAsString());
+		store.setTransaction(transaction);
+		return transaction;
+    }
+
+    private void deductInventory(Inventory inventory) throws InsufficientQuantityException{
+    	for(Item item : items){
+    		item.getProduct().deductQuantity(item.getQuantity());
+    	}
+    }
+
 }
