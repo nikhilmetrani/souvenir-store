@@ -18,12 +18,10 @@ public class CategoryPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private Inventory        			inventory;
-    //private java.util.List<Category> 	categories;
-    //private JList<Category>          	categoryList;
     private JFrame						parent;
     private JScrollPane 				scrollPane;
-    private JTable 						categoryTable;
-    private CategoryTableModel 					model;
+    private JTable 						table;
+    private CategoryTableModel 			model;
     
     public CategoryPanel (Inventory inventory, JFrame parent) {
         this.inventory = inventory;
@@ -32,18 +30,17 @@ public class CategoryPanel extends JPanel {
         
         this.scrollPane = new JScrollPane();
         this.model = new CategoryTableModel(this.inventory.getAllCategories());
-        this.categoryTable = new JTable(model);
+        this.table = new JTable(model);
         
-        this.categoryTable.getModel().addTableModelListener(new TableModelListener() {
+        this.table.getModel().addTableModelListener(new TableModelListener() {
 			
 			@Override
 			public void tableChanged(TableModelEvent e) {
 				if (TableModelEvent.UPDATE == e.getType()) {
-					System.out.println("e.getColumn(): " + e.getColumn());
 						DataStoreFactory dsFactory = DataStoreFactory.getInstance();
 						
 				        try {
-				        	dsFactory.getCategoryDS().update(CategoryPanel.this.getSelectedCategory());
+				        	dsFactory.getCategoryDS().update(CategoryPanel.this.getSelected());
 				        }
 				        catch (UpdateFailedException ufe) {
 				        	JOptionPane.showMessageDialog(null,
@@ -61,7 +58,7 @@ public class CategoryPanel extends JPanel {
 				}
 		});
 
-        this.scrollPane.setViewportView(this.categoryTable);
+        this.scrollPane.setViewportView(this.table);
         
         add ("North", new JLabel ("Categories"));
         add ("Center", this.scrollPane);
@@ -69,18 +66,18 @@ public class CategoryPanel extends JPanel {
     }
 
     public void refresh () {
-    	this.categoryTable.setVisible(false);
-    	this.categoryTable.setVisible(true);
+    	this.table.setVisible(false);
+    	this.table.setVisible(true);
     }
     
     public void select(int index) {
-    	ListSelectionModel selectionModel = this.categoryTable.getSelectionModel();
+    	ListSelectionModel selectionModel = this.table.getSelectionModel();
     	if ((index >= 0) && (this.model.size() > index))
     		selectionModel.setSelectionInterval(index, index);
     }
 
-    public Category getSelectedCategory () {
-        int idx = this.categoryTable.getSelectedRow();
+    public Category getSelected () {
+        int idx = this.table.getSelectedRow();
         return (idx == -1) ? null : this.model.get(idx);
     }
 
@@ -93,9 +90,9 @@ public class CategoryPanel extends JPanel {
             public void actionPerformed (ActionEvent e) {
                 AddCategoryDialog d = new AddCategoryDialog(CategoryPanel.this.parent);
                 d.setVisible (true);
-                if (null != d.getAddedCategory()) {
-                	CategoryPanel.this.inventory.addCategory(d.getAddedCategory());
-                	CategoryPanel.this.model.add(d.getAddedCategory());
+                if (null != d.getAdded()) {
+                	CategoryPanel.this.inventory.addCategory(d.getAdded());
+                	CategoryPanel.this.model.add(d.getAdded());
                 	CategoryPanel.this.refresh();
                 	CategoryPanel.this.select(CategoryPanel.this.model.size()-1);
                 }
@@ -106,14 +103,14 @@ public class CategoryPanel extends JPanel {
         b = new JButton ("Remove");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-            	if (null != CategoryPanel.this.getSelectedCategory()) {
-            		int index = CategoryPanel.this.categoryTable.getSelectedRow();
+            	if (null != CategoryPanel.this.getSelected()) {
+            		int index = CategoryPanel.this.table.getSelectedRow();
             		
             		DataStoreFactory dsFactory = DataStoreFactory.getInstance();
             		try {
-        	        	dsFactory.getCategoryDS().remove(CategoryPanel.this.getSelectedCategory());
-        	        	CategoryPanel.this.inventory.removeCategory(CategoryPanel.this.getSelectedCategory().getCode());
-                		CategoryPanel.this.model.remove(CategoryPanel.this.getSelectedCategory());
+        	        	dsFactory.getCategoryDS().remove(CategoryPanel.this.getSelected());
+        	        	CategoryPanel.this.inventory.removeCategory(CategoryPanel.this.getSelected().getCode());
+                		CategoryPanel.this.model.remove(CategoryPanel.this.getSelected());
     	            	CategoryPanel.this.refresh();
     	            	if (1 <= index) {
     	            		index -= 1;

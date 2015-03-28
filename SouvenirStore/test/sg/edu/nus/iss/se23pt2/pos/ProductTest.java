@@ -281,17 +281,17 @@ public class ProductTest {
 		assertEquals(0, p1.getReorderThresholdQuantity().intValue());
 		
 		/* Must return value set by setQuantity */
-		p1.setReorderThresholdQty(p1RTQuantity);
+		p1.setReorderThresholdQuantity(p1RTQuantity);
 		assertEquals(p1RTQuantity, p1.getReorderThresholdQuantity());
 		
-		p1.setReorderThresholdQty(null);
+		p1.setReorderThresholdQuantity(null);
 		/* Existing value must not be set to null */
 		assertNotNull(p1.getReorderThresholdQuantity());
 		/* Existing value must be retained */
 		assertEquals(p1RTQuantity, p1.getReorderThresholdQuantity());
 		
 		Integer negativeValue = -3;
-		p1.setReorderThresholdQty(negativeValue);
+		p1.setReorderThresholdQuantity(negativeValue);
 		/* Existing value must not be set to negative value */
 		assertNotEquals(negativeValue, p1.getReorderThresholdQuantity());
 		/* Existing value must be retained */

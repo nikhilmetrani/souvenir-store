@@ -189,7 +189,7 @@ public class Product {
     }
 
     /** */
-    public void setReorderThresholdQty(Integer reorderThresholdQuantity) {
+    public void setReorderThresholdQuantity(Integer reorderThresholdQuantity) {
     	if ((null != reorderThresholdQuantity) && (0 <= reorderThresholdQuantity))
     		this.reorderThresholdQuantity = reorderThresholdQuantity;
     }
@@ -267,9 +267,9 @@ public class Product {
 				.append((null != this.getName()) ? this.getName() : "").append(",")
 				.append((null != this.getDescription()) ? this.getDescription() : "").append(",")
 				.append(this.getQuantity()).append(",")
-				.append(this.getReorderThresholdQuantity()).append(",")
 				.append(this.getPrice()).append(",")
 				.append((null != this.getBarcode()) ? this.getBarcode() : "").append(",")
+				.append(this.getReorderThresholdQuantity()).append(",")
 				.append(this.getOrderQuantity());
 		return stb.toString();
     }

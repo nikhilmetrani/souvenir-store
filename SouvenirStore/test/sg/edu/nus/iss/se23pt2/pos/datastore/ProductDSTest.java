@@ -36,7 +36,7 @@ public class ProductDSTest extends TestCase{
         product1.setQuantity(100);
         product1.setPrice(6.90f);
         product1.setBarcode("LED/1");
-        product1.setReorderThresholdQty(10);
+        product1.setReorderThresholdQuantity(10);
         product1.setOrderQuantity(100);
 
         product2 = new Product("LED/2", "LED Light - Green color");
@@ -44,7 +44,7 @@ public class ProductDSTest extends TestCase{
         product2.setQuantity(100);
         product2.setPrice(6.90f);
         product2.setBarcode("LED/2");
-        product2.setReorderThresholdQty(10);
+        product2.setReorderThresholdQuantity(10);
         product2.setOrderQuantity(100);
     }
     

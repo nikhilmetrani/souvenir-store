@@ -70,7 +70,7 @@ public class AddCategoryDialog extends OkCancelDialog {
 	        }
 	    }
 
-	    public Category getAddedCategory() {
+	    public Category getAdded() {
 	    	return this.category;
 	    }
 	}

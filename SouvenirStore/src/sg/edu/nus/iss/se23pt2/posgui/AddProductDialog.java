@@ -1,13 +1,16 @@
 package sg.edu.nus.iss.se23pt2.posgui;
 
 import sg.edu.nus.iss.se23pt2.pos.*;
+import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
+import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.Iterator;
 
 import javax.swing.*;
 
-public class AddEditProductDialog extends OkCancelDialog {
+public class AddProductDialog extends OkCancelDialog {
 
 		private static final long serialVersionUID = 1L;
 		
@@ -25,24 +28,12 @@ public class AddEditProductDialog extends OkCancelDialog {
 	    
 	    private boolean editMode = false;
 
-	    public AddEditProductDialog (Inventory inventory, JFrame parent) {
+	    public AddProductDialog (Inventory inventory, JFrame parent) {
 	        super(parent, "Add Product");
 	        this.inventory = inventory;
 	        this.product = null;
 	        loadCategories();
 	        this.setLocationRelativeTo(parent);
-	        this.setModal(true);
-	        this.pack();
-	    }
-	    
-	    public AddEditProductDialog (Product product, Inventory inventory, JFrame parent) {
-	    	super(parent, "Edit Product");
-	    	this.editMode = true;
-	        this.inventory = inventory;
-	        this.product = product;
-	        loadCategories();
-			loadProductDetails();
-			this.setLocationRelativeTo(parent);
 	        this.setModal(true);
 	        this.pack();
 	    }
@@ -99,7 +90,7 @@ public class AddEditProductDialog extends OkCancelDialog {
 	    		return false;
 	    	}
 	    	this.product.setQuantity(quantity);
-	    	this.product.setReorderThresholdQty(rtQuantity);
+	    	this.product.setReorderThresholdQuantity(rtQuantity);
 	    	this.product.setOrderQuantity(oQuantity);
 	    	this.product.setPrice(price);
 	    	
@@ -158,27 +149,41 @@ public class AddEditProductDialog extends OkCancelDialog {
 	        return p;
 	    }
 
-	    protected boolean performOkAction () {
-	    	if (this.editMode) {
-	    		String name = this.productNameField.getText();
-		    	String description = this.productDescriptionField.getText();
-		    	if ((0 == name.length()) || (0 == description.length())) {
-		            return false;
+	    protected boolean performOkAction() {
+    		String id = this.productIdField.getText();
+	        String name = this.productNameField.getText();
+	    	String description = this.productDescriptionField.getText();
+	    	if ((0 == id.length()) || (0 == name.length()) || (0 == description.length())) {
+	            return false;
+	        }
+	        this.product = new Product(id, name);
+	        if (updateProductDetails()) {
+		        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+		        try {
+		        	dsFactory.getProductDS().update(this.product);
+		        	return true;
 		        }
-		    	return updateProductDetails();
-	    	}
-	    	else {
-	    		String id = this.productIdField.getText();
-		        String name = this.productNameField.getText();
-		    	String description = this.productDescriptionField.getText();
-		    	if ((0 == id.length()) || (0 == name.length()) || (0 == description.length())) {
-		            return false;
+		        catch (UpdateFailedException ufe) {
+		        	JOptionPane.showMessageDialog(null,
+	                        "Error :: " + ufe.getMessage(),
+	                        "Error",
+	                        JOptionPane.ERROR_MESSAGE);
+		        	this.product = null;
+		        	return false;
 		        }
-		        this.product = new Product(id, name);
-		        updateProductDetails();
-		        this.inventory.addProduct(this.product);
-	    	}
-	        return true;
+		        catch (IOException ioe) {
+		        	JOptionPane.showMessageDialog(null,
+	                        "Error :: " + ioe.getMessage(),
+	                        "Error",
+	                        JOptionPane.ERROR_MESSAGE);
+		        	this.product = null;
+		        	return false;
+		        }
+	        }
+	        return false;
 	    }
 
+	    public Product getAdded() {
+	    	return this.product;
+	    }
 	}

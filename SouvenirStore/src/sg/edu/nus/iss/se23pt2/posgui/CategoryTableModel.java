@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 import sg.edu.nus.iss.se23pt2.pos.*;
 
