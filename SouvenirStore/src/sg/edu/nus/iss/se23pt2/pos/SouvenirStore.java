@@ -29,6 +29,7 @@ import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 import sg.edu.nus.iss.se23pt2.pos.exception.CreationFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.InvalidTransactionException;
+import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 
 public class SouvenirStore{
@@ -265,8 +266,14 @@ public class SouvenirStore{
 		return null;
 	}
 
-	public void setTransaction(Transaction transaction) throws InvalidTransactionException, AccessDeniedException, CreationFailedException, IOException{
+	public void setTransaction(Transaction transaction) throws InvalidTransactionException, AccessDeniedException, CreationFailedException, UpdateFailedException, IOException{
 		validateTransaction(transaction);
+		if(transaction.getCustomer() instanceof Member){
+			dsFactory.getMemberDS().update((Member)transaction.getCustomer());
+		}
+		for(Item item : transaction.getItems()){
+			dsFactory.getProductDS().update(item.getProduct());
+		}
 		dsFactory.getTransactionDS().create(transaction);
 	}
 
