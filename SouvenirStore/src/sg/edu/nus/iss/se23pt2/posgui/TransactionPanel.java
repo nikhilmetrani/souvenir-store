@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.border.BevelBorder;
 
@@ -40,7 +40,6 @@ public class TransactionPanel extends javax.swing.JPanel {
 	private JPanel searchPanel;
 	private JSeparator searchSeparator;
 	private JButton search;
-	private JList<TransactionModel> transactionList;
 	private JLabel transactionsLabel;
 	private JPanel searchListPanel;
 	private JButton close;
@@ -52,6 +51,8 @@ public class TransactionPanel extends javax.swing.JPanel {
 	private JTextArea startDateText;
 	private JLabel startDateLabel;
 	private JFrame parent;
+	private JTable table;
+	private JScrollPane scrollPane;
 	private SouvenirStore store;
 	private SimpleDateFormat dateFormat;
 	private ArrayList<Transaction> transactions;
@@ -62,7 +63,6 @@ public class TransactionPanel extends javax.swing.JPanel {
 		this.store=store;
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		dateFormat.setLenient(false);
-		transactionList = new JList<TransactionModel>();
 		initGUI();
 	}
 	
@@ -199,11 +199,8 @@ public class TransactionPanel extends javax.swing.JPanel {
 					transactionsLabel.setText("Transactions");
 					transactionsLabel.setBounds(6, 6, 82, 21);
 				}
-				{
+				{					
 					refresh();
-					transactionList.setBounds(6, 33, 527, 250);
-					transactionList.setBorder(BorderFactory
-							.createEtchedBorder(BevelBorder.LOWERED));
 				}
 			}
 		} catch (Exception e) {
@@ -212,24 +209,24 @@ public class TransactionPanel extends javax.swing.JPanel {
 	}
 	
 	public void refresh() {
-		searchListPanel.add(transactionList);
-	    transactionList.removeAll();
-		DefaultListModel<TransactionModel> listModel = new DefaultListModel<TransactionModel>();
-		if (transactions != null) {
-			for(Transaction transaction:transactions) {
-				TransactionModel transactionModel = new TransactionModel();
-				transactionModel.setTransactionId(transaction.getId());
-				transactionModel.setMemberId(transaction.getCustomer().getId());
-				transactionModel.setDate(transaction.getDate());
-				listModel.addElement(transactionModel);
+			if(scrollPane==null){
+				scrollPane = new JScrollPane();
 			}
-		}
-		transactionList.setModel(listModel);		
+			if(table==null){
+				table = new JTable();
+			}
+			searchListPanel.add(scrollPane);
+			scrollPane.setBounds(6, 33, 527, 277);
+			{
+				scrollPane.setViewportView(table);
+				table.setModel(new TransactionModel(transactions));
+				table.setPreferredSize(new java.awt.Dimension(509, 256));
+			}			
 	}
 	
 	 public Transaction getSelectedTransaction() {
-	        int idx = transactionList.getSelectedIndex();
-	        return (idx == -1) ? null : transactions.get(idx);
+	        int id = table.getSelectedRow();
+	        return (id == -1) ? null : transactions.get(id);
 	    }
 
 }
