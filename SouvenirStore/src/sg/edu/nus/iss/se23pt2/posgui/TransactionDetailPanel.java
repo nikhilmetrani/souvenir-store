@@ -2,16 +2,14 @@ package sg.edu.nus.iss.se23pt2.posgui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
-import sg.edu.nus.iss.se23pt2.pos.Item;
 import sg.edu.nus.iss.se23pt2.pos.Transaction;
 
 /**
@@ -24,20 +22,20 @@ public class TransactionDetailPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JLabel transactionDetailLabel;
 	private JPanel searchPanel;
-	private JList<TransactionDetailModel> transactionDetailList;
 	private JButton close;
 	private JButton back;
 	private JFrame parent;
+	private JTable table;
+	private JScrollPane scrollPane;
 	private Transaction transaction;
 	
 	public TransactionDetailPanel(JFrame parent, TransactionPanel searchPanel) {
 		super();
 		this.searchPanel=searchPanel;
 		this.parent = parent;
-		transactionDetailList = new JList<TransactionDetailModel>();
 		initGUI();
 	}
-	
+
 	private void initGUI() {
 		try {
 			this.setPreferredSize(new java.awt.Dimension(650, 453));
@@ -47,12 +45,6 @@ public class TransactionDetailPanel extends JPanel {
 				this.add(transactionDetailLabel);
 				transactionDetailLabel.setText("Transaction Details");
 				transactionDetailLabel.setBounds(5, 8, 151, 21);
-			}
-			{
-				refresh();
-				transactionDetailList.setBounds(6, 33, 542, 359);
-				transactionDetailList.setBorder(BorderFactory
-						.createEtchedBorder(BevelBorder.LOWERED));
 			}
 			{
 				back = new JButton();
@@ -77,28 +69,29 @@ public class TransactionDetailPanel extends JPanel {
 					}
 				});
 			}
+			{
+				refresh();				
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	
-	public void refresh() {
-		this.add(transactionDetailList);
-		transactionDetailList.removeAll();
-		DefaultListModel<TransactionDetailModel> listModel = new DefaultListModel<TransactionDetailModel>();
-		if (transaction != null) {				
-				for(Item item:transaction.getItems()){
-					TransactionDetailModel transactionDetailModel = new TransactionDetailModel();
-					transactionDetailModel.setTransactionId(transaction.getId());
-					transactionDetailModel.setMemberId(transaction.getCustomer().getId());
-					transactionDetailModel.setDate(transaction.getDate());
-					transactionDetailModel.setProductId(item.getProduct().getId());
-					transactionDetailModel.setQuantity(item.getQuantity());
-					listModel.addElement(transactionDetailModel);
-				}
+	public void refresh() {		
+		if(scrollPane==null){
+			scrollPane = new JScrollPane();
 		}
-		transactionDetailList.setModel(listModel);			
+		if(table==null){
+			table = new JTable();
+		}
+		this.add(scrollPane);
+		scrollPane.setBounds(5, 35, 537, 327);
+		{
+			scrollPane.setViewportView(table);
+			table.setPreferredSize(new java.awt.Dimension(534, 351));
+			table.setModel(new TransactionDetailModel(transaction));
+		}
 	}
 
 	public Transaction getTransaction() {
