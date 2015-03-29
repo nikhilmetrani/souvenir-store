@@ -5,7 +5,7 @@ package sg.edu.nus.iss.se23pt2.pos;
 
 //import sg.edu.nus.iss.se23pt2.pos.datastore.*;
 //import sg.edu.nus.iss.se23pt2.pos.exception.*;
-import sg.edu.nus.iss.se23pt2.posgui.*;
+import sg.edu.nus.iss.se23pt2.pos.gui.*;
 
 import java.awt.*;
 //import java.awt.event.*;

@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-import sg.edu.nus.iss.se23pt2.posgui.LoginDialog;
+import sg.edu.nus.iss.se23pt2.pos.gui.LoginDialog;
 
 /**
  * @author Nikhil Metrani

@@ -6,4 +6,17 @@ public class MemberDiscount extends Discount{
     {
         super(discountCode, description, startDate, periodInDays, discountPercentage, applicableTo);
     }
+    
+    /**
+	 * Nikhil Metrani
+	 * Override equals() implementation
+	 * */
+    @Override
+	public boolean equals(Object obj) {
+		if(obj instanceof MemberDiscount){
+			MemberDiscount discount = (MemberDiscount) obj;
+            return discount.getDiscCode().equals(this.getDiscCode());
+        }
+		return false;
+	}
 }

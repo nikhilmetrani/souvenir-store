@@ -4,7 +4,7 @@
 package sg.edu.nus.iss.se23pt2.pos.exception;
 
 /**
- * @author Nick
+ * @author Nikhil Metrani
  *
  */
 public class InsufficientQuantityException extends Exception {

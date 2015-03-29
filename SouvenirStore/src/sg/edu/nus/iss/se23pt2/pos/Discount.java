@@ -2,11 +2,7 @@ package sg.edu.nus.iss.se23pt2.pos;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-
-import sg.edu.nus.iss.se23pt2.pos.exception.VendorExistsException;
 
 //
 //
@@ -26,7 +22,7 @@ public class Discount
 	private String discDesc;
 	private String startDate;
 	private String periodInDays;
-	private double discPct;
+	private Double discPct;
 	private String appTo;
 	
     public Discount(String discCode, String discDesc, String startDate, String periodInDays, double discPct, String appTo)
@@ -125,5 +121,18 @@ public class Discount
 						 .append(this.getAppTo())
 						 .append(System.getProperty("line.separator"));			
 		return stb.toString();
+	}
+	
+	/**
+	 * Nikhil Metrani
+	 * Override equals() implementation
+	 * */
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Discount){
+			Discount discount = (Discount) obj;
+            return discount.getDiscCode().equals(this.getDiscCode());
+        }
+		return false;
 	}
 }
