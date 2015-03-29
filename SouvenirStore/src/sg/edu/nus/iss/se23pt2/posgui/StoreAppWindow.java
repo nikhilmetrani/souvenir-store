@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.se23pt2.posgui;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import sg.edu.nus.iss.se23pt2.pos.Session;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
@@ -277,8 +279,15 @@ public class StoreAppWindow extends JFrame {
         this.updateUserInTitle ();
 	}
 
-    private void makeContentVisible () {
+    public void makeContentVisible () {
     	this.getContentPane().setVisible(false);
     	this.getContentPane().setVisible(true);
+    }
+    
+    public static int showOkCancelDialog(Component parent, String message, String title, int messageType) {
+    	Object[] options = { "OK", "CANCEL" };
+		return JOptionPane.showOptionDialog(null, message, title,
+			JOptionPane.DEFAULT_OPTION, messageType,
+			null, options, options[0]);
     }
 }

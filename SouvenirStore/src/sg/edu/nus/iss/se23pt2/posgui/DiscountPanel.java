@@ -5,6 +5,7 @@ import sg.edu.nus.iss.se23pt2.pos.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 //
@@ -37,7 +38,7 @@ public class DiscountPanel extends JPanel {
     }
 
     public void refresh () {
-    	discounts = inventory.getAllDiscounts();
+    	discounts = inventory.getDiscounts();
     	discList.removeAll();
         Discount disc = null;
         Iterator<Discount> i = discounts.iterator();
@@ -54,7 +55,7 @@ public class DiscountPanel extends JPanel {
 
     private JPanel createButtonPanel () {
 
-        JPanel p = new JPanel (new GridLayout (0, 1));
+    	JPanel p = new JPanel (new GridLayout (0, 1, 5, 5));
 
         JButton b = new JButton ("Add");
         b.addActionListener (new ActionListener () {

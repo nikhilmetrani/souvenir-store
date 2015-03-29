@@ -1,140 +1,167 @@
 package sg.edu.nus.iss.se23pt2.posgui;
 
 import sg.edu.nus.iss.se23pt2.pos.*;
+import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
+import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
+import java.io.IOException;
 import java.util.*;
-import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 public class VendorPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Inventory        		inventory;
-    private java.util.List<Category> 	categories;
-    private java.awt.Choice			categoryChoice; 
-    private java.awt.List          	vendorList;
-    
-    private JFrame					parent;
+	private Inventory       	 		inventory;
+    private JComboBox<String>			categoryCombo; 
+    private JTable 						table;
+    private VendorTableModel 			model;
+    private JFrame						parent;
+    private JScrollPane 				scrollPane;
    
     
     public VendorPanel (Inventory inventory, JFrame parent) {
         this.inventory = inventory;
         this.parent = parent;
         setLayout (new BorderLayout());
-        
+        setBorder(new EmptyBorder(5, 5, 5, 5));
         //Initialize Choice for user to select category
-        categoryChoice=new java.awt.Choice(); 
-        //Add the listener for categoryChoice
-        categoryChoice.addItemListener(new ItemListener(){
-            public void itemStateChanged(ItemEvent ie)
-            {
-            	showVendorsForSelectedCategory();
-            }
-        });
+        this.categoryCombo = new JComboBox<String>(); 
+        this.loadCategories();
         
         //Initialize List for showing vendors for selected category
-        vendorList = new java.awt.List(5);
-        vendorList.setMultipleMode (false);
+        this.model = new VendorTableModel(this.inventory.getVendors(this.getSelectedCategory()));
+        this.table = new JTable(this.model);
+        
+        //Add the listener for categoryCombo
+        this.categoryCombo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				VendorPanel.this.showVendorsForSelectedCategory();
+			}
+		});
+        
+        this.table.getModel().addTableModelListener(new TableModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				if (TableModelEvent.UPDATE == e.getType()) {
+						DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+						
+				        try {
+				        	dsFactory.getVendorDS(VendorPanel.this.getSelectedCategory()).update(VendorPanel.this.getSelected());
+				        }
+				        catch (UpdateFailedException ufe) {
+				        	JOptionPane.showMessageDialog(null,
+			                        "Error :: " + ufe.getMessage(),
+			                        "Error",
+			                        JOptionPane.ERROR_MESSAGE);
+				        }
+				        catch (IOException ioe) {
+				        	JOptionPane.showMessageDialog(null,
+			                        "Error :: " + ioe.getMessage(),
+			                        "Error",
+			                        JOptionPane.ERROR_MESSAGE);
+				        }
+					}
+				}
+		});
+
+        this.scrollPane = new JScrollPane();
+        this.scrollPane.setViewportView(this.table);
         
         //JPanel for category
         JPanel c = new JPanel ();
         c.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         c.setLayout (new FlowLayout(FlowLayout.LEADING));
         c.add (new JLabel ("Please choose category:"));
-        c.add (categoryChoice);         
+        c.add (categoryCombo);         
        
         //JPanel for Vendors
         JPanel v = new JPanel ();
         v.setLayout (new BorderLayout());
         v.add ("North",new JLabel ("Vendors:"));
-        v.add ("Center", vendorList);
+        v.add ("Center", this.scrollPane);
         v.add ("East", createButtonPanel());        
         
         add ("North", c);        
         add ("Center", v);      
     }
 
-    public void refresh () {
+    private void loadCategories() {
+    	java.util.List<Category> catList = inventory.getCategories();
     	
-    	categories = inventory.getAllCategories();
-    	categoryChoice.removeAll();    	
-        Category cat = null;
-        Iterator<Category> i = categories.iterator();
-        while (i.hasNext()) {        	
-        	cat = i.next();
-        	categoryChoice.add (cat.getCode());        
-        }
-        showVendorsForSelectedCategory();     
+    	if (null != catList) {
+    		this.categoryCombo.removeAll();
+	    	Category cat = null;
+	        Iterator<Category> i = catList.iterator();
+	        while (i.hasNext()) {
+	        	cat = i.next();
+	        	this.categoryCombo.addItem(cat.getCode());
+	        }
+	        if (0 < this.categoryCombo.getItemCount())
+	        	this.categoryCombo.setSelectedIndex(0);
+    	}
     }
     
-    private void showVendorsForSelectedCategory(){
-    	vendorList.removeAll();    	
-    	String selectedCat=categoryChoice.getSelectedItem();
-        if(selectedCat!="")
-        {
-        	ArrayList<Vendor> vendorsForCategory=inventory.getVendorsForCategory(selectedCat);   
-        	if(vendorsForCategory!=null){
-        		Iterator<Vendor> iterator = vendorsForCategory.iterator();
-                while (iterator.hasNext()) {
-                	Vendor vendor = iterator.next();
-                	vendorList.add(vendor.getName() + " - " + vendor.getDescription());
-                }
-        	}        	 
-        }         
+    public void refresh () {
+    	this.table.setVisible(false);
+    	this.table.setVisible(true);   
     }
     
-    public Category getSelectedCategory () {
-        int idx = categoryChoice.getSelectedIndex();
-        return (idx == -1) ? null : categories.get(idx);
+    public void select(int index) {
+    	ListSelectionModel selectionModel = this.table.getSelectionModel();
+    	if ((index >= 0) && (this.model.size() > index))
+    		selectionModel.setSelectionInterval(index, index);
     }
     
-    public Vendor getSelectedVendor () {
-        int idx = vendorList.getSelectedIndex();
+    public void showVendorsForSelectedCategory(){
+    	this.model = new VendorTableModel(this.inventory.getVendors(this.getSelectedCategory()));
+    	this.table = new JTable(this.model);
+    	this.scrollPane.setViewportView(this.table);
+    	this.refresh();         
+    }
+    
+    public String getSelectedCategory() {
+        int idx = categoryCombo.getSelectedIndex();
+        return (idx == -1) ? null : categoryCombo.getSelectedItem().toString();
+    }
+    
+    public Vendor getSelected() {
+        /*int idx = vendorList.getSelectedIndex();
         String selectedCat=categoryChoice.getSelectedItem();
         ArrayList<Vendor> vendorsForCategory=inventory.getVendorsForCategory(selectedCat);           
-        return (idx == -1) ? null : vendorsForCategory.get(idx);
-    }
-    
-    private void MoveUpSelectedVendor()
-    {
-    	 int idx = vendorList.getSelectedIndex();
-    	 if(idx <1)return;    	 
-         String selectedCat=categoryChoice.getSelectedItem();
-         ArrayList<Vendor> vendorsForCategory=inventory.getVendorsForCategory(selectedCat);  
-         Collections.swap(vendorsForCategory,idx,idx-1);          
-         showVendorsForSelectedCategory();
-    }
-    
-    private void MoveDownSelectedVendor()
-    {
-    	 int idx = vendorList.getSelectedIndex();
-    	 if(idx == -1 )return;    	 
-         String selectedCat=categoryChoice.getSelectedItem();
-         ArrayList<Vendor> vendorsForCategory=inventory.getVendorsForCategory(selectedCat);  
-         int listSize= vendorsForCategory.size()-1;
-         if(idx == listSize )return;    
-         Collections.swap(vendorsForCategory,idx,idx+1);    
-         showVendorsForSelectedCategory();
+        return (idx == -1) ? null : vendorsForCategory.get(idx);*/
+        int idx = this.table.getSelectedRow();
+        return (idx == -1) ? null : this.model.get(idx);
     }
     
     private JPanel createButtonPanel () {
 
-        JPanel p = new JPanel (new GridLayout (0, 1));
-
+    	JPanel p = new JPanel (new GridLayout (0, 1, 5, 5));
+    	p.setBorder(new EmptyBorder(5, 5, 5, 5));
+    	
         JButton b = new JButton ("Add");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-            	String selectedCat=categoryChoice.getSelectedItem();
-                AddEditVendorDialog d = new AddEditVendorDialog(selectedCat,VendorPanel.this.inventory, VendorPanel.this.parent);
-                d.setLocationRelativeTo(VendorPanel.this.parent);
-                d.setModal(true);
-                d.pack();
+            	String selectedCat = VendorPanel.this.categoryCombo.getSelectedItem().toString();
+            	
+            	AddVendorDialog d = new AddVendorDialog(selectedCat,VendorPanel.this.inventory, VendorPanel.this.parent);
                 d.setVisible (true);
-                VendorPanel.this.showVendorsForSelectedCategory();
+                if (null != d.getAdded()) {
+                	//VendorPanel.this.inventory.addVendor(selectedCat, d.getAdded());
+                	VendorPanel.this.model.add(d.getAdded());
+                	VendorPanel.this.refresh();
+                	VendorPanel.this.select(VendorPanel.this.model.size()-1);
+                }
             }
         });      
         p.add (b);
@@ -142,38 +169,48 @@ public class VendorPanel extends JPanel {
         b = new JButton ("Remove");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-                inventory.removeVendor(categoryChoice.getSelectedItem(), getSelectedVendor());
-            	VendorPanel.this.showVendorsForSelectedCategory();
+            	if (null != VendorPanel.this.getSelected()) {
+            		if (0 == StoreAppWindow.showOkCancelDialog(null, "Are you sure you want to remove selected vendor?\nClick Ok to continue.", "Confirm", JOptionPane.QUESTION_MESSAGE)) {
+	            		int index = VendorPanel.this.table.getSelectedRow();
+	            		
+	            		DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+	            		try {
+	        	        	dsFactory.getVendorDS(VendorPanel.this.getSelectedCategory()).remove(VendorPanel.this.getSelected());
+	        	        	VendorPanel.this.inventory.removeVendor(VendorPanel.this.getSelectedCategory(), VendorPanel.this.getSelected());
+	        	        	VendorPanel.this.model.remove(VendorPanel.this.getSelected());
+	        	        	VendorPanel.this.refresh();
+	    	            	if (1 <= index) {
+	    	            		index -= 1;
+	    	            		VendorPanel.this.select(index);
+	    	            	}
+	    	            	else {
+	    	            		if (VendorPanel.this.model.size() >= 1)
+	    	            			VendorPanel.this.select(0);
+	    	            	}
+	        	        }
+	        	        catch (RemoveFailedException rfe) {
+	        	        	JOptionPane.showMessageDialog(null,
+	                                "Error :: " + rfe.getMessage(),
+	                                "Error",
+	                                JOptionPane.ERROR_MESSAGE);
+	        	        }
+	        	        catch (IOException ioe) {
+	        	        	JOptionPane.showMessageDialog(null,
+	                                "Error :: " + ioe.getMessage(),
+	                                "Error",
+	                                JOptionPane.ERROR_MESSAGE);
+	        	        }
+            		}
+            	}
             }
         });        
         p.add (b);
         
-        b = new JButton ("Edit");    
+        b = new JButton ("Close");    
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
-            	String selectedCat=categoryChoice.getSelectedItem();
-            	AddEditVendorDialog d = new AddEditVendorDialog(selectedCat,getSelectedVendor(), VendorPanel.this.parent);
-            	d.setLocationRelativeTo(VendorPanel.this.parent);
-            	d.setModal(true);
-                d.pack();
-                d.setVisible (true);
-                VendorPanel.this.showVendorsForSelectedCategory();
-            }
-        });
-        p.add (b);
-        
-        b = new JButton ("Move Up");    
-        b.addActionListener (new ActionListener () {
-            public void actionPerformed (ActionEvent e) {
-            	MoveUpSelectedVendor();
-            }
-        });        
-        p.add (b);
-        
-        b = new JButton ("Move Down"); 
-        b.addActionListener (new ActionListener () {
-            public void actionPerformed (ActionEvent e) {
-            	MoveDownSelectedVendor();
+            	VendorPanel.this.parent.setContentPane(new EmptyPanel(VendorPanel.this.parent));
+                VendorPanel.this.parent.repaint();
             }
         });        
         p.add (b);

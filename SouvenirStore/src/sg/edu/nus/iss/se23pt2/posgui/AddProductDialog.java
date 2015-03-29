@@ -5,6 +5,8 @@ import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -26,8 +28,6 @@ public class AddProductDialog extends OkCancelDialog {
 	    private JTextField productPriceField;
 	    private JTextField productBarcodeField;
 	    
-	    private boolean editMode = false;
-
 	    public AddProductDialog (Inventory inventory, JFrame parent) {
 	        super(parent, "Add Product");
 	        this.inventory = inventory;
@@ -39,7 +39,7 @@ public class AddProductDialog extends OkCancelDialog {
 	    }
 
 	    private void loadCategories() {
-	    	java.util.List<Category> catList = inventory.getAllCategories();
+	    	java.util.List<Category> catList = inventory.getCategories();
 	    	
 	    	if (null != catList) {
 	    		this.productCategoryCombo.removeAll();
@@ -57,53 +57,58 @@ public class AddProductDialog extends OkCancelDialog {
 	    	}
 	    }
 	    
-	    private void loadProductDetails() {
-	    	this.productNameField.setText(this.product.getName());
-	    	this.productDescriptionField.setText(this.product.getDescription());
-	    	this.productIdField.setText(this.product.getId());
-	    	this.productQuantityField.setText(this.product.getQuantity().toString());
-	    	this.productOrderQuantityField.setText(this.product.getOrderQuantity().toString());
-	    	this.productReorderThresholdQuantityField.setText(this.product.getReorderThresholdQuantity().toString());
-	    	this.productPriceField.setText(this.product.getPrice().toString());
-	    	this.productBarcodeField.setText(this.product.getBarcode());
-	    }
-	    
-	    private boolean updateProductDetails() {
-	    	
-	    	//Validate and update
-	    	Integer quantity = 0;
-	    	Integer oQuantity = 0;
-	    	Integer rtQuantity = 0;
-	    	Float price = Float.parseFloat("0");
+	    private boolean validateProductDetails() {
+	    	//Let's validate number fields
 	    	try {
-	    		quantity = Integer.parseInt(this.productQuantityField.getText());
-	    		oQuantity = Integer.parseInt(this.productOrderQuantityField.getText());
-	    		rtQuantity = Integer.parseInt(this.productReorderThresholdQuantityField.getText());
-	    		price = Float.parseFloat(this.productPriceField.getText());
+	    		Integer.parseInt(this.productQuantityField.getText());
+	    		Integer.parseInt(this.productOrderQuantityField.getText());
+	    		Integer.parseInt(this.productReorderThresholdQuantityField.getText());
+	    		Float.parseFloat(this.productPriceField.getText());
 	    	}
 	    	catch (NumberFormatException nfex) {
 	    		JOptionPane.showMessageDialog(null,
-                        nfex.getMessage(),
+                        "Error :: Invalid input - Quantity, Price, Reorder Quantity, Order Quantity",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
-	    		nfex.printStackTrace();
 	    		return false;
 	    	}
-	    	this.product.setQuantity(quantity);
-	    	this.product.setReorderThresholdQuantity(rtQuantity);
-	    	this.product.setOrderQuantity(oQuantity);
-	    	this.product.setPrice(price);
 	    	
-	    	//Update string fields
-	    	this.product.setName(this.productNameField.getText());
-	    	this.product.setDescription(this.productDescriptionField.getText());
-	    	this.product.setCategory((Category)this.productCategoryCombo.getSelectedItem());
-	    	this.product.setBarcode(this.productBarcodeField.getText());
-	    	
-	    	//No need to update Id since, category change will take care of it.
-	    	//this.product.setId(this.productIdField.getText());
-	    	
+	    	//Let's validate text fields
+	    	//we only need to ensure that name and barcode are not empty
+	    	if ((0 == this.productNameField.getText().length()) ||
+	    		(0 == this.productBarcodeField.getText().length())) {
+	    		JOptionPane.showMessageDialog(null,
+                        "Error :: Name and Barcode cannot be empty!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+	    		return false;
+	    	}
 	    	return true;
+	    }
+	    
+	    private Product createNewProduct() {
+	    	String id = this.productIdField.getText();
+	        String name = this.productNameField.getText();
+	    	
+	    	if (validateProductDetails()) {
+	    		this.product = new Product(id, name);
+		    	this.product.setQuantity(Integer.parseInt(this.productQuantityField.getText()));
+		    	this.product.setReorderThresholdQuantity(Integer.parseInt(this.productReorderThresholdQuantityField.getText()));
+		    	this.product.setOrderQuantity(Integer.parseInt(this.productOrderQuantityField.getText()));
+		    	this.product.setPrice(Float.parseFloat(this.productPriceField.getText()));
+		    	
+		    	//Update string fields
+		    	this.product.setName(this.productNameField.getText());
+		    	this.product.setDescription(this.productDescriptionField.getText());
+		    	this.product.setCategory((Category)this.productCategoryCombo.getSelectedItem());
+		    	this.product.setBarcode(this.productBarcodeField.getText());
+		    	
+		    	//No need to update Id since, category change will take care of it.
+		    	//this.product.setId(this.productIdField.getText());
+		    	return this.product;
+	    	}
+	    	//Let's return null if we hit this code (Validation failed)
+	    	return null;
 	    }
 	    
 	    protected JPanel createFormPanel () {
@@ -111,11 +116,19 @@ public class AddProductDialog extends OkCancelDialog {
 	        p.setLayout (new GridLayout (0, 2));
 	        p.add (new JLabel ("Category:"));
 	        productCategoryCombo = new JComboBox<Category>();
+	        productCategoryCombo.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					AddProductDialog.this.productIdField.setText(SequenceGenerator.getInstance().getNextSequence(((Category)AddProductDialog.this.productCategoryCombo.getSelectedItem()).getCode()));
+				}
+			});
 	        p.add(productCategoryCombo);
 	        
 	        p.add (new JLabel ("Product ID:"));
 	        productIdField = new JTextField (20);
-	        //productIdField.setEnabled(false); //To be disabled after sequence generator is ready
+	        productIdField.setEnabled(false); //To be disabled after sequence generator is ready
 	        p.add(productIdField);
 	        
 	        p.add (new JLabel ("Product name:"));
@@ -126,6 +139,10 @@ public class AddProductDialog extends OkCancelDialog {
 		    productDescriptionField = new JTextField ();
 		    p.add(productDescriptionField);
 
+		    p.add (new JLabel ("Quantity:"));
+		    productQuantityField = new JTextField ();
+		    p.add(productQuantityField);
+
 		    p.add (new JLabel ("Price:"));
 		    productPriceField = new JTextField (20);
 		    p.add(productPriceField);
@@ -133,31 +150,21 @@ public class AddProductDialog extends OkCancelDialog {
 		    p.add (new JLabel ("Barcode:"));
 	        productBarcodeField = new JTextField (20);
 	        p.add (productBarcodeField);
-	        
-		    p.add (new JLabel ("Quantity:"));
-		    productQuantityField = new JTextField ();
-		    p.add(productQuantityField);
-
-		    p.add (new JLabel ("Order quantity:"));
-		    productOrderQuantityField = new JTextField (20);
-		    p.add(productOrderQuantityField);
 
 		    p.add (new JLabel ("Threshold quantity:"));
 		    productReorderThresholdQuantityField = new JTextField (20);
 		    p.add(productReorderThresholdQuantityField);
 	        
+		    p.add (new JLabel ("Order quantity:"));
+		    productOrderQuantityField = new JTextField (20);
+		    p.add(productOrderQuantityField);
+
 	        return p;
 	    }
 
 	    protected boolean performOkAction() {
-    		String id = this.productIdField.getText();
-	        String name = this.productNameField.getText();
-	    	String description = this.productDescriptionField.getText();
-	    	if ((0 == id.length()) || (0 == name.length()) || (0 == description.length())) {
-	            return false;
-	        }
-	        this.product = new Product(id, name);
-	        if (updateProductDetails()) {
+    		
+	        if (null != createNewProduct()) {
 		        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
 		        try {
 		        	dsFactory.getProductDS().update(this.product);

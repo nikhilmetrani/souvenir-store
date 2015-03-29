@@ -10,6 +10,7 @@ import java.awt.event.*;
 import java.io.IOException;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -27,9 +28,10 @@ public class CategoryPanel extends JPanel {
         this.inventory = inventory;
         this.parent = parent;
         setLayout (new BorderLayout(5,5));
+        setBorder(new EmptyBorder(5, 5, 5, 5));
         
         this.scrollPane = new JScrollPane();
-        this.model = new CategoryTableModel(this.inventory.getAllCategories());
+        this.model = new CategoryTableModel(this.inventory.getCategories());
         this.table = new JTable(model);
         
         this.table.getModel().addTableModelListener(new TableModelListener() {
@@ -84,7 +86,8 @@ public class CategoryPanel extends JPanel {
     private JPanel createButtonPanel () {
 
         JPanel p = new JPanel (new GridLayout (0, 1, 5, 5));
-
+        p.setBorder(new EmptyBorder(5, 5, 5, 5));
+        
         JButton b = new JButton ("Add");
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
@@ -104,35 +107,37 @@ public class CategoryPanel extends JPanel {
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
             	if (null != CategoryPanel.this.getSelected()) {
-            		int index = CategoryPanel.this.table.getSelectedRow();
-            		
-            		DataStoreFactory dsFactory = DataStoreFactory.getInstance();
-            		try {
-        	        	dsFactory.getCategoryDS().remove(CategoryPanel.this.getSelected());
-        	        	CategoryPanel.this.inventory.removeCategory(CategoryPanel.this.getSelected().getCode());
-                		CategoryPanel.this.model.remove(CategoryPanel.this.getSelected());
-    	            	CategoryPanel.this.refresh();
-    	            	if (1 <= index) {
-    	            		index -= 1;
-    	            		CategoryPanel.this.select(index);
-    	            	}
-    	            	else {
-    	            		if (CategoryPanel.this.model.size() >= 1)
-    	            			CategoryPanel.this.select(0);
-    	            	}
-        	        }
-        	        catch (RemoveFailedException rfe) {
-        	        	JOptionPane.showMessageDialog(null,
-                                "Error :: " + rfe.getMessage(),
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
-        	        }
-        	        catch (IOException ioe) {
-        	        	JOptionPane.showMessageDialog(null,
-                                "Error :: " + ioe.getMessage(),
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
-        	        }
+            		if (0 == StoreAppWindow.showOkCancelDialog(null, "Are you sure you want to remove selected category?\nClick Ok to continue.", "Confirm", JOptionPane.QUESTION_MESSAGE)) {
+	            		int index = CategoryPanel.this.table.getSelectedRow();
+	            		
+	            		DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+	            		try {
+	        	        	dsFactory.getCategoryDS().remove(CategoryPanel.this.getSelected());
+	        	        	CategoryPanel.this.inventory.removeCategory(CategoryPanel.this.getSelected().getCode());
+	                		CategoryPanel.this.model.remove(CategoryPanel.this.getSelected());
+	    	            	CategoryPanel.this.refresh();
+	    	            	if (1 <= index) {
+	    	            		index -= 1;
+	    	            		CategoryPanel.this.select(index);
+	    	            	}
+	    	            	else {
+	    	            		if (CategoryPanel.this.model.size() >= 1)
+	    	            			CategoryPanel.this.select(0);
+	    	            	}
+	        	        }
+	        	        catch (RemoveFailedException rfe) {
+	        	        	JOptionPane.showMessageDialog(null,
+	                                "Error :: " + rfe.getMessage(),
+	                                "Error",
+	                                JOptionPane.ERROR_MESSAGE);
+	        	        }
+	        	        catch (IOException ioe) {
+	        	        	JOptionPane.showMessageDialog(null,
+	                                "Error :: " + ioe.getMessage(),
+	                                "Error",
+	                                JOptionPane.ERROR_MESSAGE);
+	        	        }
+	            	}
             	}
             }
         });

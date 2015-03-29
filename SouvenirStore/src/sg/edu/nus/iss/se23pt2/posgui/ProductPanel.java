@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
@@ -29,9 +30,10 @@ public class ProductPanel extends JPanel {
         this.inventory = inventory;
         this.parent = parent;
         setLayout (new BorderLayout());
+        setBorder(new EmptyBorder(5, 5, 5, 5));
         
         //this.scrollPane = new JScrollPane();
-        this.model = new ProductTableModel(this.inventory.getAllProducts());
+        this.model = new ProductTableModel(this.inventory.getProducts());
         this.table = new JTable(model);
         this.table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         Dimension tableSize = new Dimension(900, 400);
@@ -80,7 +82,7 @@ public class ProductPanel extends JPanel {
 
     private JComboBox<String> getCategoryCombo() {
     	JComboBox<String> comboCat = new JComboBox<String>();
-    	java.util.List<Category> catList = inventory.getAllCategories();
+    	java.util.List<Category> catList = inventory.getCategories();
     	
     	if (null != catList) {
     		comboCat.removeAll();
@@ -144,7 +146,8 @@ public class ProductPanel extends JPanel {
 
     private JPanel createButtonPanel () {
 
-        JPanel p = new JPanel (new GridLayout (0, 1));
+    	JPanel p = new JPanel (new GridLayout (0, 1, 5, 5));
+    	p.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         JButton b = new JButton ("Add");
         b.addActionListener (new ActionListener () {
@@ -165,35 +168,37 @@ public class ProductPanel extends JPanel {
         b.addActionListener (new ActionListener () {
         	public void actionPerformed (ActionEvent e) {
             	if (null != ProductPanel.this.getSelected()) {
-            		int index = ProductPanel.this.table.getSelectedRow();
-            		
-            		DataStoreFactory dsFactory = DataStoreFactory.getInstance();
-            		try {
-        	        	dsFactory.getProductDS().remove(ProductPanel.this.getSelected());
-        	        	ProductPanel.this.inventory.removeProduct(ProductPanel.this.getSelected().getId());
-                		ProductPanel.this.model.remove(ProductPanel.this.getSelected());
-    	            	ProductPanel.this.refresh();
-    	            	if (1 <= index) {
-    	            		index -= 1;
-    	            		ProductPanel.this.select(index);
-    	            	}
-    	            	else {
-    	            		if (ProductPanel.this.model.size() >= 1)
-    	            			ProductPanel.this.select(0);
-    	            	}
-        	        }
-        	        catch (RemoveFailedException rfe) {
-        	        	JOptionPane.showMessageDialog(null,
-                                "Error :: " + rfe.getMessage(),
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
-        	        }
-        	        catch (IOException ioe) {
-        	        	JOptionPane.showMessageDialog(null,
-                                "Error :: " + ioe.getMessage(),
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
-        	        }
+            		if (0 == StoreAppWindow.showOkCancelDialog(null, "Are you sure you want to remove selected product?\nClick Ok to continue.", "Confirm", JOptionPane.QUESTION_MESSAGE)) {
+	            		int index = ProductPanel.this.table.getSelectedRow();
+	            		
+	            		DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+	            		try {
+	        	        	dsFactory.getProductDS().remove(ProductPanel.this.getSelected());
+	        	        	ProductPanel.this.inventory.removeProduct(ProductPanel.this.getSelected().getId());
+	                		ProductPanel.this.model.remove(ProductPanel.this.getSelected());
+	    	            	ProductPanel.this.refresh();
+	    	            	if (1 <= index) {
+	    	            		index -= 1;
+	    	            		ProductPanel.this.select(index);
+	    	            	}
+	    	            	else {
+	    	            		if (ProductPanel.this.model.size() >= 1)
+	    	            			ProductPanel.this.select(0);
+	    	            	}
+	        	        }
+	        	        catch (RemoveFailedException rfe) {
+	        	        	JOptionPane.showMessageDialog(null,
+	                                "Error :: " + rfe.getMessage(),
+	                                "Error",
+	                                JOptionPane.ERROR_MESSAGE);
+	        	        }
+	        	        catch (IOException ioe) {
+	        	        	JOptionPane.showMessageDialog(null,
+	                                "Error :: " + ioe.getMessage(),
+	                                "Error",
+	                                JOptionPane.ERROR_MESSAGE);
+	        	        }
+            		}
             	}
             }
         });

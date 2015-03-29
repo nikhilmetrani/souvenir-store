@@ -43,6 +43,22 @@ public class SequenceGenerator
                 e.printStackTrace();
             }
 	    }
+	    /**
+	     * Nikhil Metrani
+	     * If the sequence generator does not exist, lets create one
+	     * It's easier to handle it here once than doing it everywhere else
+	     * */
+	    else {
+	    	Sequence s = new Sequence(sequenceType);
+	    	/**
+	    	 * Nikhil Metrani
+	    	 * Do we need to set the prefix here?
+	    	 * Transaction prefix does not contain a trailing forward slash as opposed to Product.
+	    	 * Let's handle this within the Product*/
+	    	//s.setPrefix(sequenceType);
+	    	this.addSequence(s);
+	    	retVal = this.getNextSequence(sequenceType);
+	    }
 	    return retVal;
 	}
 	

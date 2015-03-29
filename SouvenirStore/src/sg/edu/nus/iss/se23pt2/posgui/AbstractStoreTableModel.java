@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import sg.edu.nus.iss.se23pt2.pos.Product;
-
 /**
  * @author Nick
  *

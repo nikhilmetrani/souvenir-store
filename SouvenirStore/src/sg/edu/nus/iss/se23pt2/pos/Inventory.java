@@ -40,7 +40,7 @@ public class Inventory {
     	this.discounts = discounts;
     }
     
-    public List<Product> getAllProducts() {
+    public List<Product> getProducts() {
     	if (null == this.products)
     		return null;
     	ArrayList<Product> p = new ArrayList<Product>();
@@ -101,7 +101,7 @@ public class Inventory {
     	return pr;
     }
     
-    public List<Category> getAllCategories() {
+    public List<Category> getCategories() {
     	if (null == this.categories)
     		return null;
     	ArrayList<Category> c = new ArrayList<Category>();
@@ -132,7 +132,7 @@ public class Inventory {
     	return false;
     }
     
-    public List<Discount> getAllDiscounts() {
+    public List<Discount> getDiscounts() {
     	if (null == this.discounts)
     		return null;
     	ArrayList<Discount> d = new ArrayList<Discount>();
@@ -164,7 +164,7 @@ public class Inventory {
     	return false;
     } 
     
-    public ArrayList<Vendor> getVendorsForCategory(String categoryCode) {
+    public ArrayList<Vendor> getVendors(String categoryCode) {
     	if (null == this.vendors)
     		return null;
     

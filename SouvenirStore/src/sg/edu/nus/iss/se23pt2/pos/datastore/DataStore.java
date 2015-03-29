@@ -44,6 +44,15 @@ public abstract class DataStore {
         }
     }
 
+    public void cleanup(){
+    	/**
+         * Nikhil Metrani
+         * Let's delete the old file to keep data folder clean
+         * */
+        File oldFile = new File(this.file.getPath() + ".old"); //Ensuring that we delete the .old file
+        oldFile.delete();
+    }
+    
     public abstract <T> ArrayList<T> load (SouvenirStore store)
             throws DataLoadFailedException;
 
@@ -109,6 +118,7 @@ public abstract class DataStore {
                 bufferedReader.close();
                 bufferedReader = null;
             }
+            this.cleanup();
         } catch (IOException ioe) {
             System.out
                     .println("Reader/Writer close failed " + ioe.getMessage());

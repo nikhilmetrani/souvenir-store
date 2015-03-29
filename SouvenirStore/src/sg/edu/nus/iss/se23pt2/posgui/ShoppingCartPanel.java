@@ -30,6 +30,7 @@ import java.util.Vector;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -41,7 +42,9 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
+import sg.edu.nus.iss.se23pt2.pos.Category;
 import sg.edu.nus.iss.se23pt2.pos.Customer;
 import sg.edu.nus.iss.se23pt2.pos.Item;
 import sg.edu.nus.iss.se23pt2.pos.Product;
@@ -62,6 +65,7 @@ public class ShoppingCartPanel extends JPanel {
     private JScrollPane                 scrollPane;
     private JScrollPane                 tblScrollPane;
     private JTable                      table;
+    private JComboBox<String> 			productSelectorCombo;
     private JPanel topPanel;
     private JTextField customerId;
     private JTextField customerName;
@@ -198,6 +202,13 @@ public class ShoppingCartPanel extends JPanel {
         table.getColumnModel().getColumn(columnIndices.get("button")).setCellEditor(new ButtonEditor(new JCheckBox()));  //Button Editor
         table.setRowHeight(20);
 
+        /**
+         * Nikhil Metrani
+         * Product selection logic to enable adding products to shopping cart
+         * */
+        TableColumn catColumn = this.table.getColumnModel().getColumn(0);
+        catColumn.setCellEditor(new DefaultCellEditor(this.getProductSelectionCombo()));
+        
         /** Modify row selection on table row insert/delete **/
         table.getModel().addTableModelListener(new TableModelListener(){
             @Override
@@ -347,6 +358,14 @@ public class ShoppingCartPanel extends JPanel {
             // Note that the data/cell address is constant,
             // no matter where the cell appears onscreen.
 
+        	/**
+        	 * Nikhil Metrani
+        	 * If product is already added, disable product selection
+        	 * */
+        	if ((col == columnIndices.get("id")) && ("x".equals(this.getValueAt(row, 5).toString()))) {
+        		return false;
+        	}
+        			
             if(this.getDataVector().size()-1 == row){
                 if (col== columnIndices.get("name") || (col > columnIndices.get("qty") && col < columnIndices.get("button"))) {
                     return false;
@@ -390,8 +409,12 @@ public class ShoppingCartPanel extends JPanel {
                 if(aValue!=null){
                     product = souvenirStore.getInventory().getProduct(aValue.toString());
                 }
-
                 this.setValueAt(product.getName(), row, columnIndices.get("name"));
+                /**
+                 * Nikhil Metrani
+                 * While adding product to cart, let's add at least one quantity
+                 * */
+                this.setValueAt("1", row, columnIndices.get("qty"));
                 this.setValueAt(product.getPrice(), row, columnIndices.get("unitPrice"));
             }
         }
@@ -609,4 +632,26 @@ public class ShoppingCartPanel extends JPanel {
         return true;
     }
 
+    /**
+     * Nikhil Metrani
+     * Product selection logic to enable adding products to shopping cart
+     * */
+    public JComboBox<String> getProductSelectionCombo() {
+    	
+    	this.productSelectorCombo = new JComboBox<String>();
+    	
+    	java.util.List<Product> prodList = this.souvenirStore.getInventory().getProducts();
+    	
+    	this.productSelectorCombo.addItem(""); //Let's add a blank item
+    	if (null != prodList) {
+    		this.productSelectorCombo.removeAll();
+	    	Product prod = null;
+	        Iterator<Product> i = prodList.iterator();
+	        while (i.hasNext()) {
+	        	prod = i.next();
+	        	this.productSelectorCombo.addItem(prod.getId());
+	        }
+    	}
+    	return this.productSelectorCombo;
+    }
 }
