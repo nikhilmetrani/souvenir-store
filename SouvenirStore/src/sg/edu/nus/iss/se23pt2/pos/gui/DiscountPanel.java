@@ -6,7 +6,6 @@ import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 import java.io.IOException;
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -42,14 +41,13 @@ public class DiscountPanel extends JPanel {
         setBorder(new EmptyBorder(5, 5, 5, 5));
         
         this.scrollPane = new JScrollPane();
-        this.model = new DiscountTableModel(this.inventory.getDiscounts());
+        this.model = new DiscountTableModel(this.inventory.getDiscounts(), parent);
         this.table = new JTable(model);
-        
         this.table.getModel().addTableModelListener(new TableModelListener() {
-			
+		
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				if (TableModelEvent.UPDATE == e.getType()) {
+				if (e.getType() == TableModelEvent.UPDATE) {
 						DataStoreFactory dsFactory = DataStoreFactory.getInstance();
 						
 				        try {

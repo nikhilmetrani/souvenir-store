@@ -3,8 +3,11 @@
  */
 package sg.edu.nus.iss.se23pt2.pos.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.event.TableModelEvent;
 
 import sg.edu.nus.iss.se23pt2.pos.Discount;
@@ -14,11 +17,10 @@ import sg.edu.nus.iss.se23pt2.pos.Discount;
  *
  */
 public class DiscountTableModel extends AbstractStoreTableModel<Discount> {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
-
+	private JFrame parent;
+	
 	private final String[] columnHeaders = new String[] {
             "Discount code", "Discount description", "Start date", "Period in days", "Percentage", "Applicable to"
     };
@@ -31,7 +33,12 @@ public class DiscountTableModel extends AbstractStoreTableModel<Discount> {
 	public DiscountTableModel(List<Discount> discountList) {
 		super(discountList);
 	}
-
+	
+	public DiscountTableModel(List<Discount> discountList, JFrame parent) {
+		super(discountList);
+		this.parent = parent;
+	}
+	
 	@Override
     public String getColumnName(int column) {
         return columnHeaders[column];
@@ -87,7 +94,9 @@ public class DiscountTableModel extends AbstractStoreTableModel<Discount> {
 				row.setDiscDesc((String) aValue);
 				break;
 			case 2:
-				row.setStartDate((String) aValue);
+				CalendarPanel cp = new CalendarPanel(parent);
+				cp.setVisible(true);
+				//row.setStartDate((String) aValue);
 				break;
 			case 3:
 				row.setPeriodInDays((String) aValue);
