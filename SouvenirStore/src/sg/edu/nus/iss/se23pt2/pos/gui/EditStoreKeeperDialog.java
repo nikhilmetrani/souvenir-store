@@ -52,6 +52,10 @@ public class EditStoreKeeperDialog extends OkCancelDialog {
     		String confirmPassword = this.storeKeeperConfirmPasswordField.getText();
 	        String name = this.storeKeeperNameField.getText();
 	        if ((0 == newPassword.length()) || (0 == name.length())) {
+	        	JOptionPane.showMessageDialog(null,
+                        "Password and confirm password are different!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);	
 	            return false;
 	        }
 	        
@@ -59,7 +63,12 @@ public class EditStoreKeeperDialog extends OkCancelDialog {
 	        	this.storeKeeper.setName(name);
 		        this.storeKeeper.setPassword("", newPassword, "");
 		        return true;
-	        }           	
+	        } else{
+	        	JOptionPane.showMessageDialog(null,
+                        "Invalid Entries!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);	        	
+	        }          	
     	
         return false;
 	}

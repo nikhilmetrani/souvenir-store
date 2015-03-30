@@ -47,9 +47,17 @@ public class AddStoreKeeperDialog extends OkCancelDialog {
 	        String confirmPassword = this.storeKeeperConfirmPasswordField.getText().toUpperCase();
 	        String name = this.storeKeeperNameField.getText();
 	        if ((0 == password.length()) || (0 == name.length())) {
+	        	JOptionPane.showMessageDialog(null,
+                        "Fields are be empty!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
 	            return false;
 	        }
 	        if(!password.equals(confirmPassword)){
+	        	JOptionPane.showMessageDialog(null,
+                        "Password and confirm password are different!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);	
 	        	return false;
 	        }
 	        this.storeKeeper = new StoreKeeper(storeKeeperNameField.getText(), storeKeeperPasswordField.getText());
