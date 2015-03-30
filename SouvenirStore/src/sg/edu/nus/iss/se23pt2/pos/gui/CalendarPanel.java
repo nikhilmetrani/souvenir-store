@@ -76,8 +76,7 @@ public class CalendarPanel extends OkCancelDialog{
         calScrollPane.setBounds(10, 50, 300, 250);
         
         calPanel = new JPanel(null);
-        //calPanel.setBounds(0, 0, 320, 335);
-        calPanel.setSize(330, 375);
+        calPanel.setPreferredSize(new Dimension(330,375));
         calPanel.setBorder(BorderFactory.createTitledBorder("Calendar"));
         calPanel.add(lblMonth);
         calPanel.add(lblYear);
