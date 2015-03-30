@@ -1,17 +1,15 @@
 package sg.edu.nus.iss.se23pt2.pos.gui;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-
-import sg.edu.nus.iss.se23pt2.pos.Category;
 import sg.edu.nus.iss.se23pt2.pos.Discount;
-import sg.edu.nus.iss.se23pt2.pos.Inventory;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.table.*;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -48,28 +46,39 @@ public class CalendarPanel extends OkCancelDialog{
         catch (IllegalAccessException e) {}
         catch (UnsupportedLookAndFeelException e) {}
     	
-    	//Add control components
         lblMonth = new JLabel ("January");
+        lblMonth.setBounds(160-lblMonth.getPreferredSize().width/2, 25, 100, 25);
+        
         lblYear = new JLabel ("Change year:");
+        lblYear.setBounds(10, 305, 80, 20);
+        
         cmbYear = new JComboBox<String>();
-        btnPrev = new JButton ("<<");
-        btnNext = new JButton (">>");
-        calModel = new DefaultTableModel(){public boolean isCellEditable(int rowIndex, int mColIndex){return false;}};
-        calTable = new JTable(calModel);
-        calScrollPane = new JScrollPane(calTable);
-        calPanel = new JPanel(null);
-        calPanel.setSize(330, 375);
-        
-        //Set border
-        calPanel.setBorder(BorderFactory.createTitledBorder("Calendar"));
-        
-        //Register action listeners
-        btnPrev.addActionListener(new btnPrev_Action());
-        btnNext.addActionListener(new btnNext_Action());
+        cmbYear.setBounds(230, 305, 80, 20);
         cmbYear.addActionListener(new cmbYear_Action());
         
-        //Add controls to pane
-        //pane.add(calPanel);
+        btnPrev = new JButton ("<<");
+        btnPrev.setBounds(10, 25, 50, 25);
+        btnPrev.addActionListener(new btnPrev_Action());
+        
+        btnNext = new JButton (">>");
+        btnNext.setBounds(260, 25, 50, 25);
+        btnNext.addActionListener(new btnNext_Action());
+        
+        calModel = new DefaultTableModel(){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int rowIndex, int mColIndex){return false;}
+		};
+        for (int i=0; i<7; i++){
+        	calModel.addColumn(dow[i]);
+        }
+        calTable = new JTable(calModel);
+        calScrollPane = new JScrollPane(calTable);
+        calScrollPane.setBounds(10, 50, 300, 250);
+        
+        calPanel = new JPanel(null);
+        //calPanel.setBounds(0, 0, 320, 335);
+        calPanel.setSize(330, 375);
+        calPanel.setBorder(BorderFactory.createTitledBorder("Calendar"));
         calPanel.add(lblMonth);
         calPanel.add(lblYear);
         calPanel.add(cmbYear);
@@ -77,58 +86,31 @@ public class CalendarPanel extends OkCancelDialog{
         calPanel.add(btnNext);
         calPanel.add(calScrollPane);
         
-        //Set bounds
-        calPanel.setBounds(0, 0, 320, 335);
-        lblMonth.setBounds(160-lblMonth.getPreferredSize().width/2, 25, 100, 25);
-        lblYear.setBounds(10, 305, 80, 20);
-        cmbYear.setBounds(230, 305, 80, 20);
-        btnPrev.setBounds(10, 25, 50, 25);
-        btnNext.setBounds(260, 25, 50, 25);
-        calScrollPane.setBounds(10, 50, 300, 250);
-        
-        //Make frame visible
-        //calFrame.setResizable(false);
-        //calFrame.setVisible(true);
-        
-        //Get real month/year
-        GregorianCalendar gc = new GregorianCalendar(); //Create calendar
-        realDay = gc.get(GregorianCalendar.DAY_OF_MONTH); //Get day
-        realMonth = gc.get(GregorianCalendar.MONTH); //Get month
-        realYear = gc.get(GregorianCalendar.YEAR); //Get year
-        curMonth = realMonth; //Match month and year
+        GregorianCalendar gc = new GregorianCalendar();
+        realDay = gc.get(GregorianCalendar.DAY_OF_MONTH);
+        realMonth = gc.get(GregorianCalendar.MONTH);
+        realYear = gc.get(GregorianCalendar.YEAR);
+        curMonth = realMonth;
         curYear = realYear;
         
-        for (int i=0; i<7; i++){
-        	calModel.addColumn(dow[i]);
-        }
-        
-        calTable.getParent().setBackground(calTable.getBackground()); //Set background
-        
-        //No resize/reorder
+        calTable.getParent().setBackground(calTable.getBackground());
         calTable.getTableHeader().setResizingAllowed(false);
         calTable.getTableHeader().setReorderingAllowed(false);
-        
-        //Single cell selection
         calTable.setColumnSelectionAllowed(true);
         calTable.setRowSelectionAllowed(true);
         calTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
-        //Set row/column count
         calTable.setRowHeight(38);
         calModel.setColumnCount(7);
         calModel.setRowCount(6);
         
-        //Populate table
         for (int i=realYear-100; i<=realYear+100; i++){
             cmbYear.addItem(String.valueOf(i));
         }
         
-        //Refresh calendar
         repaint(realMonth, realYear);
         
         ListSelectionModel cellSelectionModel = calTable.getSelectionModel();
-        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
+        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);        
         cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
               String selCell = null;
@@ -155,7 +137,7 @@ public class CalendarPanel extends OkCancelDialog{
         lblMonth.setBounds(160-lblMonth.getPreferredSize().width/2, 25, 180, 25); //Re-align label with calendar
         cmbYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box
         
-        //Clear table
+        //Clear calendar
         for (int i=0; i<6; i++){
             for (int j=0; j<7; j++){
             	calModel.setValueAt(null, i, j);
@@ -172,8 +154,6 @@ public class CalendarPanel extends OkCancelDialog{
             int column  =  (i+som-2)%7;
             calModel.setValueAt(i, row, column);
         }
-        
-        //Apply renderers
         calTable.setDefaultRenderer(calTable.getColumnClass(0), new calTableRenderer());
     }
     
