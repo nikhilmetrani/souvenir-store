@@ -123,7 +123,7 @@ public class DiscountPanel extends JPanel {
         b.addActionListener (new ActionListener () {
             public void actionPerformed (ActionEvent e) {
             	if (null != DiscountPanel.this.getSelected()) {
-            		if (0 == StoreAppWindow.showOkCancelDialog(null, "Are you sure you want to remove selected discount?\nClick Ok to continue.", "Confirm", JOptionPane.QUESTION_MESSAGE)) {
+            		if (0 == StoreAppWindow.confirm("Are you sure you want to remove selected discount?\nClick Ok to continue.")) {
 	            		int index = DiscountPanel.this.table.getSelectedRow();
 	            		
 	            		DataStoreFactory dsFactory = DataStoreFactory.getInstance();

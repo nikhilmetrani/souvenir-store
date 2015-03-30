@@ -159,9 +159,10 @@ public class VendorPanel extends JPanel {
 
         b = new JButton ("Remove");
         b.addActionListener (new ActionListener () {
+            @Override
             public void actionPerformed (ActionEvent e) {
             	if (null != VendorPanel.this.getSelected()) {
-            		if (0 == StoreAppWindow.showOkCancelDialog(null, "Are you sure you want to remove selected vendor?\nClick Ok to continue.", "Confirm", JOptionPane.QUESTION_MESSAGE)) {
+            		if (0 == StoreAppWindow.confirm("Are you sure you want to remove selected vendor?\nClick Ok to continue.")) {
                             int index = VendorPanel.this.table.getSelectedRow();
 
                             DataStoreFactory dsFactory = DataStoreFactory.getInstance();
