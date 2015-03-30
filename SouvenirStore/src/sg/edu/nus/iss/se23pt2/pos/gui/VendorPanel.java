@@ -17,14 +17,14 @@ import javax.swing.event.TableModelListener;
 
 public class VendorPanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 	
-	private Inventory       	 		inventory;
-    private JComboBox<String>			categoryCombo; 
-    private JTable 						table;
-    private VendorTableModel 			model;
-    private JFrame						parent;
-    private JScrollPane 				scrollPane;
+    private final Inventory               inventory;
+    private final JComboBox<String>       categoryCombo; 
+    private JTable                        table;
+    private VendorTableModel              model;
+    private final JFrame                  parent;
+    private final JScrollPane             scrollPane;
    
     
     public VendorPanel (Inventory inventory, JFrame parent) {
@@ -33,7 +33,7 @@ public class VendorPanel extends JPanel {
         setLayout (new BorderLayout());
         setBorder(new EmptyBorder(5, 5, 5, 5));
         //Initialize Choice for user to select category
-        this.categoryCombo = new JComboBox<String>(); 
+        this.categoryCombo = new JComboBox(); 
         this.loadCategories();
         
         //Initialize List for showing vendors for selected category
@@ -43,37 +43,31 @@ public class VendorPanel extends JPanel {
         //Add the listener for categoryCombo
         this.categoryCombo.addActionListener(new ActionListener() {
 			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				VendorPanel.this.showVendorsForSelectedCategory();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    VendorPanel.this.showVendorsForSelectedCategory();
+            }
+        });
         
         this.table.getModel().addTableModelListener(new TableModelListener() {
 			
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				if (TableModelEvent.UPDATE == e.getType()) {
-						DataStoreFactory dsFactory = DataStoreFactory.getInstance();
-						
-				        try {
-				        	dsFactory.getVendorDS(VendorPanel.this.getSelectedCategory()).update(VendorPanel.this.getSelected());
-				        }
-				        catch (UpdateFailedException ufe) {
-				        	JOptionPane.showMessageDialog(null,
-			                        "Error :: " + ufe.getMessage(),
-			                        "Error",
-			                        JOptionPane.ERROR_MESSAGE);
-				        }
-				        catch (IOException ioe) {
-				        	JOptionPane.showMessageDialog(null,
-			                        "Error :: " + ioe.getMessage(),
-			                        "Error",
-			                        JOptionPane.ERROR_MESSAGE);
-				        }
-					}
-				}
-		});
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                if (TableModelEvent.UPDATE == e.getType()) {
+                    DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+
+                    try {
+                            dsFactory.getVendorDS(VendorPanel.this.getSelectedCategory()).update(VendorPanel.this.getSelected());
+                    }
+                    catch (UpdateFailedException | IOException ufe) {
+                            JOptionPane.showMessageDialog(null,
+                            "Error :: " + ufe.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
 
         this.scrollPane = new JScrollPane();
         this.scrollPane.setViewportView(this.table);
@@ -136,10 +130,6 @@ public class VendorPanel extends JPanel {
     }
     
     public Vendor getSelected() {
-        /*int idx = vendorList.getSelectedIndex();
-        String selectedCat=categoryChoice.getSelectedItem();
-        ArrayList<Vendor> vendorsForCategory=inventory.getVendorsForCategory(selectedCat);           
-        return (idx == -1) ? null : vendorsForCategory.get(idx);*/
         int idx = this.table.getSelectedRow();
         return (idx == -1) ? null : this.model.get(idx);
     }
@@ -151,6 +141,7 @@ public class VendorPanel extends JPanel {
     	
         JButton b = new JButton ("Add");
         b.addActionListener (new ActionListener () {
+            @Override
             public void actionPerformed (ActionEvent e) {
             	String selectedCat = VendorPanel.this.categoryCombo.getSelectedItem().toString();
             	
@@ -171,35 +162,29 @@ public class VendorPanel extends JPanel {
             public void actionPerformed (ActionEvent e) {
             	if (null != VendorPanel.this.getSelected()) {
             		if (0 == StoreAppWindow.showOkCancelDialog(null, "Are you sure you want to remove selected vendor?\nClick Ok to continue.", "Confirm", JOptionPane.QUESTION_MESSAGE)) {
-	            		int index = VendorPanel.this.table.getSelectedRow();
-	            		
-	            		DataStoreFactory dsFactory = DataStoreFactory.getInstance();
-	            		try {
-	        	        	dsFactory.getVendorDS(VendorPanel.this.getSelectedCategory()).remove(VendorPanel.this.getSelected());
-	        	        	VendorPanel.this.inventory.removeVendor(VendorPanel.this.getSelectedCategory(), VendorPanel.this.getSelected());
-	        	        	VendorPanel.this.model.remove(VendorPanel.this.getSelected());
-	        	        	VendorPanel.this.refresh();
-	    	            	if (1 <= index) {
-	    	            		index -= 1;
-	    	            		VendorPanel.this.select(index);
-	    	            	}
-	    	            	else {
-	    	            		if (VendorPanel.this.model.size() >= 1)
-	    	            			VendorPanel.this.select(0);
-	    	            	}
-	        	        }
-	        	        catch (RemoveFailedException rfe) {
-	        	        	JOptionPane.showMessageDialog(null,
-	                                "Error :: " + rfe.getMessage(),
-	                                "Error",
-	                                JOptionPane.ERROR_MESSAGE);
-	        	        }
-	        	        catch (IOException ioe) {
-	        	        	JOptionPane.showMessageDialog(null,
-	                                "Error :: " + ioe.getMessage(),
-	                                "Error",
-	                                JOptionPane.ERROR_MESSAGE);
-	        	        }
+                            int index = VendorPanel.this.table.getSelectedRow();
+
+                            DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+                            try {
+                                    dsFactory.getVendorDS(VendorPanel.this.getSelectedCategory()).remove(VendorPanel.this.getSelected());
+                                    VendorPanel.this.inventory.removeVendor(VendorPanel.this.getSelectedCategory(), VendorPanel.this.getSelected());
+                                    VendorPanel.this.model.remove(VendorPanel.this.getSelected());
+                                    VendorPanel.this.refresh();
+                            if (1 <= index) {
+                                    index -= 1;
+                                    VendorPanel.this.select(index);
+                            }
+                            else {
+                                    if (VendorPanel.this.model.size() >= 1)
+                                            VendorPanel.this.select(0);
+                            }
+                            }
+                            catch (RemoveFailedException | IOException rfe) {
+                                    JOptionPane.showMessageDialog(null,
+                                    "Error :: " + rfe.getMessage(),
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            }
             		}
             	}
             }
@@ -208,6 +193,7 @@ public class VendorPanel extends JPanel {
         
         b = new JButton ("Close");    
         b.addActionListener (new ActionListener () {
+            @Override
             public void actionPerformed (ActionEvent e) {
             	VendorPanel.this.parent.setContentPane(new EmptyPanel(VendorPanel.this.parent));
                 VendorPanel.this.parent.repaint();

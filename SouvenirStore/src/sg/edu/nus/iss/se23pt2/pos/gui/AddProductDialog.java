@@ -162,6 +162,7 @@ public class AddProductDialog extends OkCancelDialog {
 	        return p;
 	    }
 
+                @Override
 	    protected boolean performOkAction() {
     		
 	        if (null != createNewProduct()) {
@@ -170,17 +171,9 @@ public class AddProductDialog extends OkCancelDialog {
 		        	dsFactory.getProductDS().update(this.product);
 		        	return true;
 		        }
-		        catch (UpdateFailedException ufe) {
+		        catch (UpdateFailedException | IOException ufe) {
 		        	JOptionPane.showMessageDialog(null,
 	                        "Error :: " + ufe.getMessage(),
-	                        "Error",
-	                        JOptionPane.ERROR_MESSAGE);
-		        	this.product = null;
-		        	return false;
-		        }
-		        catch (IOException ioe) {
-		        	JOptionPane.showMessageDialog(null,
-	                        "Error :: " + ioe.getMessage(),
 	                        "Error",
 	                        JOptionPane.ERROR_MESSAGE);
 		        	this.product = null;

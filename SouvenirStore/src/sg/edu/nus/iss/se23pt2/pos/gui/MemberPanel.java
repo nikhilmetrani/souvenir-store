@@ -6,44 +6,76 @@ import java.util.*;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
+import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 public class MemberPanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 	
-    private java.util.List<Member> 	members;
-    private java.awt.List          	memberList;
-    private JFrame						parent;
-    private JScrollPane 				scrollPane;
+    private final java.util.List<Member>    members;
+    private final JFrame                    parent;
+    private final JScrollPane               scrollPane;
+    private final JTable                    table;
+    private final MemberTableModel          model;
     
     public MemberPanel (List<Member> members, JFrame parent) {
     	this.members = members;
         this.parent = parent;
-        setLayout (new BorderLayout(5,5));
-        this.memberList = new java.awt.List();
-        this.memberList.setMultipleMode(false);
+        setLayout (new BorderLayout());
+        setBorder(new EmptyBorder(5, 5, 5, 5));
+        
+        this.model = new MemberTableModel(this.members);
+        this.table = new JTable(this.model);
+        
+        this.table.getModel().addTableModelListener(new TableModelListener() {
+			
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                if (TableModelEvent.UPDATE == e.getType()) {
+                    DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+
+                    try {
+                        dsFactory.getMemberDS().update(MemberPanel.this.getSelected());
+                    }
+                    catch (UpdateFailedException | IOException ufe) {
+                            JOptionPane.showMessageDialog(null,
+                            "Error :: " + ufe.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+        
         this.scrollPane = new JScrollPane();
-        this.scrollPane.setViewportView(this.memberList);
+        this.scrollPane.setViewportView(this.table);
         add ("North", new JLabel ("Members"));
-        add ("Center", this.memberList);
+        add ("Center", this.scrollPane);
         add ("East", this.createButtonPanel());
     }
 
     public void refresh () {
-        memberList.removeAll();
-        Member mem = null;
-        Iterator<Member> i = members.iterator();
-        while (i.hasNext()) {
-        	mem = i.next();
-            memberList.add(mem.getName() + ", " + mem.getId() + ", " + mem.getLoyaltyPoints());
-        }
+        this.table.setVisible(false);
+    	this.table.setVisible(true);  
     }
 
-    public Member getSelectedMember () {
-        int idx = memberList.getSelectedIndex();
-        return (idx == -1) ? null : members.get(idx);
+    public void select(int index) {
+        ListSelectionModel selectionModel = this.table.getSelectionModel();
+        if ((index >= 0) && (this.model.size() > index))
+            selectionModel.setSelectionInterval(index, index);
+    }
+    
+    public Member getSelected() {
+        int idx = this.table.getSelectedRow();
+        return (idx == -1) ? null : this.model.get(idx);
     }
 
     private JPanel createButtonPanel () {
@@ -52,11 +84,15 @@ public class MemberPanel extends JPanel {
 
         JButton b = new JButton ("Add");
         b.addActionListener (new ActionListener () {
+            @Override
             public void actionPerformed (ActionEvent e) {
-                AddEditMemberDialog d = new AddEditMemberDialog(MemberPanel.this.members, MemberPanel.this.parent);
+                AddMemberDialog d = new AddMemberDialog(MemberPanel.this.parent);
                 d.setVisible (true);
-                if (null != d.getMember()) {
+                if (null != d.getAdded()) {
+                	//VendorPanel.this.inventory.addVendor(selectedCat, d.getAdded());
+                	MemberPanel.this.model.add(d.getAdded());
                 	MemberPanel.this.refresh();
+                	MemberPanel.this.select(MemberPanel.this.model.size()-1);
                 }
             }
         });
@@ -64,30 +100,34 @@ public class MemberPanel extends JPanel {
 
         b = new JButton ("Remove");
         b.addActionListener (new ActionListener () {
+            @Override
             public void actionPerformed (ActionEvent e) {
-            	if (null != MemberPanel.this.getSelectedMember()) {
-            		int index = MemberPanel.this.memberList.getSelectedIndex();
-	                members.remove(MemberPanel.this.getSelectedMember());
-	                MemberPanel.this.refresh();
-	            	if (1 <= index) {
-	            		index -= 1;
-	            	}
-	            	else {
-	            	}
-            	}
-            }
-        });
-        p.add (b);
+            	if (null != MemberPanel.this.getSelected()) {
+                    if (0 == StoreAppWindow.showOkCancelDialog(null, "Are you sure you want to remove selected member?\nClick Ok to continue.", "Confirm", JOptionPane.QUESTION_MESSAGE)) {
+                        int index = MemberPanel.this.table.getSelectedRow();
 
-        b = new JButton ("Edit");
-        b.addActionListener (new ActionListener () {
-            public void actionPerformed (ActionEvent e) {
-            	if (null != MemberPanel.this.getSelectedMember()) {
-	            	AddEditMemberDialog d = new AddEditMemberDialog(MemberPanel.this.getSelectedMember(), MemberPanel.this.parent);
-	            	d.setVisible (true);
-	            	if (null != d.getMember()) {
-	                	MemberPanel.this.refresh();
-	                }
+                        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+                        try {
+                            dsFactory.getMemberDS().remove(MemberPanel.this.getSelected());
+                            MemberPanel.this.members.remove(MemberPanel.this.getSelected());
+                            MemberPanel.this.model.remove(MemberPanel.this.getSelected());
+                            MemberPanel.this.refresh();
+                            if (1 <= index) {
+                                    index -= 1;
+                                    MemberPanel.this.select(index);
+                            }
+                            else {
+                                    if (MemberPanel.this.model.size() >= 1)
+                                            MemberPanel.this.select(0);
+                            }
+                        }
+                        catch (RemoveFailedException | IOException rfe) {
+                                JOptionPane.showMessageDialog(null,
+                                "Error :: " + rfe.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
             	}
             }
         });
@@ -95,6 +135,7 @@ public class MemberPanel extends JPanel {
 
         b = new JButton ("Close");
         b.addActionListener (new ActionListener () {
+            @Override
             public void actionPerformed (ActionEvent e) {
                 MemberPanel.this.parent.setContentPane(new EmptyPanel(MemberPanel.this.parent));
                 MemberPanel.this.parent.repaint();

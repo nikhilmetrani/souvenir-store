@@ -23,6 +23,7 @@ public class Member extends Customer {
     	this.id = id;
     }
 
+    @Override
     public String getId() {
     	return id;
     }
@@ -36,12 +37,27 @@ public class Member extends Customer {
     	this.name = name;
     }
 
+    @Override
     public void setId(String id) {
     	this.id = id;
     }
 
     public int getLoyaltyPoints() {
     	return loyaltyPoints;
+    }
+    
+    /*
+    * Nikhil Metrani
+    * Added setLoyaltyPoints method to support editing points in UI
+    */
+
+    /**
+     *
+     * @param points
+     */
+    
+    public void setLoyaltyPoints(Integer points) {
+    	this.loyaltyPoints = points;
     }
 
     public boolean isRedeemable() {
@@ -62,6 +78,7 @@ public class Member extends Customer {
     	if(tempPts >= 0) this.loyaltyPoints = tempPts;
     }
 
+    @Override
     public String toString(){
     	return this.name + "," + this.id + "," + this.loyaltyPoints;
     }
