@@ -6,13 +6,16 @@ import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 import java.io.IOException;
+import java.util.EventObject;
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
 //
@@ -24,7 +27,7 @@ import javax.swing.table.TableColumn;
 //@ Author : Niu Yiming
 //
 
-public class DiscountPanel extends JPanel {
+public class DiscountPanel extends JPanel implements TableCellEditor, ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -173,5 +176,48 @@ public class DiscountPanel extends JPanel {
         bp.add ("North", p);
         return bp;
     }
+
+	@Override
+	public Object getCellEditorValue() {
+		return null;
+	}
+
+	@Override
+	public boolean isCellEditable(EventObject anEvent) {
+		return false;
+	}
+
+	@Override
+	public boolean shouldSelectCell(EventObject anEvent) {
+		return false;
+	}
+
+	@Override
+	public boolean stopCellEditing() {
+		return false;
+	}
+
+	@Override
+	public void cancelCellEditing() {
+	}
+
+	@Override
+	public void addCellEditorListener(CellEditorListener l) {
+	}
+
+	@Override
+	public void removeCellEditorListener(CellEditorListener l) {
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	}
+
+	@Override
+	public Component getTableCellEditorComponent(JTable table, Object value,
+			boolean isSelected, int row, int column) {
+		return null;
+	}
+    
 
 }
