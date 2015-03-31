@@ -22,5 +22,6 @@ public class TransactionConstant {
 	public static final String START_DATE_NULL = "Start date is null";
 	public static final String END_DATE_NULL = "End date is null";
 	public static final String INVALID_DATE_ORDER = "Start date is greater than end date";	
+	public static final String PRODUCT_NOT_FOUND = "Cannot load product from data file";
 
 }

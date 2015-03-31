@@ -64,7 +64,7 @@ public class TransactionTest {
 		Item item1 = new Item();
 		item1.setPrice(10.15f);
 		Product product1= new Product();
-		product1.setId("LED/1");
+		product1.setId("TXT/5");
 		item1.setProduct(product1);
 		item1.setQuantity(25);
 		ArrayList<Item> items = new ArrayList<Item>();
@@ -83,14 +83,14 @@ public class TransactionTest {
 		Item item2 = new Item();
 		item2.setPrice(31.5f);
 		Product product2= new Product();
-		product2.setId("LCD/1");
+		product2.setId("MUG/1");
 		item2.setProduct(product2);
 		item2.setQuantity(52);
 		
 		Item item3 = new Item();
 		item3.setPrice(14.15f);
 		Product product3= new Product();
-		product3.setId("ZTV/1");
+		product3.setId("CLO/1");
 		item3.setProduct(product3);
 		item3.setQuantity(22);
 		ArrayList<Item> items2 = new ArrayList<Item>();
@@ -113,6 +113,10 @@ public class TransactionTest {
 		transaction3.setId(123);
 		transaction3.setCustomer(cust3); 
 		
+		ds.remove(transaction1);
+		ds.remove(transaction2);
+		ds.remove(transaction3);
+		
 		ds.create(transaction1);
         ds.create(transaction2);
         ds.create(transaction3);
@@ -123,15 +127,6 @@ public class TransactionTest {
 
 	@After
 	public void tearDown() throws Exception {
-		if(transaction1!=null){
-			ds.remove(transaction1);
-		}
-		if(transaction2!=null){
-			ds.remove(transaction2);
-		}
-		if(transaction3!=null){
-			ds.remove(transaction3);
-		}		
 	}
 	
 	@Test
@@ -223,10 +218,11 @@ public class TransactionTest {
 		ArrayList<Item> items = transaction2.getItems();
 		assertNotNull(items);
 		assertEquals(4, items.size());
-        assertEquals("LCD/1",items.get(0).getProduct().getId());
-        assertEquals("LED/1",items.get(1).getProduct().getId());
+		assertEquals("CLO/1",items.get(0).getProduct().getId());
+        assertEquals("MUG/1",items.get(1).getProduct().getId());       
         assertEquals("MUG/2",items.get(2).getProduct().getId());
-        assertEquals("ZTV/1",items.get(3).getProduct().getId());
+        assertEquals("TXT/5",items.get(3).getProduct().getId());
+        
 	}
 	
 	@Test

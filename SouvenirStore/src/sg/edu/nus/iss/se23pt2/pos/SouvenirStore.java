@@ -223,6 +223,14 @@ public class SouvenirStore{
     		ArrayList<Transaction> tempTransactionList;
     		Date date;
     		for(Transaction transaction:transactionList){
+    			List<Item> items = transaction.getItems();
+    			for(Item item:items){
+    				Product product = products.get(item.getProduct().getId());
+    				if(product==null){
+    					throw new DataLoadFailedException(TransactionConstant.PRODUCT_NOT_FOUND);
+    				}
+    				item.setProduct(product);    				
+    			}    			
     			date = dateFormat.parse(transaction.getDate());
     			if(transactions!=null && transactions.containsKey(date)){
     				tempTransactionList = transactions.get(date);
@@ -293,7 +301,9 @@ public class SouvenirStore{
 		ArrayList<Transaction> filterTransactions = new ArrayList<Transaction>();
 		Set<Date> dateSet = transactions.keySet();
 		if(startDate==null && endDate==null){
-			 return dsFactory.getTransactionDS().load(this);
+			for(Date date : dateSet){
+					filterTransactions.addAll(transactions.get(date));
+			}			 
 		}else if(endDate==null){
 			for(Date date : dateSet){
 				if(date.compareTo(startDate)>=0)

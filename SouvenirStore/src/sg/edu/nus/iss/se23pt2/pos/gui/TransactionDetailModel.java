@@ -22,7 +22,7 @@ public class TransactionDetailModel extends AbstractTableModel  {
 	
 	public TransactionDetailModel(Transaction transaction){
 		this.transaction = transaction;
-		columnNames = new String[] { "Transaction Id", "Member Id","Date","Product Id","Quantity" };
+		columnNames = new String[] { "Transaction Id", "Member Id","Date","Product Id","Product Name","Product Description","Quantity" };
 		transDetailModel=new String[0][0];
 			if (this.transaction != null  && transaction.getItems()!=null) {
 				transDetailModel = new String[getRowCount()][getColumnCount()];
@@ -32,6 +32,8 @@ public class TransactionDetailModel extends AbstractTableModel  {
 					transDetailModel[i][j++] = this.transaction.getCustomer().getId();
 					transDetailModel[i][j++] = this.transaction.getDate();
 					transDetailModel[i][j++] = this.transaction.getItems().get(i).getProduct().getId();
+					transDetailModel[i][j++] = this.transaction.getItems().get(i).getProduct().getName();
+					transDetailModel[i][j++] = this.transaction.getItems().get(i).getProduct().getDescription();
 					transDetailModel[i][j++] = String.valueOf(this.transaction.getItems().get(i).getQuantity());
 				}
 			}
