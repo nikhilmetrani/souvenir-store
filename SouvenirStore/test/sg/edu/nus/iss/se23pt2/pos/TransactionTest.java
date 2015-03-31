@@ -53,7 +53,7 @@ public class TransactionTest {
 	    ds = dsFactory.getTransactionDS();		
 		transaction1 = new Transaction();
 		Customer cust = new Customer();
-		cust.setId("Fkldjf234");
+		cust.setId("A02453959T");
 		item = new Item();
 		item.setPrice(20.5f);
 		Product product = new Product();
@@ -79,7 +79,7 @@ public class TransactionTest {
 		
 		transaction2 = new Transaction();
 		Customer cust2 = new Customer();
-		cust2.setId("Abldjf234");
+		cust2.setId("S02453958J");
 		Item item2 = new Item();
 		item2.setPrice(31.5f);
 		Product product2= new Product();
@@ -106,7 +106,7 @@ public class TransactionTest {
 		
 		
 		Customer cust3 = new Customer();
-		cust3.setId("JKSDKDF324");
+		cust3.setId("A02434595W");
 		transaction3 = new Transaction();
 		transaction3.setDate("2012-02-12");
 		transaction3.setItems(items);
@@ -561,7 +561,7 @@ public class TransactionTest {
 		ArrayList<Item> items = new ArrayList<>();
 		Item item = new Item();
 		Product product = new Product();
-		product.setId("PHN/1");
+		product.setId("CLO/1");
 		item.setProduct(product);
 		items.add(item);
 		transaction.setItems(items);
@@ -584,7 +584,7 @@ public class TransactionTest {
 		ArrayList<Item> items = new ArrayList<>();
 		Item item = new Item();
 		Product product = new Product();
-		product.setId("PHN/1");
+		product.setId("CLO/1");
 		item.setProduct(product);
 		item.setPrice(24.05f);
 		items.add(item);
@@ -611,7 +611,7 @@ public class TransactionTest {
 		ArrayList<Item> items = new ArrayList<>();
 		Item item = new Item();
 		Product product = new Product();
-		product.setId("PHN/1");
+		product.setId("CLO/1");
 		item.setProduct(product);
 		item.setPrice(24.05f);
 		item.setQuantity(24);
@@ -648,7 +648,7 @@ public class TransactionTest {
 		ArrayList<Item> items = new ArrayList<>();
 		Item item = new Item();
 		Product product = new Product();
-		product.setId("PHN/1");
+		product.setId("CLO/1");
 		item.setProduct(product);
 		item.setPrice(24.05f);
 		item.setQuantity(24);
