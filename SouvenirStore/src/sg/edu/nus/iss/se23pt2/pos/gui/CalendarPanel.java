@@ -46,22 +46,25 @@ public class CalendarPanel extends OkCancelDialog{
         catch (IllegalAccessException e) {}
         catch (UnsupportedLookAndFeelException e) {}
     	
-        lblMonth = new JLabel ("January");
-        lblMonth.setBounds(160-lblMonth.getPreferredSize().width/2, 25, 100, 25);
-        
-        lblYear = new JLabel ("Change year:");
-        lblYear.setBounds(10, 305, 80, 20);
+    	lblYear = new JLabel ("Change years (+/-20):");
+        lblYear.setBounds(15, 10, 150, 20);
         
         cmbYear = new JComboBox<String>();
-        cmbYear.setBounds(230, 305, 80, 20);
+        cmbYear.setBounds(205, 10, 80, 20);
         cmbYear.addActionListener(new cmbYear_Action());
         
+        lblMonth = new JLabel ("January");
+        lblMonth.setBounds(145-lblMonth.getPreferredSize().width/2, 40, 100, 25);
+        lblMonth.setFont(new Font(null, Font.BOLD, 14));
+        
         btnPrev = new JButton ("<<");
-        btnPrev.setBounds(10, 25, 50, 25);
+        btnPrev.setBounds(15, 40, 50, 25);
+        btnPrev.setToolTipText("Previous month");
         btnPrev.addActionListener(new btnPrev_Action());
         
         btnNext = new JButton (">>");
-        btnNext.setBounds(260, 25, 50, 25);
+        btnNext.setBounds(235, 40, 50, 25);
+        btnNext.setToolTipText("Next month");
         btnNext.addActionListener(new btnNext_Action());
         
         calModel = new DefaultTableModel(){
@@ -72,12 +75,12 @@ public class CalendarPanel extends OkCancelDialog{
         	calModel.addColumn(dow[i]);
         }
         calTable = new JTable(calModel);
+        calTable.setGridColor(new Color(225, 225, 225));	//Grid color: Light grey
         calScrollPane = new JScrollPane(calTable);
-        calScrollPane.setBounds(10, 50, 300, 250);
+        calScrollPane.setBounds(15, 80, 270, 245);
         
         calPanel = new JPanel(null);
-        calPanel.setPreferredSize(new Dimension(330,375));
-        calPanel.setBorder(BorderFactory.createTitledBorder("Calendar"));
+        calPanel.setPreferredSize(new Dimension(300,335));
         calPanel.add(lblMonth);
         calPanel.add(lblYear);
         calPanel.add(cmbYear);
@@ -98,42 +101,38 @@ public class CalendarPanel extends OkCancelDialog{
         calTable.setColumnSelectionAllowed(true);
         calTable.setRowSelectionAllowed(true);
         calTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        calTable.setRowHeight(38);
+        calTable.setRowHeight(35);
         calModel.setColumnCount(7);
         calModel.setRowCount(6);
         
-        for (int i=realYear-100; i<=realYear+100; i++){
+        for (int i=realYear-20; i<=realYear+20; i++){
             cmbYear.addItem(String.valueOf(i));
         }
         
-        repaint(realMonth, realYear);
+        repaint(realYear, realMonth);
         
-        ListSelectionModel cellSelectionModel = calTable.getSelectionModel();
-        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);        
-        cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
+        calTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
               String selCell = null;
-
               selCell = curYear+""+curMonth+""+ calTable.getValueAt(calTable.getSelectedRow(), 
             		  calTable.getSelectedColumn());
-
               System.out.println("Selected: " + selCell);
             }
           });
-
+        
         return calPanel;
     }
 
-    public static void repaint(int month, int year){
+    public static void repaint(int year, int month){
         int nod, som; //Number Of Days, Start Of Month
         
         btnPrev.setEnabled(true);
         btnNext.setEnabled(true);
         if (month == 0 && year <= realYear-10) {btnPrev.setEnabled(false);} //Too early
-        if (month == 11 && year >= realYear+100) {btnNext.setEnabled(false);} //Too late
+        if (month == 11 && year >= realYear+20) {btnNext.setEnabled(false);} //Too late
         
         lblMonth.setText(months[month]); //Refresh the month label (at the top)
-        lblMonth.setBounds(160-lblMonth.getPreferredSize().width/2, 25, 180, 25); //Re-align label with calendar
+        lblMonth.setBounds(145-lblMonth.getPreferredSize().width/2, 40, 180, 25); //Re-align label with calendar
         cmbYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box
         
         //Clear calendar
@@ -159,16 +158,16 @@ public class CalendarPanel extends OkCancelDialog{
     static class calTableRenderer extends DefaultTableCellRenderer{
 		private static final long serialVersionUID = 1L;
 
-		public Component getTableCellRendererComponent (JTable table, Object value, boolean selected, boolean focused, int row, int col){
-            super.getTableCellRendererComponent(table, value, selected, focused, row, col);
-            if (col == 0 || col == 6){ //Weekend
-                setBackground(new Color(255, 220, 220));
+		public Component getTableCellRendererComponent (JTable table, Object obj, boolean selected, boolean focused, int row, int col){
+            super.getTableCellRendererComponent(table, obj, selected, focused, row, col);
+            if (col >= 1 && col <= 5){ //Weekdays: Background = white
+            	setBackground(new Color(255, 255, 255));
             }
-            else{ //Weekdays
-                setBackground(new Color(255, 255, 255));
+            else{ //Weekends: Background = light yellow
+            	setBackground(new Color(255, 255, 200));
             }
-            if (value != null){
-                if (Integer.parseInt(value.toString()) == realDay && curMonth == realMonth && curYear == realYear){ //Today
+            if (obj != null){
+                if (Integer.parseInt(obj.toString()) == realDay && curMonth == realMonth && curYear == realYear){ //Today
                     setBackground(new Color(220, 220, 255));
                 }
             }
@@ -187,7 +186,7 @@ public class CalendarPanel extends OkCancelDialog{
             else{ //Back to the previous month
                 curMonth -= 1;
             }
-            repaint(curMonth, curYear);
+            repaint(curYear, curMonth);
         }
     }
     
@@ -200,7 +199,7 @@ public class CalendarPanel extends OkCancelDialog{
             else{ //Forward to the next month
                 curMonth += 1;
             }
-            repaint(curMonth, curYear);
+            repaint(curYear, curMonth);
         }
     }
     
@@ -209,14 +208,13 @@ public class CalendarPanel extends OkCancelDialog{
             if (cmbYear.getSelectedItem() != null){
                 String b = cmbYear.getSelectedItem().toString();
                 curYear = Integer.parseInt(b);
-                repaint(curMonth, curYear);
+                repaint(curYear, curMonth);
             }
         }
     }
     
     protected boolean performOkAction(){
         this.disc.getStartDate();
-        
         DataStoreFactory dsFactory = DataStoreFactory.getInstance();
         try {
         	dsFactory.getDiscountDS().update(this.disc);
