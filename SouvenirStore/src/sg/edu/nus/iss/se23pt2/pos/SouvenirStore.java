@@ -46,7 +46,8 @@ public class SouvenirStore{
     private Inventory                inventory = null;
     private DataStoreFactory 		 dsFactory = DataStoreFactory.getInstance();
     private ArrayList<Discount> discountList = null;
-    public SouvenirStore(){
+    
+	public SouvenirStore(){
         this.storeKeepers = new HashMap<String, StoreKeeper>();
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.categories = new HashMap<String, Category>();
@@ -112,6 +113,14 @@ public class SouvenirStore{
     public String getLoginUserName () {
         return null;
     }
+
+    public ArrayList<Discount> getDiscountList() {
+		return discountList;
+	}
+
+	public void setDiscountList(ArrayList<Discount> discountList) {
+		this.discountList = discountList;
+	}
 
     public void loadData(){
         try {
