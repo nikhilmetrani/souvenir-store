@@ -479,6 +479,8 @@ public class ShoppingCartPanel extends JPanel {
 	                		Session.getInstance(souvenirStore).removeAttribute("ShoppingCart");
 	                		
 	                		//TO-DO: Print Receipt
+	                		TransactionReceiptDialog trd = new TransactionReceiptDialog(transaction, shoppingCart);
+	                		trd.setVisible(true);
 	                		
 	                		shoppingCart = null;
 	                        ShoppingCartPanel.this.parent.setContentPane(new ShoppingCartPanel( souvenirStore, 
