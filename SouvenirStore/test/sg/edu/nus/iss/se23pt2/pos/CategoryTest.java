@@ -94,7 +94,7 @@ public class CategoryTest {
 		
 		/* Must not set null name attribute */
 		c1.setCode(null);
-		assertNotEquals(c1.getCode(), null);
+		assertNotSame(c1.getCode(), null);
 		
 		/* Must return previously set value */
 		assertEquals(c1Code, c1.getCode());
@@ -114,7 +114,7 @@ public class CategoryTest {
 		
 		/* Must not set null name attribute */
 		c1.setName(null);
-		assertNotEquals(c1.getName(), null);
+		assertNotSame(c1.getName(), null);
 		
 		/* Must return previously set value*/
 		assertEquals(c1.getName(), c1Name);
@@ -150,10 +150,10 @@ public class CategoryTest {
 	@Test
 	public void equalsTest() {
 		
-		/* Must return false when name does not match */
+		/* Must return true when code matches but name does not match */
 		c1 = new Category(c1Code, c1Name);
 		c2 = new Category(c1Code, c2Name);
-		assertFalse(c1.equals(c2));
+		assertTrue(c1.equals(c2));
 		
 		/* Must return false when code does not match */
 		c1 = new Category(c1Code, c1Name);

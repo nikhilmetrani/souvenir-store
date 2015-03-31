@@ -215,7 +215,7 @@ public class ProductTest {
 		Integer negativeValue = -3;
 		p1.setQuantity(negativeValue);
 		/* Existing value must not be set to negative value */
-		assertNotEquals(negativeValue, p1.getQuantity());
+		assertNotSame(negativeValue, p1.getQuantity());
 		/* Existing value must be retained */
 		assertEquals(p1Quantity, p1.getQuantity());
 	}
@@ -293,7 +293,7 @@ public class ProductTest {
 		Integer negativeValue = -3;
 		p1.setReorderThresholdQuantity(negativeValue);
 		/* Existing value must not be set to negative value */
-		assertNotEquals(negativeValue, p1.getReorderThresholdQuantity());
+		assertNotSame(negativeValue, p1.getReorderThresholdQuantity());
 		/* Existing value must be retained */
 		assertEquals(p1RTQuantity, p1.getReorderThresholdQuantity());
 	}
@@ -318,7 +318,7 @@ public class ProductTest {
 		Integer negativeValue = -3;
 		p1.setOrderQuantity(negativeValue);
 		/* Existing value must not be set to negative value */
-		assertNotEquals(negativeValue, p1.getOrderQuantity());
+		assertNotSame(negativeValue, p1.getOrderQuantity());
 		/* Existing value must be retained */
 		assertEquals(p1OrderQuantity, p1.getOrderQuantity());
 	}
@@ -376,7 +376,7 @@ public class ProductTest {
 		
 		/* Must return <,,,0,0,0.0,,0> on default instantiation */
 		p1 = new Product();
-		assertEquals(",,,0,0,0.0,,0", p1.toString());
+		assertEquals(",,,0,0.0,,0,0", p1.toString());
 		
 		/* Must return Id,name,description,quantity,price,barcode,reorderThresholdquantity,orderQuantity */
 		p1 = new Product(p1Id, p1Name, p1Description, 22, 10, p1Price, p1Barcode, 15, c1);
@@ -385,10 +385,10 @@ public class ProductTest {
 		stb = stb.append(c1.getCode() + "/" + p1Id + ",")
 				.append(p1Name).append(",")
 				.append(p1Description).append(",")
-				.append(22).append(",")
-				.append(10).append(",")
+                                .append(22).append(",")
 				.append(p1Price).append(",")
 				.append(p1Barcode).append(",")
+				.append(10).append(",")
 				.append(15);
 		
 		assertEquals(stb.toString(), p1.toString());
@@ -401,9 +401,9 @@ public class ProductTest {
 				.append(p1Name).append(",")
 				.append(",") //Description is null
 				.append(22).append(",")
-				.append(10).append(",")
 				.append(p1Price).append(",")
 				.append(",") //Barcode is null
+				.append(10).append(",")
 				.append(15);
 		
 		assertEquals(stb.toString(), p1.toString());

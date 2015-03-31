@@ -79,7 +79,7 @@ public class VendorTest {
 		
 		/** Must not set null name attribute */
 		v1.setName(null);
-		assertNotEquals(v1.getName(), null);
+		assertNotSame(v1.getName(), null);
 		
 		/** Must return previously set value*/
 		assertEquals(v1.getName(), v1Name);
@@ -98,7 +98,7 @@ public class VendorTest {
 		
 		/** Must not set null description attribute */
 		v1.setDescription(null);
-		assertNotEquals(v1.getDescription(), null);
+		assertNotSame(v1.getDescription(), null);
 		
 		/** Must return previously set value*/
 		assertEquals(v1.getDescription(), v1Description);
@@ -161,7 +161,7 @@ public class VendorTest {
 		
 		/* Modification of clone must not affect original object */
 		v2.setName(v2Name);
-		assertNotEquals(v1, v2);
+		assertNotSame(v1, v2);
 		assertFalse(v1.equals(v2));
 	}
 }

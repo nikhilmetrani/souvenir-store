@@ -3,8 +3,7 @@
  */
 package sg.edu.nus.iss.se23pt2.pos;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -270,7 +269,7 @@ public class ShoppingCartTest {
 	public void testTotalPriceBeforeDiscount() {
 		Double totalPriceOfItems = (double) (20.5f*5)+(double)(10.15f*25);
 		Double totalPriceBeforeDiscount = shoppingCart.getTotalPriceBeforeDiscount(shoppingCart.getItems());
-		assertNotEquals(totalPriceBeforeDiscount,0.0);
+		assertNotSame(totalPriceBeforeDiscount,0.0);
 		assertEquals(totalPriceOfItems, totalPriceBeforeDiscount);
 	}
 
@@ -346,7 +345,7 @@ public class ShoppingCartTest {
 	public void testTotalPriceAfterDiscountForPublic() {
 		Double totalPriceOfItems = (double) (20.0f*5)+(double)(10.0f*20);
 		Double totalPriceBeforeDiscount = shoppingCart2.getTotalPriceBeforeDiscount(shoppingCart2.getItems());
-		assertNotEquals(totalPriceBeforeDiscount,0.0);
+		assertNotSame(totalPriceBeforeDiscount,0.0);
 		assertEquals(totalPriceOfItems, totalPriceBeforeDiscount);
 		String transDate = shoppingCart2.getDate();
 		Double totalPriceAfterDiscount = 0.0;
@@ -356,8 +355,8 @@ public class ShoppingCartTest {
 
 			totalPriceAfterDiscount =shoppingCart2.getTotalPriceAfterDiscount(shoppingCart2.getCustomer(), totalPriceBeforeDiscount
 		    		, souvenirStore2.getDiscounts(),transDate);
-			assertNotEquals(totalPriceBeforeDiscount, totalPriceAfterDiscount);
-			assertNotEquals(0.0,totalPriceAfterDiscount);
+			assertNotSame(totalPriceBeforeDiscount, totalPriceAfterDiscount);
+			assertNotSame(0.0,totalPriceAfterDiscount);
 			assertEquals(totalPriceAfterDiscount1, totalPriceAfterDiscount);
 
 
@@ -365,7 +364,7 @@ public class ShoppingCartTest {
 			totalPriceAfterDiscount =shoppingCart6.getTotalPriceAfterDiscount(shoppingCart6.getCustomer(), totalPriceBeforeDiscount
 		    		, souvenirStore6.getDiscounts(),transDate);
 			assertEquals(totalPriceBeforeDiscount, totalPriceAfterDiscount);
-			assertNotEquals(0.0,totalPriceAfterDiscount);
+			assertNotSame(0.0,totalPriceAfterDiscount);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -375,7 +374,7 @@ public class ShoppingCartTest {
 		public void testTotalPriceAfterDiscountForMember() {
 			Double totalPriceOfItems = (double) (20.0f*5)+(double)(10.0f*20);
 			Double totalPriceBeforeDiscount = shoppingCart3.getTotalPriceBeforeDiscount(shoppingCart3.getItems());
-			assertNotEquals(totalPriceBeforeDiscount,0.0);
+			assertNotSame(totalPriceBeforeDiscount,0.0);
 			assertEquals(totalPriceOfItems, totalPriceBeforeDiscount);
 			String transDate = shoppingCart3.getDate();
 			Double totalPriceAfterDiscount = 0.0;
@@ -384,15 +383,15 @@ public class ShoppingCartTest {
 				//14.final discount is +ve and customer is a member
 				totalPriceAfterDiscount =shoppingCart3.getTotalPriceAfterDiscount(shoppingCart3.getCustomer(), totalPriceBeforeDiscount
 			    		, souvenirStore3.getDiscounts(),transDate);
-				assertNotEquals(totalPriceBeforeDiscount, totalPriceAfterDiscount);
-				assertNotEquals(0.0,totalPriceAfterDiscount);
+				assertNotSame(totalPriceBeforeDiscount, totalPriceAfterDiscount);
+				assertNotSame(0.0,totalPriceAfterDiscount);
 				assertEquals(totalPriceAfterDiscount1, totalPriceAfterDiscount);
 
 				//13.final discount is 0.0 and customer is a member
 				totalPriceAfterDiscount =shoppingCart6.getTotalPriceAfterDiscount(shoppingCart6.getCustomer(), totalPriceBeforeDiscount
 			    		, souvenirStore6.getDiscounts(),transDate);
 				assertEquals(totalPriceBeforeDiscount, totalPriceAfterDiscount);
-				assertNotEquals(0.0,totalPriceAfterDiscount);
+				assertNotSame(0.0,totalPriceAfterDiscount);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -404,7 +403,7 @@ public class ShoppingCartTest {
 		public void testPayableAmountAfterDiscountForPublic() {
 			Double totalPriceOfItems = (double) (20.0f*5)+(double)(10.0f*20);
 			Double totalPriceBeforeDiscount = shoppingCart2.getTotalPriceBeforeDiscount(shoppingCart2.getItems());
-			assertNotEquals(totalPriceBeforeDiscount,0.0);
+			assertNotSame(totalPriceBeforeDiscount,0.0);
 			assertEquals(totalPriceOfItems, totalPriceBeforeDiscount);
 			String transDate = shoppingCart2.getDate();
 			Double totalPriceAfterDiscount = 0.0;
@@ -412,19 +411,19 @@ public class ShoppingCartTest {
 			try {
 				totalPriceAfterDiscount =shoppingCart2.getTotalPriceAfterDiscount(shoppingCart2.getCustomer(), totalPriceBeforeDiscount
 			    		, souvenirStore2.getDiscounts(),transDate);
-				assertNotEquals(totalPriceBeforeDiscount, totalPriceAfterDiscount);
-				assertNotEquals(0.0,totalPriceAfterDiscount);
+				assertNotSame(totalPriceBeforeDiscount, totalPriceAfterDiscount);
+				assertNotSame(0.0,totalPriceAfterDiscount);
 				assertEquals(totalPriceAfterDiscount1, totalPriceAfterDiscount);
 
 				//15.Customer is a not a member and does not have loyality points,finalAmountToBePaid is same as totalPriceAfterDisc
 				Double payableAmount = shoppingCart2.getPayableAmount(shoppingCart2.getCustomer(), totalPriceAfterDiscount, false, 0);
 				assertEquals(totalPriceAfterDiscount, payableAmount);
-				assertNotEquals(0.0,totalPriceAfterDiscount);
+				assertNotSame(0.0,totalPriceAfterDiscount);
 
 				//16.Customer is a not a member and pass some loyality points,finalAmountToBePaid is same as totalPriceAfterDisc
 				payableAmount = shoppingCart2.getPayableAmount(shoppingCart2.getCustomer(), totalPriceAfterDiscount, false, 120);
 				assertEquals(totalPriceAfterDiscount, payableAmount);
-				assertNotEquals(0.0,totalPriceAfterDiscount);
+				assertNotSame(0.0,totalPriceAfterDiscount);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -435,7 +434,7 @@ public class ShoppingCartTest {
 		public void testPayableAmountAfterDiscountForMember() {
 			Double totalPriceOfItems = (double) (20.0f*5)+(double)(10.0f*20);
 			Double totalPriceBeforeDiscount = shoppingCart3.getTotalPriceBeforeDiscount(shoppingCart2.getItems());
-			assertNotEquals(totalPriceBeforeDiscount,0.0);
+			assertNotSame(totalPriceBeforeDiscount,0.0);
 			assertEquals(totalPriceOfItems, totalPriceBeforeDiscount);
 			String transDate = shoppingCart3.getDate();
 			Double totalPriceAfterDiscount = 0.0;
@@ -443,15 +442,15 @@ public class ShoppingCartTest {
 			try {
 				totalPriceAfterDiscount =shoppingCart3.getTotalPriceAfterDiscount(shoppingCart3.getCustomer(), totalPriceBeforeDiscount
 			    		, souvenirStore3.getDiscounts(),transDate);
-				assertNotEquals(totalPriceBeforeDiscount, totalPriceAfterDiscount);
-				assertNotEquals(0.0,totalPriceAfterDiscount);
+				assertNotSame(totalPriceBeforeDiscount, totalPriceAfterDiscount);
+				assertNotSame(0.0,totalPriceAfterDiscount);
 				assertEquals(totalPriceAfterDiscount1, totalPriceAfterDiscount);
 				Member member = (Member)shoppingCart3.getCustomer();
 				//17.Customer is a member and does not want to redeem loyality points,finalAmountToBePaid is same as totalPriceAfterDisc
 				//and points to redeemed <= totalPriceAfterDisc
 				Double payableAmount = shoppingCart3.getPayableAmount(member, totalPriceAfterDiscount, member.isRedeemable(), member.getLoyaltyPoints());
 				assertEquals(totalPriceAfterDiscount, payableAmount);
-				assertNotEquals(0.0,payableAmount);
+				assertNotSame(0.0,payableAmount);
 
 				//18.Customer is a a member and wants to redeem some loyality points(say 100),finalAmountToBePaid should be adjusted with totalPriceAfterDisc
 				//and points to redeemed <= totalPriceAfterDisc
@@ -460,7 +459,7 @@ public class ShoppingCartTest {
 				member.setRedeemable(true);
 				payableAmount = shoppingCart3.getPayableAmount(member, totalPriceAfterDiscount, member.isRedeemable(), 100);
 				assertEquals(payableAmount1, payableAmount);
-				assertNotEquals(0.0,payableAmount);
+				assertNotSame(0.0,payableAmount);
 
 				//19.Customer is a member and wants to redeem whole loyality points.finalAmountToBePaid should be adjusted with totalPriceAfterDisc
 				//points to redeemed <= totalPriceAfterDisc
