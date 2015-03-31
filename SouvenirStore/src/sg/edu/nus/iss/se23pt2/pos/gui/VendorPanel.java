@@ -118,7 +118,11 @@ public class VendorPanel extends JPanel {
     }
     
     public void showVendorsForSelectedCategory(){
-    	this.model = new VendorTableModel(this.inventory.getVendors(this.getSelectedCategory()));
+        //Nikhil Metrani
+        // null check required
+        ArrayList<Vendor> vendors = this.inventory.getVendors(this.getSelectedCategory());
+        if (null == vendors) vendors = new ArrayList();
+    	this.model = new VendorTableModel(vendors);
     	this.table = new JTable(this.model);
     	this.scrollPane.setViewportView(this.table);
     	this.refresh();         
