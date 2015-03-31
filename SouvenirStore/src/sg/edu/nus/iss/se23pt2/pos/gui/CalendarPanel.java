@@ -46,7 +46,7 @@ public class CalendarPanel extends OkCancelDialog{
         catch (IllegalAccessException e) {}
         catch (UnsupportedLookAndFeelException e) {}
     	
-    	lblYear = new JLabel ("Change years (+/-20):");
+    	lblYear = new JLabel ("Change year (+/-20):");
         lblYear.setBounds(15, 10, 150, 20);
         
         cmbYear = new JComboBox<String>();
@@ -76,6 +76,7 @@ public class CalendarPanel extends OkCancelDialog{
         }
         calTable = new JTable(calModel);
         calTable.setGridColor(new Color(225, 225, 225));	//Grid color: Light grey
+        calTable.setToolTipText("Choose a start date");
         calScrollPane = new JScrollPane(calTable);
         calScrollPane.setBounds(15, 80, 270, 245);
         
@@ -144,7 +145,7 @@ public class CalendarPanel extends OkCancelDialog{
         
         GregorianCalendar gc = new GregorianCalendar(year, month, 1);
         nod = gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);	//Number of days
-        som = gc.get(GregorianCalendar.DAY_OF_WEEK);	//The first day of week
+        som = gc.get(GregorianCalendar.DAY_OF_WEEK);	//The first day of month
         
         //Draw calendar
         for (int i=1; i<=nod; i++){
@@ -152,7 +153,14 @@ public class CalendarPanel extends OkCancelDialog{
             int column  =  (i+som-2)%7;
             calModel.setValueAt(i, row, column);
         }
-        calTable.setDefaultRenderer(calTable.getColumnClass(0), new calTableRenderer());
+        
+        //Define a renderer which aligns each date of the calendar to the center
+        DefaultTableCellRenderer centerRenderer = new calTableRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        for (int i=0; i<calModel.getColumnCount(); i++) {
+        	calTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+        calTable.setDefaultRenderer(calTable.getColumnClass(0), centerRenderer);
     }
     
     static class calTableRenderer extends DefaultTableCellRenderer{
