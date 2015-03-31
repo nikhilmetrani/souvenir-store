@@ -267,6 +267,7 @@ public class StoreAppWindow extends JFrame {
         mntmTransactions.setEnabled(true);
         mntmVendors.setEnabled(true);
         mntmStoreKeepers.setEnabled(true);
+        mntmBill.setEnabled(true);
         this.updateUserInTitle();
     }
 
@@ -281,6 +282,7 @@ public class StoreAppWindow extends JFrame {
         mntmTransactions.setEnabled(false);
         mntmVendors.setEnabled(false);
         mntmStoreKeepers.setEnabled(false);
+        mntmBill.setEnabled(false);
         this.updateUserInTitle();
     }
 
