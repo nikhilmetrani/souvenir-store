@@ -279,17 +279,19 @@ public class ShoppingCart {
 
     // Calculate the discounted payment based on customer type
     public double getPayableAmount(Customer customer,double totalPriceAfterDisc,boolean isRedeemable,int pointsRedeemed) {
+        
+    	int pointsToDollar = 0;
         double finalAmountToBePaid = totalPriceAfterDisc;
         //if Member wants to redeem the points then this block of code will be executed to calculate the final amount
         if(customer != null && customer instanceof Member){
             Member member = getMember();
-            //fetch the loyality points for the member
-            int currentLoyalityPoints = member.getLoyaltyPoints();
-            //Current loyality point should be more than the points the customer wants to redeeem
-            //if (currentLoyalityPoints >= pointsRedeemed) {
-                finalAmountToBePaid = calculateNewPoints(totalPriceAfterDisc,pointsRedeemed,currentLoyalityPoints,member);
-            //}
-
+            if(member.getLoyaltyPoints() >= pointsRedeemed && isRedeemable){
+                pointsToDollar = (int) ((5d/100d)*pointsRedeemed);
+            }
+        }
+        finalAmountToBePaid = BigDecimal.valueOf(finalAmountToBePaid - pointsToDollar).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue(); //According to Requirement $5=100 Points redeemed
+        if(finalAmountToBePaid < 0){
+            finalAmountToBePaid = 0.0;
         }
         return finalAmountToBePaid;
     }
@@ -326,7 +328,7 @@ public class ShoppingCart {
         */
         double updatedLoyalityPoints = 0.0;
         double finalAmountToBePaid = 0.0;
-        if(member.isRedeemable() && price.intValue() >= pointsRedeemed){
+        if(member.isRedeemable() && price.intValue() >= pointsRedeemed && currentLoyalityPoints >= pointsRedeemed){
             finalAmountToBePaid = price - pointsRedeemed;
             member.deductLoyaltyPoints(pointsRedeemed);
             //updatedLoyalityPoints = member.getLoyaltyPoints()+;
