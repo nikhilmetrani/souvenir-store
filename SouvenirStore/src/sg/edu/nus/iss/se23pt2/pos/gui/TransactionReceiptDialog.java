@@ -1,21 +1,24 @@
 package sg.edu.nus.iss.se23pt2.pos.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.font.TextAttribute;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 
 import sg.edu.nus.iss.se23pt2.pos.Item;
 import sg.edu.nus.iss.se23pt2.pos.ShoppingCart;
