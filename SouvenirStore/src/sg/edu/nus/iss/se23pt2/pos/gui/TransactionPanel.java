@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
@@ -28,19 +28,6 @@ import sg.edu.nus.iss.se23pt2.pos.TransactionSort;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.InvalidTransactionException;
 
-
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
 /**
  * 
  * @author Rushabh Shah 
@@ -57,10 +44,10 @@ public class TransactionPanel extends javax.swing.JPanel {
 	private JButton close;
 	private JButton view;
 	private JPanel buttonPanel;
-	private JTextArea endDateText;
+	private JTextField endDateText;
 	private JLabel endDateLabel;
 	private JLabel transactionSearchLabel;
-	private JTextArea startDateText;
+	private JTextField startDateText;
 	private JLabel startDateLabel;
 	private JFrame parent;
 	private JButton clear;
@@ -81,6 +68,7 @@ public class TransactionPanel extends javax.swing.JPanel {
 		initGUI();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void initGUI() {
 		try {
 			this.setPreferredSize(new java.awt.Dimension(650, 453));
@@ -99,9 +87,10 @@ public class TransactionPanel extends javax.swing.JPanel {
 					startDateLabel.setBounds(6, 45, 78, 21);
 				}
 				{
-					startDateText = new JTextArea();
+					startDateText = new JTextField(10);
 					searchPanel.add(startDateText);
 					startDateText.setBounds(86, 49, 115, 15);
+					startDateText.setSize(115, 18);
 				}
 				{
 					transactionSearchLabel = new JLabel();
@@ -116,9 +105,10 @@ public class TransactionPanel extends javax.swing.JPanel {
 					endDateLabel.setBounds(228, 46, 61, 21);
 				}
 				{
-					endDateText = new JTextArea();
+					endDateText = new JTextField(10);
 					searchPanel.add(endDateText);
 					endDateText.setBounds(301, 48, 115, 16);
+					endDateText.setSize(115, 18);
 				}
 				{
 					searchSeparator = new JSeparator();
@@ -140,6 +130,7 @@ public class TransactionPanel extends javax.swing.JPanel {
 				buttonPanel.setLayout(null);
 				{
 					search = new JButton();
+					endDateText.setNextFocusableComponent(search);
 					buttonPanel.add(search);
 					search.setText("Search");
 					search.setPreferredSize(new java.awt.Dimension(100, 22));
