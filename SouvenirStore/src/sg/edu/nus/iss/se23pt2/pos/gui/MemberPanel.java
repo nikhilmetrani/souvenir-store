@@ -98,39 +98,39 @@ public class MemberPanel extends JPanel {
         });
         p.add(b);
 
-        b = new JButton("Remove");
-        b.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (null != MemberPanel.this.getSelected()) {
-                    if (0 == StoreAppWindow.confirm("Are you sure you want to remove selected member?\nClick Ok to continue.")) {
-                        int index = MemberPanel.this.table.getSelectedRow();
-
-                        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
-                        try {
-                            dsFactory.getMemberDS().remove(MemberPanel.this.getSelected());
-                            MemberPanel.this.members.remove(MemberPanel.this.getSelected());
-                            MemberPanel.this.model.remove(MemberPanel.this.getSelected());
-                            MemberPanel.this.refresh();
-                            if (1 <= index) {
-                                index -= 1;
-                                MemberPanel.this.select(index);
-                            } else {
-                                if (MemberPanel.this.model.size() >= 1) {
-                                    MemberPanel.this.select(0);
-                                }
-                            }
-                        } catch (RemoveFailedException | IOException rfe) {
-                            JOptionPane.showMessageDialog(null,
-                                    "Error :: " + rfe.getMessage(),
-                                    "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            }
-        });
-        p.add(b);
+//        b = new JButton("Remove");
+//        b.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                if (null != MemberPanel.this.getSelected()) {
+//                    if (0 == StoreAppWindow.confirm("Are you sure you want to remove selected member?\nClick Ok to continue.")) {
+//                        int index = MemberPanel.this.table.getSelectedRow();
+//
+//                        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+//                        try {
+//                            dsFactory.getMemberDS().remove(MemberPanel.this.getSelected());
+//                            MemberPanel.this.members.remove(MemberPanel.this.getSelected());
+//                            MemberPanel.this.model.remove(MemberPanel.this.getSelected());
+//                            MemberPanel.this.refresh();
+//                            if (1 <= index) {
+//                                index -= 1;
+//                                MemberPanel.this.select(index);
+//                            } else {
+//                                if (MemberPanel.this.model.size() >= 1) {
+//                                    MemberPanel.this.select(0);
+//                                }
+//                            }
+//                        } catch (RemoveFailedException | IOException rfe) {
+//                            JOptionPane.showMessageDialog(null,
+//                                    "Error :: " + rfe.getMessage(),
+//                                    "Error",
+//                                    JOptionPane.ERROR_MESSAGE);
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//        p.add(b);
 
         b = new JButton("Close");
         b.addActionListener(new ActionListener() {

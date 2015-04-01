@@ -2,15 +2,14 @@ package sg.edu.nus.iss.se23pt2.pos.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.font.TextAttribute;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.BorderFactory;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;

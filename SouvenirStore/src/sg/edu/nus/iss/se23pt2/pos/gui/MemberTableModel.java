@@ -59,8 +59,8 @@ public class MemberTableModel extends AbstractStoreTableModel<Member> {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        //We do not allow editing of member ID
-        return (0 != columnIndex);
+        //We do not allow editing of member ID && points
+        return (1 == columnIndex);
     }
 
     @Override

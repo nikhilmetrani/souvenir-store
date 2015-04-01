@@ -39,8 +39,22 @@ public class StoreKeeper {
     
     /** */
     public void setName(String name) {
-		this.name = name;
+    	if (name != null) {
+			this.name = name;
+		}
     }
+    
+    /** */
+    public String getPassword() {
+		return this.password;
+    }
+    
+    /** */
+	public void setPassword(String password) {
+		if (password != null) {
+			this.password = password;
+		}
+	}
     
     /** */
     public Boolean validatePassword(String password) {
@@ -68,7 +82,14 @@ public class StoreKeeper {
 
     @Override
     public String toString(){
-        return name + "," + password;
+    	if (this.name == null && this.password == null)
+			return null;
+		else if (this.name != null && this.password == null)
+			return this.name + ",";
+		else if (this.name == null && this.password != null)
+			return "," + this.password;
+
+		return name + "," + password;
     }
 
     @Override
