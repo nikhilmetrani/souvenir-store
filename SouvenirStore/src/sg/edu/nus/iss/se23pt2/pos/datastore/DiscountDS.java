@@ -60,7 +60,7 @@ public class DiscountDS extends DataStore
     @Override
     protected <T> boolean matchData(T obj, String data) {
         String key = ((Discount) obj).getDiscCode();
-        if (data.indexOf( "," + key + ",") > 0)
+        if (data.indexOf( key + ",") == 0)
             return true;
         return false;
     }
