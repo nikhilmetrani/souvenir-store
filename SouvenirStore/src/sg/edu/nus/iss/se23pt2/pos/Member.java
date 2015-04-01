@@ -82,4 +82,13 @@ public class Member extends Customer {
     public String toString(){
     	return this.name + "," + this.id + "," + this.loyaltyPoints;
     }
+    
+    @Override
+    public boolean equals(Object obj){
+        if(obj instanceof Member){
+            Member member = (Member) obj;
+            return this.id.equals(member.id);
+        }
+        return false;
+    }
 }
