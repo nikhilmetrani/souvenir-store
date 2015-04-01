@@ -1,9 +1,9 @@
 package sg.edu.nus.iss.se23pt2.pos.datastore;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
+
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,7 +22,7 @@ import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
  *  Date    : 16/3/2015
  * 
  */
-public class TransactionDSTest {
+public class TransactionDSTest extends TestCase{
 	
 	    DataStoreFactory dsFactory;
 	    DataStore ds;
@@ -60,7 +60,7 @@ public class TransactionDSTest {
 			
 			transaction1.setDate("2013-09-28");
 			transaction1.setItems(items);
-			transaction1.setId(21389);
+			transaction1.setId(1);
 			transaction1.setCustomer(cust);     
 	       
 			
@@ -86,10 +86,10 @@ public class TransactionDSTest {
 			
 			transaction2.setDate("2012-02-12");
 			transaction2.setItems(items2);
-			transaction2.setId(22);
+			transaction2.setId(2);
 			transaction2.setCustomer(cust2);   
 	    }
-	    
+
 	    @After
 	    public void tearDown() throws Exception {
 	        ds.remove(transaction1);
@@ -124,5 +124,10 @@ public class TransactionDSTest {
 			}
 	    }
 
+	    public static TestSuite suite(){
+	        TestSuite suite = new TestSuite();
+	        suite.addTestSuite(TransactionDSTest.class);
+	        return suite;
+	    }
 
 }
