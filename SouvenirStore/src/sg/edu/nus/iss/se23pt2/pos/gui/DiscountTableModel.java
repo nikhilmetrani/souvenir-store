@@ -96,7 +96,7 @@ public class DiscountTableModel extends AbstractStoreTableModel<Discount> {
 			case 2:
 				CalendarPanel cp = new CalendarPanel(parent);
 				cp.setVisible(true);
-				//row.setStartDate((String) aValue);
+				row.setStartDate(cp.getSelDate());
 				break;
 			case 3:
 				row.setPeriodInDays((String) aValue);

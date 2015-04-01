@@ -1,16 +1,14 @@
 package sg.edu.nus.iss.se23pt2.pos.gui;
 
-import sg.edu.nus.iss.se23pt2.pos.Discount;
-import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
-import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
-
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
-import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CalendarPanel extends OkCancelDialog{
@@ -24,13 +22,12 @@ public class CalendarPanel extends OkCancelDialog{
     static JButton btnPrev, btnNext;
     static JLabel lblMonth, lblYear;
     static JComboBox<String> cmbYear;
+    static String selDate;	//selected date from calendar (in 'yyyy-MM-dd' format)
     
     static int realYear, realMonth, realDay, curYear, curMonth;
     final static String[] months =  {"January", "February", "March", "April", "May", "June"
     	, "July", "August", "September", "October", "November", "December"};
     final static String[] dow = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"}; //Day of the week
-    
-    private Discount disc;
     
     public CalendarPanel(JFrame parent){
         super(parent, "Choose a date");
@@ -114,13 +111,18 @@ public class CalendarPanel extends OkCancelDialog{
         
         calTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-              String selCell = null;
-              selCell = curYear+""+curMonth+""+ calTable.getValueAt(calTable.getSelectedRow(), 
-            		  calTable.getSelectedColumn());
-              System.out.println("Selected: " + selCell);
+            	String origDate = curYear+"-"+curMonth+"-"+calTable.getValueAt(calTable.getSelectedRow(), 
+						  calTable.getSelectedColumn());   	
+				try {
+					Date fd1 = new SimpleDateFormat("yyyy-MM-dd").parse(origDate);
+					SimpleDateFormat fd2 = new SimpleDateFormat("yyyy-MM-dd");
+					selDate = fd2.format(fd1);
+					System.out.println(selDate);
+				} catch (ParseException pe) {
+					JOptionPane.showMessageDialog(calPanel, "Invalid Date!");
+				}
             }
           });
-        
         return calPanel;
     }
 
@@ -221,29 +223,12 @@ public class CalendarPanel extends OkCancelDialog{
         }
     }
     
+    public String getSelDate() {
+    	return selDate;
+    }
+    
     protected boolean performOkAction(){
-        this.disc.getStartDate();
-        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
-        try {
-        	dsFactory.getDiscountDS().update(this.disc);
-        	return true;
-        }
-        catch (UpdateFailedException ufe) {
-        	JOptionPane.showMessageDialog(null,
-                    "Error :: " + ufe.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-        	this.disc = null;
-        	return false;
-        }
-        catch (IOException ioe) {
-        	JOptionPane.showMessageDialog(null,
-                    "Error :: " + ioe.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-        	this.disc = null;
-        	return false;
-        }
+    	return true;
     }
 
 }
