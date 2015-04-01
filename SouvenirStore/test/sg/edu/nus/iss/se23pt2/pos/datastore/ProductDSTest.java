@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import sg.edu.nus.iss.se23pt2.pos.Category;
 import sg.edu.nus.iss.se23pt2.pos.Product;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.Vendor;
@@ -19,8 +20,10 @@ import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 public class ProductDSTest extends TestCase{
     DataStoreFactory dsFactory = null;
-    DataStore ds = null;
+    DataStore ds, ds2 = null;
     SouvenirStore store = null;
+    Category category1 = null;
+    Vendor vendor1 = null;
     Product product1 = null;
     Product product2 = null;
     ArrayList<Product> products = null;
@@ -30,7 +33,13 @@ public class ProductDSTest extends TestCase{
         dsFactory = DataStoreFactory.getInstance();
         ds = dsFactory.getProductDS();
         store = new SouvenirStore();
-        
+
+        category1 = new Category("LED", "LED light");
+        vendor1 = new Vendor("LED Vendor", "LED Vendor");
+        category1.addVendor(vendor1);
+        ds2 = dsFactory.getCategoryDS();
+        ds2.create(category1);
+
         product1 = new Product("LED/1", "LED Light - Black color");
         product1.setDescription("LED Light - Black color");
         product1.setQuantity(100);
@@ -53,6 +62,8 @@ public class ProductDSTest extends TestCase{
         ds.remove(product1);
         ds.remove(product2);
         ds.close();
+        ds2.remove(category1);
+        ds2.close();
     }
     
     @Test
@@ -106,7 +117,7 @@ public class ProductDSTest extends TestCase{
 
     public static TestSuite suite(){
         TestSuite suite = new TestSuite();
-        suite.addTestSuite(VendorDSTest.class);
+        suite.addTestSuite(ProductDSTest.class);
         return suite;
     }
 }
