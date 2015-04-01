@@ -33,7 +33,8 @@ public class MemberPanel extends JPanel {
 
         this.model = new MemberTableModel(this.members);
         this.table = new JTable(this.model);
-
+        this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
         this.table.getModel().addTableModelListener(new TableModelListener() {
 
             @Override

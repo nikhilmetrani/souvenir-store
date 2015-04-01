@@ -33,7 +33,8 @@ public class CategoryPanel extends JPanel {
         this.scrollPane = new JScrollPane();
         this.model = new CategoryTableModel(this.inventory.getCategories());
         this.table = new JTable(model);
-
+        this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
         this.table.getModel().addTableModelListener(new TableModelListener() {
 
             @Override
@@ -97,7 +98,7 @@ public class CategoryPanel extends JPanel {
             }
         });
         p.add(b);
-
+/*
         b = new JButton("Remove");
         b.addActionListener(new ActionListener() {
             @Override
@@ -131,7 +132,7 @@ public class CategoryPanel extends JPanel {
             }
         });
         p.add(b);
-
+*/
         b = new JButton("Close");
         b.addActionListener(new ActionListener() {
             @Override

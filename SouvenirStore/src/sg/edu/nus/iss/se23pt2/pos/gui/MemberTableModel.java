@@ -1,42 +1,31 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package sg.edu.nus.iss.se23pt2.pos.gui;
 
 import java.util.List;
-
 import javax.swing.event.TableModelEvent;
-
 import sg.edu.nus.iss.se23pt2.pos.Member;
 
 /**
  * @author Nikhil Metrani
  *
  */
+public class MemberTableModel extends AbstractStoreTableModel<Member> {
 
-/**
- *
- * @author metrann
- */
-public class MemberTableModel extends AbstractStoreTableModel<Member>{
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 
-    private final String[] columnHeaders = new String[] {
+    private final String[] columnHeaders = new String[]{
         "Member id", "Name", "Loyalty points"
     };
-    
+
     @SuppressWarnings("rawtypes")
-	private final Class[] columnClass = new Class[] {
+    private final Class[] columnClass = new Class[]{
         String.class, String.class, Integer.class
     };
-    
+
     public MemberTableModel(List<Member> memberList) {
-            super(memberList);
+        super(memberList);
     }
 
     @Override
@@ -58,12 +47,12 @@ public class MemberTableModel extends AbstractStoreTableModel<Member>{
     public Object getValueAt(int rowIndex, int columnIndex) {
         Member row = super.list.get(rowIndex);
         switch (columnIndex) {
-        case 0:
-            return row.getId();
-        case 1:
-            return row.getName();
-        case 2:
-            return row.getLoyaltyPoints();
+            case 0:
+                return row.getId();
+            case 1:
+                return row.getName();
+            case 2:
+                return row.getLoyaltyPoints();
         }
         return null;
     }
@@ -77,12 +66,12 @@ public class MemberTableModel extends AbstractStoreTableModel<Member>{
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Member row = super.list.get(rowIndex);
-        
+
         switch (columnIndex) {
             //We don't allow editing of Member ID, let's update other attributes
             /*case 0:
-                row.setId((String) aValue);
-                break;*/
+             row.setId((String) aValue);
+             break;*/
             case 1:
                 row.setName((String) aValue);
                 break;
@@ -90,7 +79,7 @@ public class MemberTableModel extends AbstractStoreTableModel<Member>{
                 row.setLoyaltyPoints((Integer) aValue);
                 break;
         }
-        if(0 != columnIndex) {
+        if (0 != columnIndex) {
             TableModelEvent e = new TableModelEvent(this, rowIndex);
             fireTableChanged(e);
         }

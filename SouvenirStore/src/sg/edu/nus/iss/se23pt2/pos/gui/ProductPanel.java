@@ -2,11 +2,9 @@ package sg.edu.nus.iss.se23pt2.pos.gui;
 
 import sg.edu.nus.iss.se23pt2.pos.*;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
-import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 import java.io.IOException;
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -35,12 +33,11 @@ public class ProductPanel extends JPanel {
         //this.scrollPane = new JScrollPane();
         this.model = new ProductTableModel(this.inventory.getProducts());
         this.table = new JTable(model);
+        this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
         this.table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         Dimension tableSize = new Dimension(900, 400);
         this.table.setPreferredSize(tableSize);
-
-        TableColumn catColumn = this.table.getColumnModel().getColumn(8);
-        catColumn.setCellEditor(new DefaultCellEditor(this.getCategoryCombo()));
 
         this.setTableHeadersWidth();
 
@@ -72,27 +69,6 @@ public class ProductPanel extends JPanel {
         add("East", createButtonPanel());
     }
 
-    private JComboBox<String> getCategoryCombo() {
-        JComboBox<String> comboCat = new JComboBox();
-        java.util.List<Category> catList = inventory.getCategories();
-
-        if (null != catList) {
-            comboCat.removeAll();
-            Category cat = null;
-            Iterator<Category> i = catList.iterator();
-            while (i.hasNext()) {
-                cat = i.next();
-                comboCat.addItem(cat.getCode());
-            }
-            if (null != this.getSelected()) {
-                if (null != this.getSelected().getCategory()) {
-                    comboCat.setSelectedItem(this.getSelected().category.getCode());
-                }
-            }
-        }
-        return comboCat;
-    }
-
     public void setTableHeadersWidth() {
         TableColumn column = null;
         for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
@@ -114,8 +90,6 @@ public class ProductPanel extends JPanel {
                     column.setPreferredWidth(25);
                 case 7:
                     column.setPreferredWidth(50);
-                case 8:
-                    column.setPreferredWidth(25);
             }
         }
     }
@@ -157,7 +131,7 @@ public class ProductPanel extends JPanel {
             }
         });
         p.add(b);
-
+/*
         b = new JButton("Remove");
         b.addActionListener(new ActionListener() {
             @Override
@@ -191,7 +165,7 @@ public class ProductPanel extends JPanel {
             }
         });
         p.add(b);
-
+*/
         b = new JButton("Close");
         b.addActionListener(new ActionListener() {
             @Override

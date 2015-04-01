@@ -46,6 +46,8 @@ public class DiscountPanel extends JPanel implements TableCellEditor, ActionList
         this.scrollPane = new JScrollPane();
         this.model = new DiscountTableModel(this.inventory.getDiscounts(), parent);
         this.table = new JTable(model);
+        this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
         this.table.getModel().addTableModelListener(new TableModelListener() {
 		
 			@Override

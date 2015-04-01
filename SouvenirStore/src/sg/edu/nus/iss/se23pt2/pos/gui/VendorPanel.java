@@ -39,6 +39,7 @@ public class VendorPanel extends JPanel {
         //Initialize List for showing vendors for selected category
         this.model = new VendorTableModel(this.inventory.getVendors(this.getSelectedCategory()));
         this.table = new JTable(this.model);
+        this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
         //Add the listener for categoryCombo
         this.categoryCombo.addActionListener(new ActionListener() {
