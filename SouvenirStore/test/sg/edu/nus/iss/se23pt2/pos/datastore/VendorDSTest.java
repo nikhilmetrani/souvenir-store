@@ -27,7 +27,7 @@ public class VendorDSTest extends TestCase{
     @Before
     public void setUp() throws Exception {
         dsFactory = DataStoreFactory.getInstance();
-        ds = dsFactory.getVendorDS("Torch");
+        ds = dsFactory.getVendorDS("TEST");
         store = new SouvenirStore();
         
         vendor1 = new Vendor("ABC", "ABC traders - Supplies Gift Wraps");
