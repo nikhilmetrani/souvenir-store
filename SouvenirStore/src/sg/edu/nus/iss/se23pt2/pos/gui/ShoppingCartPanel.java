@@ -60,7 +60,6 @@ public class ShoppingCartPanel extends JPanel {
 
     private SouvenirStore               souvenirStore;
     private ShoppingCart                shoppingCart;
-    private java.util.List<Transaction> transactions;
     private JFrame                      parent;
     private JScrollPane                 scrollPane;
     private JScrollPane                 tblScrollPane;
@@ -130,10 +129,7 @@ public class ShoppingCartPanel extends JPanel {
                 /* Sample Data */
                 /*
                 data.add(new Vector<Object>(Arrays.asList(new Object[]{ "CLO/1", "Cloth 1", new Integer(5), new BigDecimal("10.90"), new BigDecimal("0.0"), "x" })));
-                data.add(new Vector<Object>(Arrays.asList(new Object[]{ "CLO/2", "Cloth 2", new Integer(3), new BigDecimal("11.90"), new BigDecimal("0.0"), "x" })));
                 data.add(new Vector<Object>(Arrays.asList(new Object[]{ "MUG/2", "Mug 2", new Integer(2), new BigDecimal("4.50"), new BigDecimal("0.0"), "x" })));
-                data.add(new Vector<Object>(Arrays.asList(new Object[]{ "STA/1", "Stationary 1", new Integer(20), new BigDecimal("1.20"), new BigDecimal("0.0"), "x" })));
-                data.add(new Vector<Object>(Arrays.asList(new Object[]{ "STA/2", "Stationary 2", new Integer(10), new BigDecimal("7.90"), new BigDecimal("0.0"), "x" })));
                  */
         	}
         }else{
