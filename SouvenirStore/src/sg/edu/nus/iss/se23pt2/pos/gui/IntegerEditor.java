@@ -5,8 +5,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.text.ParseException;
 
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
@@ -18,10 +16,9 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.text.DefaultFormatter;
 import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
 
 /**
- * Implements a cell editor that uses a formatted text field to edit Text
+ * Implements a cell editor that uses a formatted text field to edit Number
  * values.
  */
 public class IntegerEditor extends DefaultCellEditor {
@@ -108,7 +105,7 @@ public class IntegerEditor extends DefaultCellEditor {
     protected boolean userSaysRevert () {
         Toolkit.getDefaultToolkit().beep();
         ftf.selectAll();
-        Object[] options = { "Edit", "Revert" };
+/*        Object[] options = { "Edit", "Revert" };
         int answer = JOptionPane.showOptionDialog(
                 SwingUtilities.getWindowAncestor(ftf),
                 "The value must be an integer between and "
@@ -120,7 +117,7 @@ public class IntegerEditor extends DefaultCellEditor {
         if (answer == 1) { // Revert!
             ftf.setValue(ftf.getValue());
             return true;
-        }
+        }*/
         return false;
     }
 }
