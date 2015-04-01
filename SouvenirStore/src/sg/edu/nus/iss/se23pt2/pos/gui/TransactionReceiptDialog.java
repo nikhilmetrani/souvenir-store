@@ -1,24 +1,21 @@
 package sg.edu.nus.iss.se23pt2.pos.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.font.TextAttribute;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 
 import sg.edu.nus.iss.se23pt2.pos.Item;
 import sg.edu.nus.iss.se23pt2.pos.ShoppingCart;
@@ -69,11 +66,6 @@ public class TransactionReceiptDialog extends JDialog {
 
 		contentPanel.add(topPanel, BorderLayout.NORTH);
 
-		JLabel lblTopDivider = new JLabel(
-				"-------------------------Items Purchased-------------------------");
-		lblTopDivider.setAlignmentX(Component.CENTER_ALIGNMENT);
-		topPanel.add(lblTopDivider);
-
 		ArrayList<Item> itemsPaid = transaction.getItems();
 
 		JPanel midPanel = new JPanel();
@@ -100,7 +92,14 @@ public class TransactionReceiptDialog extends JDialog {
 			itemsPanel.add(boxPrice);
 			midPanel.add(itemsPanel);
 		}
-		contentPanel.add(midPanel, BorderLayout.CENTER);
+		
+		JScrollPane scroll = new JScrollPane(midPanel);
+		Border blackline = BorderFactory.createLoweredBevelBorder();
+		TitledBorder title = BorderFactory.createTitledBorder(blackline, "Items Purchased");
+		title.setTitleJustification(TitledBorder.CENTER);
+		scroll.setBorder(title);
+		scroll.setWheelScrollingEnabled(true);
+		contentPanel.add(scroll, BorderLayout.CENTER);
 
 		JPanel botPanel = new JPanel();
 		botPanel.setLayout(new BoxLayout(botPanel, BoxLayout.Y_AXIS));
@@ -132,11 +131,22 @@ public class TransactionReceiptDialog extends JDialog {
 		discountPanel.add(discountText);
 		discountPanel.add(Box.createHorizontalGlue());
 		discountPanel.add(discountAmount);
-
+		
+		double payable = 0;
+		if(shoppingCart.getMember() != null) {
+			if(shoppingCart.getPoints() == 0) {
+				payable = shoppingCart.getPayableAmount();
+			} else {
+				payable = shoppingCart.getPayableAmount(shoppingCart.getMember(), shoppingCart.getTotalPriceAfterDiscount(), true, shoppingCart.getPoints());
+			}
+		} else {
+			payable = shoppingCart.getPayableAmount();
+		}
+		
 		JPanel nettPanel = new JPanel();
 		nettPanel.setLayout(new BoxLayout(nettPanel, BoxLayout.X_AXIS));
 		JLabel nettText = new JLabel("Nett Total: ");
-		JLabel nettTotal = new JLabel(shoppingCart.getPayableAmount() + "");
+		JLabel nettTotal = new JLabel(payable + "");
 		nettPanel.add(nettText);
 		nettPanel.add(Box.createHorizontalGlue());
 		nettPanel.add(nettTotal);
@@ -153,7 +163,7 @@ public class TransactionReceiptDialog extends JDialog {
 		balance.setLayout(new BoxLayout(balance, BoxLayout.X_AXIS));
 		JLabel balanceText = new JLabel("Change: ");
 		JLabel balanceTotal = new JLabel(String.valueOf((new BigDecimal(
-				shoppingCart.getAmountPaid() - shoppingCart.getPayableAmount())
+				shoppingCart.getAmountPaid() - payable)
 				.setScale(2, BigDecimal.ROUND_HALF_UP))));
 		balance.add(balanceText);
 		balance.add(Box.createHorizontalGlue());
@@ -198,7 +208,7 @@ public class TransactionReceiptDialog extends JDialog {
 		member.add(memberText);
 		member.add(Box.createHorizontalGlue());
 		member.add(id);
-
+		
 		botPanel.add(grossPanel);
 		botPanel.add(discountPanel);
 		botPanel.add(nettPanel);
