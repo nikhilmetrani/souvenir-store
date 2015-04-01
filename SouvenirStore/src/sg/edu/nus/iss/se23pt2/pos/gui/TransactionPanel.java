@@ -1,5 +1,4 @@
 package sg.edu.nus.iss.se23pt2.pos.gui;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -29,6 +28,19 @@ import sg.edu.nus.iss.se23pt2.pos.TransactionSort;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.InvalidTransactionException;
 
+
+/**
+* This code was edited or generated using CloudGarden's Jigloo
+* SWT/Swing GUI Builder, which is free for non-commercial
+* use. If Jigloo is being used commercially (ie, by a corporation,
+* company or business for any purpose whatever) then you
+* should purchase a license for each developer using Jigloo.
+* Please visit www.cloudgarden.com for details.
+* Use of Jigloo implies acceptance of these licensing terms.
+* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
+* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
+* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
+*/
 /**
  * 
  * @author Rushabh Shah 
@@ -51,6 +63,9 @@ public class TransactionPanel extends javax.swing.JPanel {
 	private JTextArea startDateText;
 	private JLabel startDateLabel;
 	private JFrame parent;
+	private JButton clear;
+	private JButton jButton1;
+	private JLabel formatLabel;
 	private JTable table;
 	private JScrollPane scrollPane;
 	private SouvenirStore store;
@@ -110,18 +125,25 @@ public class TransactionPanel extends javax.swing.JPanel {
 					searchPanel.add(searchSeparator);
 					searchSeparator.setBounds(2, 31, 529, 10);
 				}
+				{
+					formatLabel = new JLabel();
+					searchPanel.add(formatLabel);
+					formatLabel.setText("*Enter date in format \"yyyy-MM-dd\"");
+					formatLabel.setBounds(390, 67, 141, 21);
+					formatLabel.setFont(new java.awt.Font("Segoe UI",2,9));
+				}
 			}
 			{
 				buttonPanel = new JPanel();
-				FlowLayout buttonPanelLayout = new FlowLayout();
 				this.add(buttonPanel);
-				buttonPanel.setBounds(533, 111, 105, 97);
-				buttonPanel.setLayout(buttonPanelLayout);
+				buttonPanel.setBounds(533, 111, 105, 141);
+				buttonPanel.setLayout(null);
 				{
 					search = new JButton();
 					buttonPanel.add(search);
 					search.setText("Search");
 					search.setPreferredSize(new java.awt.Dimension(100, 22));
+					search.setBounds(3, 5, 100, 22);
 					search.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent arg0) {
 							Date startDate = null, endDate = null;
@@ -163,7 +185,7 @@ public class TransactionPanel extends javax.swing.JPanel {
 					view = new JButton();
 					buttonPanel.add(view);
 					view.setText("View");
-					view.setPreferredSize(new java.awt.Dimension(100, 22));
+					view.setBounds(3, 57, 100, 22);
 					view.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
 							if (detailPanel == null){
@@ -179,11 +201,23 @@ public class TransactionPanel extends javax.swing.JPanel {
 					close = new JButton();
 					buttonPanel.add(close);
 					close.setText("Close");
-					close.setPreferredSize(new java.awt.Dimension(100, 22));
+					close.setBounds(2, 84, 100, 22);
 					close.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
 							parent.setContentPane(new EmptyPanel(parent));
 							parent.repaint();
+						}
+					});
+				}
+				{
+					clear = new JButton();
+					buttonPanel.add(clear);
+					clear.setText("Clear");
+					clear.setBounds(3, 31, 100, 22);
+					clear.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							startDateText.setText(null);
+							endDateText.setText(null);
 						}
 					});
 				}
@@ -202,6 +236,18 @@ public class TransactionPanel extends javax.swing.JPanel {
 				{					
 					refresh();
 				}
+			}
+			{
+				jButton1 = new JButton();
+				this.add(jButton1);
+				jButton1.setText("Close");
+				jButton1.setPreferredSize(new java.awt.Dimension(100,22));
+				jButton1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						parent.setContentPane(new EmptyPanel(parent));
+						parent.repaint();
+					}
+				});
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
