@@ -78,7 +78,7 @@ public class MemberDSTest extends TestCase{
         try{
             ds.create(member1);
             members = ds.load(store);
-            assertTrue("Member save failed", members.contains(member1));
+            assertTrue("Member load failed", members.contains(member1));
         }catch(CreationFailedException e){
             assertFalse("Save failed", true);
         }catch(DataLoadFailedException e){
