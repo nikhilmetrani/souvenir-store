@@ -272,6 +272,9 @@ public class StoreAppWindow extends JFrame {
     }
 
     private void deactivateSession() {
+        this.setContentPane(new EmptyPanel(this));
+        this.repaint();
+        this.makeContentVisible();
         mnLogin.setEnabled(true);
         mnLogoff.setEnabled(false);
         mntmCategories.setEnabled(false);
