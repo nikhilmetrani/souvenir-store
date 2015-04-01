@@ -29,7 +29,7 @@ public class DiscountDSTest extends TestCase{
         dsFactory = DataStoreFactory.getInstance();
         ds = dsFactory.getDiscountDS();
         store = new SouvenirStore();
-        discount1 = new MemberDiscount("Discount1", "Member Discount", "01-01-2015", "120", 20, "M");
+        discount1 = new MemberDiscount("Discount1", "Member Discount", "2015-01-01", "120", 20, "M");
         discount2 = new Discount("Discount2", "Non-member Discount", "ALWAYS", "ALWAYS", 5, "A");
     }
     
@@ -44,7 +44,7 @@ public class DiscountDSTest extends TestCase{
         try{
             ds.create(discount1);
             discounts = ds.load(store);
-            assertTrue("Discount save failed", discounts.size()==1);
+            assertTrue("Discount load failed", discounts.get(discounts.size()-1).equals(discount1));
         }catch(CreationFailedException e){
             assertFalse("Save failed", true);
         }catch(DataLoadFailedException e){
@@ -76,7 +76,8 @@ public class DiscountDSTest extends TestCase{
             ds.create(discount1);
             ds.create(discount2);
             discounts = ds.load(store);
-            assertTrue("Discount save failed", discounts.size()==2);
+            assertTrue("Discount load failed", discounts.get(discounts.size()-2).equals(discount1));
+            assertTrue("Discount load failed", discounts.get(discounts.size()-1).equals(discount2));
         }catch(CreationFailedException e){
             assertFalse("Save failed", true);
         }catch(DataLoadFailedException e){
