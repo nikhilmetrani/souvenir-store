@@ -29,8 +29,8 @@ public class StoreKeeperDSTest extends TestCase{
         dsFactory = DataStoreFactory.getInstance();
         ds = dsFactory.getStoreKeeperDS();
         store = new SouvenirStore();
-        storekeeper1 = new StoreKeeper("Tom", "abcd1234");
-        storekeeper2 = new StoreKeeper("Jerry", "efgh5678");
+        storekeeper1 = new StoreKeeper("ThomasC", "abcd1234");
+        storekeeper2 = new StoreKeeper("JerryM", "efgh5678");
     }
     
     @After
