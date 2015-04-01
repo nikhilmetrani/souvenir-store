@@ -84,7 +84,7 @@ public class Item {
             Item item = (Item) obj;
             
             if(item.product == this.product || (this.product!=null && this.product.equals(item.product))){
-                return ((item.quantity == this.quantity) && (item.price == this.price));
+                return ((item.quantity == this.quantity) && (Float.floatToIntBits(item.price) == Float.floatToIntBits(this.price)));  /** JV - To fix float comparison **/
             }
         }
         return false;
