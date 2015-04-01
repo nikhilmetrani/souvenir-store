@@ -3,10 +3,7 @@ package sg.edu.nus.iss.se23pt2.pos.gui;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
-import java.util.EventListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
@@ -108,7 +105,7 @@ public class TextEditor extends DefaultCellEditor {
     protected boolean userSaysRevert () {
         Toolkit.getDefaultToolkit().beep();
         ftf.selectAll();
-        Object[] options = { "Edit", "Revert" };
+/*        Object[] options = { "Edit", "Revert" };
         int answer = JOptionPane.showOptionDialog(
                 SwingUtilities.getWindowAncestor(ftf),
                 "The value must be an integer between and "
@@ -120,7 +117,7 @@ public class TextEditor extends DefaultCellEditor {
         if (answer == 1) { // Revert!
             ftf.setValue(ftf.getValue());
             return true;
-        }
+        }*/
         return false;
     }
 }
