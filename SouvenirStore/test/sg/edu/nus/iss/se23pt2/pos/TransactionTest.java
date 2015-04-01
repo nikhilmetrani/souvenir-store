@@ -1,7 +1,5 @@
 package sg.edu.nus.iss.se23pt2.pos;
 
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.text.ParseException;
@@ -10,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -31,7 +31,7 @@ import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
  * 
  */
 
-public class TransactionTest {
+public class TransactionTest extends TestCase{
     private DataStoreFactory dsFactory;
     private DataStore ds1, ds2, ds3;
     private SouvenirStore store;

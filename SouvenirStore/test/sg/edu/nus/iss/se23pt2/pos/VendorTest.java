@@ -4,7 +4,7 @@
 package sg.edu.nus.iss.se23pt2.pos;
 
 //import sg.edu.nus.iss.se23pt2.pos.*;
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +14,7 @@ import org.junit.Test;
  * @author Nikhil Metrani
  *
  */
-public class VendorTest {
+public class VendorTest extends TestCase{
 
 	String v1Name = null;
 	String v2Name = null;
@@ -53,7 +53,7 @@ public class VendorTest {
 	}
 
 	@Test
-	public void instantiateTest() {
+	public void testInstantiateTest() {
 		
 		/** Return null of instantiate */
 		v1 = new Vendor();
@@ -67,7 +67,7 @@ public class VendorTest {
 	}
 	
 	@Test
-	public void setGetNameTest() {
+	public void testSetGetNameTest() {
 		
 		/** Return null of instantiate */
 		v1 = new Vendor();
@@ -86,7 +86,7 @@ public class VendorTest {
 	}
 	
 	@Test
-	public void setGetDescriptionTest() {
+	public void testSetGetDescriptionTest() {
 		
 		/** Return null of instantiate */
 		v1 = new Vendor();
@@ -105,7 +105,7 @@ public class VendorTest {
 	}
 	
 	@Test
-	public void toStringTest() {
+	public void testToStringTest() {
 		/** Return null of instantiate */
 		v1 = new Vendor();
 		assertNull(v1.toString());
@@ -131,7 +131,7 @@ public class VendorTest {
 	}
 	
 	@Test
-	public void equalsTest() {
+	public void testEqualsTest() {
 		
 		/** Must return false when description does not match */
 		v1 = new Vendor(v1Name, v1Description);
@@ -150,7 +150,7 @@ public class VendorTest {
 	}
 	
 	@Test
-	public void cloneTest() {
+	public void testCloneTest() {
 		
 		v1 = new Vendor(v1Name, v1Description);
 		

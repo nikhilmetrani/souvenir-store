@@ -3,13 +3,11 @@
  */
 package sg.edu.nus.iss.se23pt2.pos;
 
-import static org.junit.Assert.*;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
+import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +17,7 @@ import org.junit.Test;
  * @author Nikhil Metrani
  *
  */
-public class ShoppingCartTest {
+public class ShoppingCartTest extends TestCase{
 
 	private ArrayList<Item> items = null;
     private ArrayList<Discount> discounts = null;

@@ -3,9 +3,9 @@
  */
 package sg.edu.nus.iss.se23pt2.pos;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
+
+import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import sg.edu.nus.iss.se23pt2.pos.exception.VendorExistsException;
  * @author Nikhil Metrani
  *
  */
-public class CategoryTest {
+public class CategoryTest extends TestCase{
 
 	String v1Name = null;
 	String v2Name = null;
@@ -67,7 +67,7 @@ public class CategoryTest {
 	}
 
 	@Test
-	public void instantiateTest() {
+	public void testInstantiateTest() {
 		
 		/* Attributes return null on default instantiate */
 		c1 = new Category();
@@ -82,7 +82,7 @@ public class CategoryTest {
 	}
 	
 	@Test
-	public void setGetCodeTest() {
+	public void testSetGetCodeTest() {
 		
 		/* Return null of instantiate */
 		c1 = new Category();
@@ -102,7 +102,7 @@ public class CategoryTest {
 	}
 	
 	@Test
-	public void setGetNameTest() {
+	public void testSetGetNameTest() {
 		
 		/* Return null of instantiate */
 		c1 = new Category();
@@ -122,7 +122,7 @@ public class CategoryTest {
 	}
 	
 	@Test
-	public void toStringTest() {
+	public void testToStringTest() {
 		/* Return null of instantiate */
 		c1 = new Category();
 		assertNull(c1.toString());
@@ -148,7 +148,7 @@ public class CategoryTest {
 	}
 	
 	@Test
-	public void equalsTest() {
+	public void testEqualsTest() {
 		
 		/* Must return true when code matches but name does not match */
 		c1 = new Category(c1Code, c1Name);
@@ -167,7 +167,7 @@ public class CategoryTest {
 	}
 	
 	@Test
-	public void addVendorTest() {
+	public void testAddVendorTest() {
 		
 		/* Must return vendor that was added to the list */
 		c1 = new Category(c1Code, c1Name);
@@ -209,7 +209,7 @@ public class CategoryTest {
 	}
 	
 	@Test
-	public void getVendorTest() {
+	public void testGetVendorTest() {
 		c1 = new Category();
 		
 		/* Must throw InvalidVendorException on instantiate */
@@ -263,7 +263,7 @@ public class CategoryTest {
 	}
 	
 	@Test
-	public void removeVendorTest() {
+	public void testRemoveVendorTest() {
 		c1 = new Category();
 		
 		try {
@@ -320,7 +320,7 @@ public class CategoryTest {
 	}
 	
 	@Test
-	public void getAllVendorsTest() {
+	public void testGetAllVendorsTest() {
 		
 		/* Must return null on instantiate */
 		c1 = new Category();

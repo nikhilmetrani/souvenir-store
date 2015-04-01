@@ -3,7 +3,7 @@
  */
 package sg.edu.nus.iss.se23pt2.pos;
 
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +15,7 @@ import sg.edu.nus.iss.se23pt2.pos.exception.InsufficientQuantityException;
  * @author Nikhil Metrani
  *
  */
-public class ProductTest {
+public class ProductTest extends TestCase{
 
 	Category c1 = null;
 	Category c2 = null;
@@ -68,7 +68,7 @@ public class ProductTest {
 	}
 
 	@Test
-	public void instantiateTest() {
+	public void testInstantiateTest() {
 		
 		p1 = new Product();
 		
@@ -115,7 +115,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void setGetIdTest() {
+	public void testSetGetIdTest() {
 		
 		/* Must return null after default instantiation */
 		p1 = new Product();
@@ -143,7 +143,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void setGetNameTest() {
+	public void testSetGetNameTest() {
 		/* Must return null after default instantiation */
 		p1 = new Product();
 		assertNull(p1.getName());
@@ -160,7 +160,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void setGetDescriptionTest() {
+	public void testSetGetDescriptionTest() {
 		/* Must return null after default instantiation */
 		p1 = new Product();
 		assertNull(p1.getDescription());
@@ -177,7 +177,7 @@ public class ProductTest {
 	}
 
 	@Test
-	public void setGetPriceTest() {
+	public void testSetGetPriceTest() {
 		
 		/* Must return 0 after default instantiation */
 		p1 = new Product();
@@ -196,7 +196,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void setGetQuantityTest() {
+	public void testSetGetQuantityTest() {
 		
 		/* Must return 0 after default instantiation */
 		p1 = new Product();
@@ -221,7 +221,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void addQuantityTest() {
+	public void testAddQuantityTest() {
 		
 		p1 = new Product();
 		p1.setQuantity(p1Quantity);
@@ -238,7 +238,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void deductQuantityTest() {
+	public void testDeductQuantityTest() {
 		
 		p1 = new Product();
 		p1.setQuantity(p1Quantity);
@@ -274,7 +274,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void setGetReorderThresholdQuantityTest() {
+	public void testSetGetReorderThresholdQuantityTest() {
 		
 		/* Must return 0 after default instantiation */
 		p1 = new Product();
@@ -299,7 +299,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void setGetOrderQuantityTest() {
+	public void testSetGetOrderQuantityTest() {
 		
 		/* Must return 0 after default instantiation */
 		p1 = new Product();
@@ -324,7 +324,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void setGetCategoryTest() {
+	public void testSetGetCategoryTest() {
 		/* Must return null after default instantiation */
 		p1 = new Product();
 		assertNull(p1.getCategory());
@@ -341,7 +341,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void setGetBarcodeTest() {
+	public void testSetGetBarcodeTest() {
 		/* Must return null after default instantiation */
 		p1 = new Product();
 		assertNull(p1.getBarcode());
@@ -358,7 +358,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void equalsTest() {
+	public void testEqualsTest() {
 		
 		/* Must return true when id matches */
 		p1 = new Product(p1Id, p1Name);
@@ -372,7 +372,7 @@ public class ProductTest {
 	}
 	
 	@Test
-	public void toStringTest() {
+	public void testToStringTest() {
 		
 		/* Must return <,,,0,0,0.0,,0> on default instantiation */
 		p1 = new Product();
