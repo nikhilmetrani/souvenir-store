@@ -86,7 +86,7 @@ public class MemberPanel extends JPanel {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddMemberDialog d = new AddMemberDialog(MemberPanel.this.parent);
+                AddMemberDialog d = new AddMemberDialog(MemberPanel.this.parent, members);
                 d.setVisible(true);
                 if (null != d.getAdded()) {
                     //VendorPanel.this.inventory.addVendor(selectedCat, d.getAdded());

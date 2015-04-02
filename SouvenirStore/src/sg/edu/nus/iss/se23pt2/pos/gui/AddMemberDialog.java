@@ -3,6 +3,8 @@ package sg.edu.nus.iss.se23pt2.pos.gui;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,9 +28,11 @@ public class AddMemberDialog extends OkCancelDialog {
     private JTextField memberIdField;
     private JTextField memberNameField;
     private JTextField loyaltyPointsField;
+    private ArrayList<Member> members;
 
-    public AddMemberDialog (JFrame parent) {
+    public AddMemberDialog (JFrame parent, List<Member> members2) {
         super(parent, "Add Member");
+        this.members = (ArrayList<Member>) members2;
         this.member = null;
         this.setLocationRelativeTo(parent);
         this.setModal(true);
@@ -62,6 +66,24 @@ public class AddMemberDialog extends OkCancelDialog {
         }
         this.member = new Member(memberNameField.getText(), memberIdField.getText());
         this.member.addLoyaltyPoints(Integer.parseInt(this.loyaltyPointsField.getText()));
+        
+        if(memberIdField.getText().equalsIgnoreCase("public")) {
+        	JOptionPane.showMessageDialog(null,
+                    "Error :: " + "Member ID already exists",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        	return false;
+        }
+        
+        for (Member m: members) {
+        	if(memberIdField.getText().equalsIgnoreCase(m.getId())) {
+            	JOptionPane.showMessageDialog(null,
+                        "Error :: " + "Member ID already exists",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            	return false;
+            }
+        }
         
         DataStoreFactory dsFactory = DataStoreFactory.getInstance();
         try {
