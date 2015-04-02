@@ -1,0 +1,370 @@
+package sg.edu.nus.iss.se23pt2.pos;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
+import junit.framework.TestCase;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * @author Debasish Routaray
+ *
+ */
+public class MemberTest extends TestCase{
+
+	private String name;
+    private String id;
+    private int loyaltyPoints = 0;
+    private boolean redeemable = false;
+    private ArrayList<Member> members = null;
+    private ArrayList<Discount> discounts = null;
+    private ArrayList<Discount> discounts1 = null;
+    private ArrayList<Discount> discounts2= null;
+    private ArrayList<Discount> discounts3 = null;
+    private ArrayList<Discount> discounts4 = null;
+    private ArrayList<Discount> memberDiscountList = null;
+    private ArrayList<Discount> memberDiscountList1 = null;
+    private ArrayList<Discount> memberDiscountList2 = null;
+    private ArrayList<Discount> memberDiscountList3 = null;
+    private ArrayList<Discount> memberDiscountList4 = null;
+    private Discount discount1,discount2,discount3,discount4,discount5,discount6,discount7,discount8,discount9,discount10,discount11,discount12
+    ,discount13,discount14,discount15,discount16,discount17,discount18,discount19,discount20= null;
+    private Customer cust,cust1,cust2,cust3,cust4,member,member1,member2,member3,member4 = null;
+    private Item item;
+ 	private SimpleDateFormat dateFormat;
+ 	private ShoppingCart shoppingCart,shoppingCart1,shoppingCart2,shoppingCart3,shoppingCart4,shoppingCart5,shoppingCart6,shoppingCart7,shoppingCart8,shoppingCart9;
+ 	private SouvenirStore souvenirStore,souvenirStore1,souvenirStore2,souvenirStore3,souvenirStore4,souvenirStore5,souvenirStore6,souvenirStore7,souvenirStore8,souvenirStore9 = null;
+/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+
+		members = new ArrayList<Member>();
+		    
+		item = new Item();
+		item.setPrice(20.5f);
+		Product product = new Product();
+		product.setId("MUG/2");
+		item.setProduct(product);
+		item.setQuantity(5);
+
+		Item item1 = new Item();
+		item1.setPrice(10.15f);
+		Product product1= new Product();
+		product1.setId("LED/1");
+		item1.setProduct(product1);
+		item1.setQuantity(25);
+		ArrayList<Item> items = new ArrayList<Item>();
+		items.add(item);
+		items.add(item1);
+		shoppingCart = new ShoppingCart();
+	    shoppingCart.setItems(items);
+	    //Test Maximum discount for public when disount start date is future date i.e. transaction date > start date > discount end date
+	    //discount set for public for disc tc1
+	    cust = new Customer();
+		//cust.setId("Fkldjf234");
+	    shoppingCart.setCustomer(cust);
+	    shoppingCart.setDate("2015-03-24");
+	    souvenirStore = new SouvenirStore();
+        discount1 = new Discount("Discount1", "Non-member Discount", "2015-07-07", "120", 15, "A");
+        discount2 = new Discount("Discount2", "Non-member Discount", "2015-01-01", "240", 10.5, "A");
+        discounts = new ArrayList<Discount>();
+        /*Map<String, Discount> discountMap = new HashMap<String, Discount>();
+        discountMap.put("1", discount1);
+        discountMap.put("2", discount2);*/
+        discounts.add(discount1);
+        discounts.add(discount2);
+        souvenirStore.setDiscountList(discounts);
+
+        //Test Maximum discount for member when disount start date is future date i.e. transaction date > start date > discount end date
+        //setting discount for member for disc tc2
+        member = new Member();
+        member.setId("NUS STUD");
+        shoppingCart1 = new ShoppingCart();
+        shoppingCart1.setDate("2015-03-24");
+        memberDiscountList = new ArrayList<Discount>();
+        souvenirStore1 = new SouvenirStore();
+        discount3 = new MemberDiscount("Discount3", "Member Discount", "2015-07-07", "120", 30, "M");
+        discount4 = new MemberDiscount("Discount4", "Member Discount", "2015-01-01", "240", 20.5, "M");
+        memberDiscountList.add(discount3);
+        memberDiscountList.add(discount4);
+        shoppingCart1.setCustomer(member);
+        souvenirStore1.setDiscountList(memberDiscountList);
+
+       //Test Maximum discount for public when discount start date > transaction date > discount end date
+      //discount set for public for disc tc3
+	    cust1 = new Customer();
+		//cust.setId("Fkldjf234");
+	    shoppingCart2 = new ShoppingCart();
+	    shoppingCart2.setCustomer(cust1);
+	    shoppingCart2.setDate("2015-03-24");
+	    souvenirStore2 = new SouvenirStore();
+        discount5 = new Discount("Discount5", "Non-member Discount", "2014-12-12", "180", 15, "A");
+        discount6 = new Discount("Discount6", "Non-member Discount", "2015-01-01", "240", 10.5, "A");
+        discounts1 = new ArrayList<Discount>();
+        discounts1.add(discount5);
+        discounts1.add(discount6);
+        souvenirStore2.setDiscountList(discounts1);
+
+        Item item2 = new Item();
+		item2.setPrice(20.0f);
+		Product product2 = new Product();
+		product2.setId("MUG/2");
+		item2.setProduct(product2);
+		item2.setQuantity(5);
+
+		Item item3 = new Item();
+		item3.setPrice(10.0f);
+		Product product3= new Product();
+		product3.setId("LED/1");
+		item3.setProduct(product3);
+		item3.setQuantity(20);
+		ArrayList<Item> items2 = new ArrayList<Item>();
+		items2.add(item2);
+		items2.add(item3);
+		shoppingCart2.setItems(items2);
+        //Test Maximum discount for member when discount start date > transaction date > discount end date
+        //setting discount for member for disc tc4
+        Member member1 = new Member();
+        member1.setRedeemable(false);
+        member1.setId("NUS Staff");
+        member1.setLoyaltyPoints(-1);
+        shoppingCart3 = new ShoppingCart();
+        shoppingCart3.setDate("2015-03-24");
+        memberDiscountList1 = new ArrayList<Discount>();
+        souvenirStore3 = new SouvenirStore();
+        discount7 = new MemberDiscount("Discount7", "Member Discount", "2014-12-12", "180", 30, "M");
+        discount8 = new MemberDiscount("Discount8", "Member Discount", "2015-01-01", "240", 20.5, "M");
+        memberDiscountList1.add(discount7);
+        memberDiscountList1.add(discount8);
+        shoppingCart3.setCustomer(member1);
+        souvenirStore3.setDiscountList(memberDiscountList1);
+        shoppingCart3.setItems(items2);
+
+//      Test Maximum discount for public when discount start date > discount end date > transaction date
+        //discount set for public for disc tc5
+	    cust2 = new Customer();
+		//cust.setId("Fkldjf234");
+	    shoppingCart4 = new ShoppingCart();
+	    shoppingCart4.setCustomer(cust2);
+	    shoppingCart4.setDate("2015-03-24");
+	    souvenirStore4 = new SouvenirStore();
+        discount9 = new Discount("Discount9", "Non-member Discount", "2014-12-12", "10", 25, "A");
+        discount10 = new Discount("Discount10", "Non-member Discount", "2015-01-01", "210", 10.5, "A");
+        discounts2 = new ArrayList<Discount>();
+        discounts2.add(discount9);
+        discounts2.add(discount10);
+        souvenirStore4.setDiscountList(discounts2);
+
+
+// Test Maximum discount for member when discount start date > discount end date > transaction date
+        //discount set for member for disc tc6
+
+        member2 = new Member();
+        member2.setId("NUS Staff");
+        shoppingCart5 = new ShoppingCart();
+        shoppingCart5.setDate("2015-03-24");
+        memberDiscountList2 = new ArrayList<Discount>();
+        souvenirStore5 = new SouvenirStore();
+        discount11 = new MemberDiscount("Discount11", "Member Discount", "2014-12-12", "10", 30, "M");
+        discount12 = new MemberDiscount("Discount12", "Member Discount", "2015-01-01", "240", 20.5, "M");
+        memberDiscountList2.add(discount11);
+        memberDiscountList2.add(discount12);
+        shoppingCart5.setCustomer(member2);
+        souvenirStore5.setDiscountList(memberDiscountList2);
+
+
+ // 7. Test Maximum discount for public when discount start date > transaction date and period in days is -ve
+        cust3 = new Customer();
+		//cust.setId("Fkldjf234");
+	    shoppingCart6 = new ShoppingCart();
+	    shoppingCart6.setCustomer(cust3);
+	    shoppingCart6.setDate("2015-03-24");
+	    souvenirStore6 = new SouvenirStore();
+        discount13 = new Discount("Discount13", "Non-member Discount", "2014-12-12", "-10", 25, "A");
+        discount14 = new Discount("Discount14", "Non-member Discount", "2015-05-05", "-10", 10, "A");
+        discounts3 = new ArrayList<Discount>();
+        discounts3.add(discount13);
+        discounts3.add(discount14);
+        souvenirStore6.setDiscountList(discounts3);
+        shoppingCart6.setItems(items2);
+
+
+    //8. Test Maximum discount for member when discount start date > transaction date and period in days is -ve
+        member3 = new Member();
+        member3.setId("NUS Staff");
+        shoppingCart7 = new ShoppingCart();
+        shoppingCart7.setDate("2015-03-24");
+        memberDiscountList3 = new ArrayList<Discount>();
+        souvenirStore7 = new SouvenirStore();
+        discount15 = new MemberDiscount("Discount15", "Member Discount", "2014-12-12", "-10", 30, "M");
+        discount16 = new MemberDiscount("Discount16", "Member Discount", "2015-01-01", "-240", 20.5, "M");
+        memberDiscountList3.add(discount15);
+        memberDiscountList2.add(discount16);
+        shoppingCart7.setCustomer(member3);
+        shoppingCart7.setItems(items2);
+        souvenirStore7.setDiscountList(memberDiscountList3);
+
+
+//9. Test Maximum discount for public when discount transaction date > start date  and period in days is -ve
+        cust4 = new Customer();
+  		//cust.setId("Fkldjf234");
+  	    shoppingCart8 = new ShoppingCart();
+  	    shoppingCart8.setCustomer(cust4);
+  	    shoppingCart8.setDate("2015-03-24");
+  	    souvenirStore8 = new SouvenirStore();
+        discount17 = new Discount("Discount17", "Non-member Discount", "2015-04-06", "-20", 25, "A");
+        discount18 = new Discount("Discount18", "Non-member Discount", "2015-03-05", "-10", 10, "A");
+	    discounts4 = new ArrayList<Discount>();
+	    discounts4.add(discount17);
+	    discounts4.add(discount18);
+	    souvenirStore8.setDiscountList(discounts4);
+
+//10. Test Maximum discount for member when discount transaction date > start date and period in days is -ve
+	    member4 = new Member();
+        member4.setId("NUS Staff");
+        shoppingCart9 = new ShoppingCart();
+        shoppingCart9.setDate("2015-03-24");
+        memberDiscountList4 = new ArrayList<Discount>();
+        souvenirStore9 = new SouvenirStore();
+        discount19 = new MemberDiscount("Discount19", "Member Discount", "2015-04-06", "-20", 30, "M");
+        discount20 = new MemberDiscount("Discount20", "Member Discount", "2015-03-05", "-10", 20.5, "M");
+        memberDiscountList4.add(discount19);
+        memberDiscountList4.add(discount20);
+        shoppingCart9.setCustomer(member4);
+        souvenirStore9.setDiscountList(memberDiscountList4);
+
+
+
+	    /*transaction1.setDate("2013-09-28");
+		transaction1.setItems(items);
+		transaction1.setId(21389);
+		transaction1.setCustomer(cust);
+
+
+		transaction2 = new Transaction();
+		*/
+	}
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@After
+	public void tearDown() throws Exception {
+		/*v1 = null;
+		v2 = null;
+		v3 = null;*/
+	}
+
+		@Test
+		public void testAddLoyalityPointsWithBoundaryConditions() {
+			Double totalPriceOfItems = (double) (20.0f*5)+(double)(10.0f*20);
+			Double totalPriceBeforeDiscount = shoppingCart3.getTotalPriceBeforeDiscount(shoppingCart2.getItems());
+			assertNotSame(totalPriceBeforeDiscount,0.0);
+			assertEquals(totalPriceOfItems, totalPriceBeforeDiscount);
+			String transDate = shoppingCart3.getDate();
+			Double totalPriceAfterDiscount = 0.0;
+			Double totalPriceAfterDiscount1 = 210.0;
+			try {
+				
+				totalPriceAfterDiscount =shoppingCart3.getTotalPriceAfterDiscount(shoppingCart3.getCustomer(), totalPriceBeforeDiscount
+			    		, souvenirStore3.getDiscountList(),transDate);
+				assertNotSame(totalPriceBeforeDiscount, totalPriceAfterDiscount);
+				assertNotSame(0.0,totalPriceAfterDiscount);
+				assertEquals(totalPriceAfterDiscount1, totalPriceAfterDiscount);
+				Member member = (Member)shoppingCart3.getCustomer();
+				//assert loyality points of New Member. Before his/her first transaction
+				assertEquals(-1, member.getLoyaltyPoints());
+				//17.Customer is a member and does not want to redeem loyality points,finalAmountToBePaid is same as totalPriceAfterDisc
+				//and points to redeemed <= totalPriceAfterDisc
+				
+				Double payableAmount = shoppingCart3.calcFinalPmt(member, totalPriceAfterDiscount, 0);
+				assertEquals(totalPriceAfterDiscount, payableAmount);
+				assertNotSame(0.0,payableAmount);
+				
+				//assert loyality points after 1st transaction should be 20
+				assertEquals(21, member.getLoyaltyPoints());
+				
+				//Customer is a member and does not want to redeem loyality points,
+				//thus accumulating more loyality points
+				
+				int newLoyalityPoints = 29;
+				member.addLoyaltyPoints(newLoyalityPoints);
+				assertEquals(50, member.getLoyaltyPoints());
+				
+				//new loyality point is 0;
+				newLoyalityPoints = 0;
+				member.addLoyaltyPoints(newLoyalityPoints);
+				assertEquals(50, member.getLoyaltyPoints());
+				
+				//loyality points is -ve
+				newLoyalityPoints = -20;
+				member.addLoyaltyPoints(newLoyalityPoints);
+				assertEquals(30, member.getLoyaltyPoints());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+
+		@Test
+		public void testLoyalityPointsForMember() {
+			Double totalPriceOfItems = (double) (20.0f*5)+(double)(10.0f*20);
+			Double totalPriceBeforeDiscount = shoppingCart3.getTotalPriceBeforeDiscount(shoppingCart2.getItems());
+			assertNotSame(totalPriceBeforeDiscount,0.0);
+			assertEquals(totalPriceOfItems, totalPriceBeforeDiscount);
+			String transDate = shoppingCart3.getDate();
+			Double totalPriceAfterDiscount = 0.0;
+			Double totalPriceAfterDiscount1 = 210.0;
+			try {
+				
+				totalPriceAfterDiscount =shoppingCart3.getTotalPriceAfterDiscount(shoppingCart3.getCustomer(), totalPriceBeforeDiscount
+			    		, souvenirStore3.getDiscountList(),transDate);
+				assertNotSame(totalPriceBeforeDiscount, totalPriceAfterDiscount);
+				assertNotSame(0.0,totalPriceAfterDiscount);
+				assertEquals(totalPriceAfterDiscount1, totalPriceAfterDiscount);
+				Member member = (Member)shoppingCart3.getCustomer();
+				//assert loyality points of New Member. Before his/her first transaction
+				assertEquals(-1, member.getLoyaltyPoints());
+				//17.Customer is a member and does not want to redeem loyality points,finalAmountToBePaid is same as totalPriceAfterDisc
+				//and points to redeemed <= totalPriceAfterDisc
+				
+				Double payableAmount = shoppingCart3.calcFinalPmt(member, totalPriceAfterDiscount, 0);
+				assertEquals(totalPriceAfterDiscount, payableAmount);
+				assertNotSame(0.0,payableAmount);
+				
+				//assert loyality points after 1st transaction should be 20
+				assertEquals(21, member.getLoyaltyPoints());
+				//18.Customer is a a member and wants to redeem some loyality points(say 100),finalAmountToBePaid should be adjusted with totalPriceAfterDisc
+				//and points to redeemed <= totalPriceAfterDisc
+
+				Double payableAmount1 = 210.0;
+				payableAmount = shoppingCart3.calcFinalPmt(member, totalPriceAfterDiscount, 30);
+				assertEquals(payableAmount1, payableAmount);
+				assertNotSame(0.0,payableAmount);
+
+				//loyality points more than current loyality points
+				assertEquals(42, member.getLoyaltyPoints());
+				
+				//19.Customer is a member and wants to redeem whole loyality points.finalAmountToBePaid should be adjusted with totalPriceAfterDisc
+				//points to redeemed <= totalPriceAfterDisc
+
+				payableAmount1 = 208.0;
+				payableAmount = shoppingCart3.calcFinalPmt(member, totalPriceAfterDiscount, member.getLoyaltyPoints());
+				assertEquals(payableAmount1, payableAmount);
+
+				//loyality points should be 0
+				assertEquals(20, member.getLoyaltyPoints());
+				
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
