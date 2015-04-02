@@ -30,8 +30,8 @@ public class MemberDiscount extends Discount{
         return true;
     }
     
-    public boolean isFirstMemberDiscount(){
-        return "FIRST_MEMBER".equals(this.getDiscCode());
+    public boolean isMemberFirstDiscount(){
+        return "MEMBER_FIRST".equals(this.getDiscCode());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class MemberDiscount extends Discount{
         if(!(customer instanceof Member))
             return false;
 
-        if(this.isFirstMemberDiscount() && !((Member)customer).isFirstPurchase())
+        if(this.isMemberFirstDiscount() && !((Member)customer).isFirstPurchase())
             return false;
 
         if("ALWAYS".equals(this.getStartDate()) && "ALWAYS".equals(this.getPeriodInDays()))
