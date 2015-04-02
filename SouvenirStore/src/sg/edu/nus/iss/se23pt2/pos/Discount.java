@@ -104,7 +104,22 @@ public class Discount
 		}
 		return false;
 	}
-	
+
+    public boolean isValid(Customer customer, String transDate) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        if("ALWAYS".equals(this.getStartDate()) && "ALWAYS".equals(this.getPeriodInDays()))
+            return true;
+        else {
+            Date startDate = df.parse(this.getStartDate());
+            Date endDate = new Date((startDate.getTime()+Long.parseLong(this.getPeriodInDays())*86400000));
+            if (df.parse(transDate).after(startDate) && df.parse(transDate).before(endDate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 	public String toString() {		
 		StringBuilder stb = new StringBuilder();
 				stb = stb.append(this.getDiscCode())

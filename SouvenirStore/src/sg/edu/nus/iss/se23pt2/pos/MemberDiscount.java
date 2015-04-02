@@ -1,5 +1,9 @@
 package sg.edu.nus.iss.se23pt2.pos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MemberDiscount extends Discount{
 
     public MemberDiscount(String discountCode, String description, String startDate, String periodInDays, double discountPercentage, String applicableTo)
@@ -28,5 +32,27 @@ public class MemberDiscount extends Discount{
     
     public boolean isFirstMemberDiscount(){
         return "FIRST_MEMBER".equals(this.getDiscCode());
+    }
+
+    @Override
+    public boolean isValid(Customer customer, String transDate) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        if(!(customer instanceof Member))
+            return false;
+
+        if(this.isFirstMemberDiscount() && !((Member)customer).isFirstPurchase())
+            return false;
+
+        if("ALWAYS".equals(this.getStartDate()) && "ALWAYS".equals(this.getPeriodInDays()))
+            return true;
+        else {
+            Date startDate = df.parse(this.getStartDate());
+            Date endDate = new Date((startDate.getTime()+Long.parseLong(this.getPeriodInDays())*86400000));
+            if (df.parse(transDate).after(startDate) && df.parse(transDate).before(endDate)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

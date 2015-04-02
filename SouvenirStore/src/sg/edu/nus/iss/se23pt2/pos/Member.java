@@ -91,4 +91,9 @@ public class Member extends Customer {
         }
         return false;
     }
+
+    @Override 
+    public boolean isFirstPurchase(){
+        return this.loyaltyPoints == -1;
+    }
 }
