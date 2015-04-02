@@ -87,8 +87,7 @@ public class Discount
 	// Determine if the discount is applicable only for store members.
 	public Boolean isForMemberOnly()
 	{
-	    if(appTo.equals('M')) return true;
-	    else return false;
+	    return false;
 	}
 	
 	// To determine the time validity of a certain discount
