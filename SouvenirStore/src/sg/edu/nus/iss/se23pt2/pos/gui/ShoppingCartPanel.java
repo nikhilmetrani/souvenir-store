@@ -199,7 +199,7 @@ public class ShoppingCartPanel extends JPanel {
                 	loyaltyPoints.setText("");
                 }
 
-                double discount = shoppingCart.getHighestDiscount(customer, souvenirStore.getDiscounts(), DateUtil.getCurrentDateAsString());
+                double discount = shoppingCart.getHighestDiscount(souvenirStore.getDiscounts());
                 if(shoppingCart.getDiscount()!=null){
                     discountPercent.setText(String.valueOf(shoppingCart.getDiscount().getDiscPct()));
                 }else{
@@ -511,7 +511,7 @@ public class ShoppingCartPanel extends JPanel {
 	            		JOptionPane.showMessageDialog(table.getParent(),"Please add an Item", "Error", JOptionPane.OK_OPTION);
 	                    return;
 	            	}
-	
+
 	            	if(calculatePayableAmount(true)){
 	            		try{
 	            			Transaction transaction = shoppingCart.confirmTransaction(souvenirStore);
@@ -630,12 +630,25 @@ public class ShoppingCartPanel extends JPanel {
         double amtPaid = 0;
         double payableAmt = 0;
         if(strRPoints != null && !strRPoints.trim().isEmpty()){
+            if(shoppingCart.getMember()==null){
+                shoppingCart.setPoints(0);
+                JOptionPane.showMessageDialog(table.getParent(),"Non-Members cannot Redeem points", "Error", JOptionPane.OK_OPTION);
+                redeemPoints.requestFocusInWindow();
+                return false;
+            }
+
             if(strLPoints != null && !strLPoints.trim().isEmpty()){
                 try{
                     lPoints = Integer.parseInt(strLPoints);
                     rPoints = Integer.parseInt(strRPoints);
-                    if(lPoints > 0 && lPoints < rPoints){
+                    if(lPoints < rPoints){
+                        shoppingCart.setPoints(0);
                         JOptionPane.showMessageDialog(table.getParent(),"Points to be redeemed cannot be greater than available loyalty points", "Error", JOptionPane.OK_OPTION);
+                        redeemPoints.requestFocusInWindow();
+                        return false;
+                    }else if (rPoints%100!=0){
+                        shoppingCart.setPoints(0);
+                        JOptionPane.showMessageDialog(table.getParent(), "Enter the redeem points in multiples of 100", "Error", JOptionPane.OK_OPTION);
                         redeemPoints.requestFocusInWindow();
                         return false;
                     }
