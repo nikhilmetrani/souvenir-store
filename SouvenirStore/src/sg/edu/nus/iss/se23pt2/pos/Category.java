@@ -2,9 +2,6 @@ package sg.edu.nus.iss.se23pt2.pos;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import sg.edu.nus.iss.se23pt2.pos.exception.*;
 
 //
@@ -53,11 +50,13 @@ public class Category {
 
     public void setCode(String code) throws InvalidCategoryCodeException {
         if (null != code) {
-            if (3 == code.length()) {
+            if (3 == code.length() && (!code.contains(" "))) {
                 this.code = code.toUpperCase();
             }
             else {
-                throw new InvalidCategoryCodeException("The category code " + code + " is invalid.\nCategory code must not exceed three characters in length.");
+                throw new InvalidCategoryCodeException("The category code " + code + " is invalid.\nCategory"
+                        + " code must be\n1. Three characters in length\n"
+                        + "2. Must not contain white spaces");
             }
         }
     }

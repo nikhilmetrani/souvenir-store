@@ -5,13 +5,9 @@ import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import sg.edu.nus.iss.se23pt2.pos.exception.InvalidCategoryCodeException;
 
 /**
@@ -51,13 +47,6 @@ public class AddCategoryDialog extends OkCancelDialog {
     protected boolean performOkAction() {
         String code = this.categoryCodeField.getText().toUpperCase();
         String name = this.categoryNameField.getText();
-        if ((3 != code.length())) {
-            JOptionPane.showMessageDialog(null,
-                        "Error :: Category code must be three characters long.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
         try {
             this.category = new Category(code, name);
             DataStoreFactory dsFactory = DataStoreFactory.getInstance();
@@ -74,6 +63,11 @@ public class AddCategoryDialog extends OkCancelDialog {
             }
         }
         catch (InvalidCategoryCodeException icce) {
+            JOptionPane.showMessageDialog(null,
+                        "Error :: " + icce.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                this.category = null;
             return false;
         }
     }
