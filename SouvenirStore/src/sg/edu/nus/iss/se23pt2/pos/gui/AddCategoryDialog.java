@@ -5,9 +5,14 @@ import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import sg.edu.nus.iss.se23pt2.pos.exception.InvalidCategoryCodeException;
 
 /**
  * Author: Nikhil Metrani Class: AddCategoryDialog
@@ -46,20 +51,29 @@ public class AddCategoryDialog extends OkCancelDialog {
     protected boolean performOkAction() {
         String code = this.categoryCodeField.getText().toUpperCase();
         String name = this.categoryNameField.getText();
-        if ((0 == code.length()) || (0 == name.length())) {
+        if ((3 != code.length())) {
+            JOptionPane.showMessageDialog(null,
+                        "Error :: Category code must be three characters long.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        this.category = new Category(code, name);
-        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
         try {
-            dsFactory.getCategoryDS().update(this.category);
-            return true;
-        } catch (UpdateFailedException | IOException ufe) {
-            JOptionPane.showMessageDialog(null,
-                    "Error :: " + ufe.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            this.category = null;
+            this.category = new Category(code, name);
+            DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+            try {
+                dsFactory.getCategoryDS().update(this.category);
+                return true;
+            } catch (UpdateFailedException | IOException ufe) {
+                JOptionPane.showMessageDialog(null,
+                        "Error :: " + ufe.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                this.category = null;
+                return false;
+            }
+        }
+        catch (InvalidCategoryCodeException icce) {
             return false;
         }
     }

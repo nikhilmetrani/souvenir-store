@@ -22,6 +22,7 @@ import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.Vendor;
 import sg.edu.nus.iss.se23pt2.pos.exception.CreationFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
+import sg.edu.nus.iss.se23pt2.pos.exception.InvalidCategoryCodeException;
 import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.VendorExistsException;
@@ -113,23 +114,28 @@ public class CategoryDS extends DataStore
                     continue;
 
                 elements = line.split(",");
-                category = new Category(elements[0], elements[1]);
-                try{
-                    ds = dsFactory.getVendorDS(category.getCode());
-                    venodrs = ds.load(store);
-                    for(Vendor vendor:venodrs){
-                    	try {
-                    		category.addVendor(vendor);
-                    	}
-                    	catch (VendorExistsException e) {
-                    		//Do nothing for existing exception
-                    	}
+                try {
+                    category = new Category(elements[0], elements[1]);
+                    try{
+                        ds = dsFactory.getVendorDS(category.getCode());
+                        venodrs = ds.load(store);
+                        for(Vendor vendor:venodrs){
+                            try {
+                                    category.addVendor(vendor);
+                            }
+                            catch (VendorExistsException e) {
+                                    //Do nothing for existing exception
+                            }
+                        }
+                    }finally{
+                        if(ds!=null)
+                            ds.close();
                     }
-                }finally{
-                    if(ds!=null)
-                        ds.close();
+                    categories.add(category);
                 }
-                categories.add(category);
+                catch (InvalidCategoryCodeException icce) {
+                    //Do nothing for existing exception
+                }
             }
         } catch (IOException e) {
             throw new DataLoadFailedException(e.getMessage());

@@ -10,90 +10,112 @@ package sg.edu.nus.iss.se23pt2.pos;
 //  @ Author : Nikhil Metrani
 //
 //
-
-
-
-/** */
+/**
+ *  */
 public class Vendor {
-    /** */
+
+    /**
+     *      */
     private String name;
-    
-    /** */
+
+    /**
+     *      */
     private String description;
-    
-    /** For future implementation*/
+
+    /**
+     * For future implementation
+     */
     //public PurchaseOrder po;
-    
-	/** */
+    /**
+     *      */
     public Vendor() {
-		this(null, null);
+        this(null, null);
     }
-	
-    /** */
+
+    /**
+     * @param name
+     * @param description
+     */
     public Vendor(String name, String description) {
-		this.name = name;
-		this.description = description;
+        this.name = name;
+        this.description = description;
     }
-    
-	/** */
+
+    /**
+     * @param name
+     */
     public void setName(String name) {
-    	if (null != name)
-    		this.name = name;
+        if (null != name) {
+            this.name = name;
+        }
     }
-	
-    /** */
+
+    /**
+     * @return
+     */
     public String getName() {
-		return this.name;
+        return this.name;
     }
-    
-	/** */
+
+    /**
+     * @param description
+     */
     public void setDescription(String description) {
-    	if (null != description)
-    		this.description = description;
+        if (null != description) {
+            this.description = description;
+        }
     }
-	
-    /** */
+
+    /**
+     * @return
+     */
     public String getDescription() {
-		return this.description;
+        return this.description;
     }
-    
-    /** For future implementation*/
+
+    /**
+     * For future implementation
+     */
     /*public void placeOrder(PurchaseOrder po) {
-		this.po = po;
-		return;
-    }
-    */
-    /** */
+     this.po = po;
+     return;
+     }
+     */
+    /**
+     *
+     * @return  */
     /*public PurchaseOrder dispatchOrder() {
-		return this.po;
-    }
-	*/
+     return this.po;
+     }
+     */
     @Override
-	public String toString() {
-    	if (null == this.name && null == this.description)
-    		return null;
-    	else {
-    		if (null != this.name && null == this.description)
-    			return this.name + ",";
-    		else if (null == this.name && null != this.description)
-    			return "," + this.description;
-    	}
-    	return this.name + "," + this.description;
-	}
-    
+    public String toString() {
+        if (null == this.name && null == this.description) {
+            return null;
+        } else {
+            if (null != this.name && null == this.description) {
+                return this.name + ",";
+            } else if (null == this.name && null != this.description) {
+                return "," + this.description;
+            }
+        }
+        return this.name + "," + this.description;
+    }
+
     @Override
     public boolean equals(Object obj) {
-    	if (obj instanceof Vendor) {
-	    	if (this.name.equals(((Vendor)obj).getName()) && this.description.equals(((Vendor)obj).getDescription()))
-	    		return true;
-    	}
-    	return false;
+        if (obj instanceof Vendor) {
+            if (this.name.equals(((Vendor) obj).getName()) && this.description.equals(((Vendor) obj).getDescription())) {
+                return true;
+            }
+        }
+        return false;
     }
-    
+
     @Override
     public Vendor clone() {
-    	Vendor vendor = new Vendor(this.name, this.description);
-    	return vendor;
+        Vendor vendor = new Vendor(this.name, this.description);
+        return vendor;
     }
-    
+
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package sg.edu.nus.iss.se23pt2.pos.gui;
 
@@ -15,25 +15,25 @@ import sg.edu.nus.iss.se23pt2.pos.Vendor;
  */
 public class VendorTableModel extends AbstractStoreTableModel<Vendor> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	private final String[] columnHeaders = new String[] {
-            "Vendor name", "Vendor description"
+    private final String[] columnHeaders = new String[]{
+        "Vendor name", "Vendor description"
     };
-    
+
     @SuppressWarnings("rawtypes")
-	private final Class[] columnClass = new Class[] {
+    private final Class[] columnClass = new Class[]{
         String.class, String.class
     };
-    
-	public VendorTableModel(List<Vendor> vendorList) {
-		super(vendorList);
-	}
 
-	@Override
+    public VendorTableModel(List<Vendor> vendorList) {
+        super(vendorList);
+    }
+
+    @Override
     public String getColumnName(int column) {
         return columnHeaders[column];
     }
@@ -51,10 +51,9 @@ public class VendorTableModel extends AbstractStoreTableModel<Vendor> {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Vendor row = super.list.get(rowIndex);
-        if(0 == columnIndex) {
+        if (0 == columnIndex) {
             return row.getName();
-        }
-        else if(1 == columnIndex) {
+        } else if (1 == columnIndex) {
             return row.getDescription();
         }
         return null;
@@ -62,16 +61,14 @@ public class VendorTableModel extends AbstractStoreTableModel<Vendor> {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-    	if (0 == columnIndex)
-    		return false;
-        return true;
+        return 0 != columnIndex;
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Vendor row = super.list.get(rowIndex);
         //We don't allow editing of Vendor name, let's just update the description 
-        if(1 == columnIndex) {
+        if (1 == columnIndex) {
             row.setDescription((String) aValue);
             TableModelEvent e = new TableModelEvent(this, rowIndex);
             fireTableChanged(e);
