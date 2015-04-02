@@ -41,6 +41,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -220,7 +221,16 @@ public class ShoppingCartPanel extends JPanel {
         topPanel.add(customerName);
         topPanel.add(msgLabel);
 
-        table = new JTable(new MyTableModel(data, columnNames));
+        table = new JTable(new MyTableModel(data, columnNames)){
+            @Override
+            public void editingStopped(ChangeEvent e){
+                int editingRow = this.getEditingRow();
+                int editingCol = this.getEditingColumn();
+                super.editingStopped(e);
+                if(editingCol==columnIndices.get("id"))
+                    table.setEditingRow(editingRow); 
+            }
+        };
         table.setPreferredScrollableViewportSize(new Dimension(450, 70));
         table.setFillsViewportHeight(true);
         table.setDefaultEditor( String.class, new TextEditor(10));  //Editor for Text fields
@@ -241,12 +251,16 @@ public class ShoppingCartPanel extends JPanel {
             @Override
             public void tableChanged (TableModelEvent e) { 
                 if(TableModelEvent.DELETE == e.getType()) {
-                    table.changeSelection(table.getRowCount(), columnIndices.get("button"), false, false);
+                    table.changeSelection(table.getRowCount()-1, columnIndices.get("button"), false, false);
                 }else if(TableModelEvent.INSERT == e.getType()){
-                    table.changeSelection(table.getEditingRow()+1, columnIndices.get("button"), false, false);
+                    if(table.getEditingRow()+1 < table.getRowCount())
+                        table.changeSelection(table.getEditingRow()+1, columnIndices.get("button"), false, false);
+                    else
+                        table.changeSelection(table.getRowCount()-1, columnIndices.get("button"), false, false);
                 }else if(TableModelEvent.UPDATE == e.getType()){
                     table.changeSelection(table.getEditingRow(), columnIndices.get("button"), false, false);
-                    table.changeSelection(table.getEditingRow()+1, columnIndices.get("button"), false, false);
+                    if(table.getEditingRow()+1 < table.getRowCount())
+                        table.changeSelection(table.getEditingRow()+1, columnIndices.get("button"), false, false);
                 }
                 table.revalidate();
                 table.repaint();
@@ -260,9 +274,9 @@ public class ShoppingCartPanel extends JPanel {
         button.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed (ActionEvent e) {
-                MyTableModel model = (MyTableModel)table.getModel();
                 int selectedRow = table.getEditingRow();
                 int rowCount = table.getRowCount();
+                MyTableModel model = (MyTableModel)table.getModel();
                 if(selectedRow==rowCount-1){
                     String id = (String)((Vector)model.getDataVector().get(selectedRow)).get(columnIndices.get("id"));
                     Product product = null;
