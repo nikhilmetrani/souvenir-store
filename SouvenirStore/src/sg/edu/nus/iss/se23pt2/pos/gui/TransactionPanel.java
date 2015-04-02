@@ -197,7 +197,8 @@ public class TransactionPanel extends javax.swing.JPanel {
 							}
 							detailPanel.setTransaction(TransactionPanel.this.getSelectedTransaction());
 							TransactionPanel.this.parent.setContentPane(detailPanel);
-							TransactionPanel.this.parent.setSize(650, 453);
+							TransactionPanel.this.parent.getContentPane().setVisible(false);
+							TransactionPanel.this.parent.getContentPane().setVisible(true);
 						}
 					});
 				}
