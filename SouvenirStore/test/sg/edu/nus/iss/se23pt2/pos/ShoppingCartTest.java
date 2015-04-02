@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author Nikhil Metrani
+ * @author Debasish Routaray
  *
  */
 public class ShoppingCartTest extends TestCase{
@@ -278,39 +278,36 @@ public class ShoppingCartTest extends TestCase{
 
 	@Test
 	public void testMaximumNonMemberDiscountWithBoundaryConditions() {
-		    //dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			String transDate = shoppingCart.getDate();
-			Double expectedDiscount = 10.5;
-			Double maxDiscount = 0.0;
-			maxDiscount = shoppingCart.getHighestDiscount(shoppingCart.getCustomer(), souvenirStore.getDiscountList(), transDate);
-			//should be 10.5
-			assertEquals(expectedDiscount, maxDiscount);
-			expectedDiscount = 15.0;
-			transDate = shoppingCart2.getDate();
-			maxDiscount = shoppingCart2.getHighestDiscount(shoppingCart2.getCustomer(), souvenirStore2.getDiscountList(), transDate);
-			//should be 15.0
-			assertEquals(expectedDiscount, maxDiscount);
-			expectedDiscount = 10.5;
-			transDate = shoppingCart4.getDate();
-			maxDiscount = shoppingCart4.getHighestDiscount(shoppingCart4.getCustomer(), souvenirStore4.getDiscountList(), transDate);
-			//should be 10.5
-			assertEquals(expectedDiscount, maxDiscount);
-			expectedDiscount = 0.0;
-			transDate = shoppingCart6.getDate();
-			maxDiscount = shoppingCart6.getHighestDiscount(shoppingCart6.getCustomer(), souvenirStore6.getDiscountList(), transDate);
-			//should be 0.0
-			assertEquals(expectedDiscount, maxDiscount);
-			expectedDiscount = 0.0;
-			transDate = shoppingCart8.getDate();
-			maxDiscount = shoppingCart8.getHighestDiscount(shoppingCart8.getCustomer(), souvenirStore8.getDiscountList(), transDate);
-			//should be 0.0
-			assertEquals(expectedDiscount, maxDiscount);
-
-
+		//dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String transDate = shoppingCart.getDate();
+		Double expectedDiscount = 10.5;
+		Double maxDiscount = 0.0;
+		maxDiscount = shoppingCart.getHighestDiscount(souvenirStore.getDiscountList());
+		//should be 10.5
+		assertEquals(expectedDiscount, maxDiscount);
+		expectedDiscount = 15.0;
+		transDate = shoppingCart2.getDate();
+		maxDiscount = shoppingCart2.getHighestDiscount(souvenirStore2.getDiscountList());
+		//should be 15.0
+		assertEquals(expectedDiscount, maxDiscount);
+		expectedDiscount = 10.5;
+		transDate = shoppingCart4.getDate();
+		maxDiscount = shoppingCart4.getHighestDiscount(souvenirStore4.getDiscountList());
+		//should be 10.5
+		assertEquals(expectedDiscount, maxDiscount);
+		expectedDiscount = 0.0;
+		transDate = shoppingCart6.getDate();
+		maxDiscount = shoppingCart6.getHighestDiscount(souvenirStore6.getDiscountList());
+		//should be 0.0
+		assertEquals(expectedDiscount, maxDiscount);
+		expectedDiscount = 0.0;
+		transDate = shoppingCart8.getDate();
+		maxDiscount = shoppingCart8.getHighestDiscount(souvenirStore8.getDiscountList());
+		//should be 0.0
+		assertEquals(expectedDiscount, maxDiscount);
 	}
-
-
-
+	
+	
 	@Test
 	public void testMaximumMemberDiscountWithBoundaryConditions() {
 
@@ -318,31 +315,32 @@ public class ShoppingCartTest extends TestCase{
 			String transDate = shoppingCart1.getDate();
 			Double expectedDiscount = 20.5;
 			Double maxDiscount = 0.0;
-			maxDiscount = shoppingCart1.getHighestDiscount(shoppingCart1.getCustomer(), souvenirStore1.getDiscountList(), transDate);
+			maxDiscount = shoppingCart1.getHighestDiscount(souvenirStore1.getDiscountList());
 			//should be 20.5
 			assertEquals(expectedDiscount, maxDiscount);
 			expectedDiscount = 30.0;
 			transDate = shoppingCart3.getDate();
-			maxDiscount = shoppingCart3.getHighestDiscount(shoppingCart3.getCustomer(), souvenirStore3.getDiscountList(), transDate);
+			maxDiscount = shoppingCart3.getHighestDiscount(souvenirStore3.getDiscountList());
 			//should be 30.0
 			assertEquals(expectedDiscount, maxDiscount);
 			expectedDiscount = 20.5;
 			transDate = shoppingCart5.getDate();
-			maxDiscount = shoppingCart5.getHighestDiscount(shoppingCart5.getCustomer(), souvenirStore5.getDiscountList(), transDate);
+			maxDiscount = shoppingCart5.getHighestDiscount(souvenirStore5.getDiscountList());
 			//should be 20.5
 			assertEquals(expectedDiscount, maxDiscount);
 			expectedDiscount = 0.0;
 			transDate = shoppingCart7.getDate();
-			maxDiscount = shoppingCart7.getHighestDiscount(shoppingCart7.getCustomer(), souvenirStore7.getDiscountList(), transDate);
+			maxDiscount = shoppingCart7.getHighestDiscount(souvenirStore7.getDiscountList());
 			//should be 0.0
 			assertEquals(expectedDiscount, maxDiscount);
 			expectedDiscount = 0.0;
 			transDate = shoppingCart9.getDate();
-			maxDiscount = shoppingCart9.getHighestDiscount(shoppingCart9.getCustomer(), souvenirStore9.getDiscountList(), transDate);
+			maxDiscount = shoppingCart9.getHighestDiscount(souvenirStore9.getDiscountList());
 			//should be 0.0
 			assertEquals(expectedDiscount, maxDiscount);
 
 	}
+
 
 	@Test
 	public void testTotalPriceAfterDiscountForPublic() {
@@ -443,6 +441,7 @@ public class ShoppingCartTest extends TestCase{
 			Double totalPriceAfterDiscount = 0.0;
 			Double totalPriceAfterDiscount1 = 210.0;
 			try {
+				
 				totalPriceAfterDiscount =shoppingCart3.getTotalPriceAfterDiscount(shoppingCart3.getCustomer(), totalPriceBeforeDiscount
 			    		, souvenirStore3.getDiscountList(),transDate);
 				assertNotSame(totalPriceBeforeDiscount, totalPriceAfterDiscount);
@@ -451,7 +450,8 @@ public class ShoppingCartTest extends TestCase{
 				Member member = (Member)shoppingCart3.getCustomer();
 				//17.Customer is a member and does not want to redeem loyality points,finalAmountToBePaid is same as totalPriceAfterDisc
 				//and points to redeemed <= totalPriceAfterDisc
-				Double payableAmount = shoppingCart3.getPayableAmount(member, totalPriceAfterDiscount, member.isRedeemable(), member.getLoyaltyPoints());
+				
+				Double payableAmount = shoppingCart3.calcFinalPmt(member, totalPriceAfterDiscount, 0);
 				assertEquals(totalPriceAfterDiscount, payableAmount);
 				assertNotSame(0.0,payableAmount);
 
@@ -461,7 +461,7 @@ public class ShoppingCartTest extends TestCase{
 				Double payableAmount1 = 208.0;
 				member.setRedeemable(true);
 				member.setLoyaltyPoints(41);
-				payableAmount = shoppingCart3.getPayableAmount(member, totalPriceAfterDiscount, member.isRedeemable(), 40);
+				payableAmount = shoppingCart3.calcFinalPmt(member, totalPriceAfterDiscount, 40);
 				assertEquals(payableAmount1, payableAmount);
 				assertNotSame(0.0,payableAmount);
 
@@ -471,25 +471,13 @@ public class ShoppingCartTest extends TestCase{
 				payableAmount1 = 209.0;
 				member.setRedeemable(true);
 				member.setLoyaltyPoints(20);
-				payableAmount = shoppingCart3.getPayableAmount(member, totalPriceAfterDiscount, member.isRedeemable(), member.getLoyaltyPoints());
+				payableAmount = shoppingCart3.calcFinalPmt(member, totalPriceAfterDiscount, member.getLoyaltyPoints());
 				assertEquals(payableAmount1, payableAmount);
 
-/*				member.setRedeemable(false);
-				payableAmount = shoppingCart3.getPayableAmount(member, totalPriceAfterDiscount, member.isRedeemable(), totalPriceAfterDiscount.intValue());
-				assertEquals(totalPriceAfterDiscount, payableAmount);
-
-				//20.Customer is a member and wants to redeem whole loyality points.finalAmountToBePaid should be adjusted with totalPriceAfterDisc
-				//points to redeemed > totalPriceAfterDisc,then loyality points added and
-				//finalAmountToBePaid=totalPriceAfterDisc
-
-				int newLoyalityPoints = 420;
-				member.setRedeemable(true);
-				payableAmount = shoppingCart3.getPayableAmount(member, totalPriceAfterDiscount, member.isRedeemable(), 220);
-				assertEquals(totalPriceAfterDiscount, payableAmount);
-				assertEquals(newLoyalityPoints,member.getLoyaltyPoints());
-*/			} catch (ParseException e) {
+			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+
 	}
