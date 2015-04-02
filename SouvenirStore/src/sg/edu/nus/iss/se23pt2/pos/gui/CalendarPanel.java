@@ -69,7 +69,7 @@ public class CalendarPanel extends OkCancelDialog{
 			public boolean isCellEditable(int rowIndex, int mColIndex){return false;}
 		};
         for (int i=0; i<7; i++){
-        	calModel.addColumn(dow[i]);
+        	calModel.addColumn(dow[i]);	//Add table header
         }
         calTable = new JTable(calModel);
         calTable.setGridColor(new Color(225, 225, 225));	//Grid color: Light grey
@@ -98,7 +98,7 @@ public class CalendarPanel extends OkCancelDialog{
         calTable.getTableHeader().setReorderingAllowed(false);
         calTable.setColumnSelectionAllowed(true);
         calTable.setRowSelectionAllowed(true);
-        calTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        //calTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         calTable.setRowHeight(35);
         calModel.setColumnCount(7);
         calModel.setRowCount(6);
@@ -107,13 +107,11 @@ public class CalendarPanel extends OkCancelDialog{
             cmbYear.addItem(String.valueOf(i));
         }
         
-        repaint(realYear, realMonth);
-        
-        calTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-            	String origDate = curYear+"-"+curMonth+"-"+calTable.getValueAt(calTable.getSelectedRow(), 
-						  calTable.getSelectedColumn());   	
-				try {
+        calTable.addMouseListener(new MouseAdapter() {
+            public void mouseReleased(MouseEvent e) {
+            	String origDate = curYear+"-"+(curMonth+1)+"-"+calTable.getValueAt(calTable.getSelectedRow(), 
+						  calTable.getSelectedColumn());
+            	try {
 					Date fd1 = new SimpleDateFormat("yyyy-MM-dd").parse(origDate);
 					SimpleDateFormat fd2 = new SimpleDateFormat("yyyy-MM-dd");
 					selDate = fd2.format(fd1);
@@ -122,7 +120,10 @@ public class CalendarPanel extends OkCancelDialog{
 					JOptionPane.showMessageDialog(calPanel, "Invalid Date!");
 				}
             }
-          });
+        });
+        
+        repaint(realYear, realMonth);
+        
         return calPanel;
     }
 
