@@ -21,6 +21,8 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.Transaction;
@@ -28,6 +30,19 @@ import sg.edu.nus.iss.se23pt2.pos.TransactionSort;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.InvalidTransactionException;
 
+
+/**
+* This code was edited or generated using CloudGarden's Jigloo
+* SWT/Swing GUI Builder, which is free for non-commercial
+* use. If Jigloo is being used commercially (ie, by a corporation,
+* company or business for any purpose whatever) then you
+* should purchase a license for each developer using Jigloo.
+* Please visit www.cloudgarden.com for details.
+* Use of Jigloo implies acceptance of these licensing terms.
+* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
+* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
+* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
+*/
 /**
  * 
  * @author Rushabh Shah 
@@ -152,6 +167,9 @@ public class TransactionPanel extends javax.swing.JPanel {
 									transactions = store.getTransactions(startDate,endDate);
 									transactions.sort(new TransactionSort());
 									refresh();
+									if(view!=null){
+										view.setEnabled(false);
+									}
 							} catch (ParseException e) {
 								errorPane(e);
 							} catch (InvalidTransactionException e) {
@@ -177,6 +195,7 @@ public class TransactionPanel extends javax.swing.JPanel {
 					buttonPanel.add(view);
 					view.setText("View");
 					view.setBounds(3, 57, 100, 22);
+					view.setEnabled(false);
 					view.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
 							if (detailPanel == null){
@@ -258,6 +277,13 @@ public class TransactionPanel extends javax.swing.JPanel {
 				scrollPane.setViewportView(table);
 				table.setModel(new TransactionModel(transactions));
 				table.setPreferredSize(new java.awt.Dimension(509, 256));
+				table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+			        public void valueChanged(ListSelectionEvent event) {
+			        	if(view!=null){
+							view.setEnabled(true);
+						}
+			        }
+			    });
 			}			
 	}
 	
