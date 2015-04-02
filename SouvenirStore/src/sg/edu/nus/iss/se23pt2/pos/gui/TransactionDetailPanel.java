@@ -1,4 +1,6 @@
 package sg.edu.nus.iss.se23pt2.pos.gui;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +27,8 @@ public class TransactionDetailPanel extends JPanel {
 	private JButton close;
 	private JButton back;
 	private JFrame parent;
+	private JPanel listPanel;
+	private JPanel buttonPanel;
 	private JTable table;
 	private JScrollPane scrollPane;
 	private Transaction transaction;
@@ -38,39 +42,54 @@ public class TransactionDetailPanel extends JPanel {
 
 	private void initGUI() {
 		try {
-			this.setPreferredSize(new java.awt.Dimension(650, 453));
-			this.setLayout(null);
+			BorderLayout thisLayout = new BorderLayout();
+			this.setLayout(thisLayout);
 			{
 				transactionDetailLabel = new JLabel();
-				this.add(transactionDetailLabel);
+				this.add(transactionDetailLabel, BorderLayout.NORTH);
 				transactionDetailLabel.setText("Transaction Details");
 				transactionDetailLabel.setBounds(5, 8, 151, 21);
+				transactionDetailLabel.setPreferredSize(new java.awt.Dimension(650, 38));
 			}
 			{
-				back = new JButton();
-				this.add(back);
-				back.setText("Back");
-				back.setBounds(548, 35, 85, 28);
-				back.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						parent.setContentPane(searchPanel);
-					}
-				});
+				listPanel = new JPanel();
+				this.add(listPanel, BorderLayout.CENTER);
+				listPanel.setLayout(new BorderLayout());
+				{
+					refresh();				
+				}
 			}
+			
 			{
-				close = new JButton();
-				this.add(close);
-				close.setText("Close");
-				close.setBounds(548, 68, 85, 28);
-				close.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						parent.setContentPane(new EmptyPanel( parent));
-		                parent.repaint();
-					}
-				});
-			}
-			{
-				refresh();				
+				buttonPanel = new JPanel();
+				this.add(buttonPanel, BorderLayout.EAST);
+				buttonPanel.setPreferredSize(new java.awt.Dimension(105, 450));
+				buttonPanel.setLayout(null);
+				{
+					back = new JButton();
+					buttonPanel.add(back);
+					back.setText("Back");
+					back.setBounds(3, 0, 100, 22);
+					back.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							parent.setContentPane(searchPanel);
+							parent.getContentPane().setVisible(false);
+							parent.getContentPane().setVisible(true);
+						}
+					});
+				}
+				{
+					close = new JButton();
+					buttonPanel.add(close);
+					close.setText("Close");
+					close.setBounds(3, 27, 100, 22);
+					close.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							parent.setContentPane(new EmptyPanel( parent));
+							parent.repaint();
+						}
+					});
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -79,17 +98,19 @@ public class TransactionDetailPanel extends JPanel {
 	
 	
 	public void refresh() {		
-		if(scrollPane==null){
+		if(scrollPane==null){	
 			scrollPane = new JScrollPane();
 		}
+		
 		if(table==null){
 			table = new JTable();
+			FlowLayout tableLayout = new FlowLayout();
+			table.setLayout(tableLayout);
 		}
-		this.add(scrollPane);
-		scrollPane.setBounds(5, 35, 537, 327);
+		listPanel.add(scrollPane);
 		{
 			scrollPane.setViewportView(table);
-			table.setPreferredSize(new java.awt.Dimension(534, 351));
+			table.setPreferredSize(new java.awt.Dimension(548, 415));
 			table.setModel(new TransactionDetailModel(transaction));
 		}
 	}
@@ -103,6 +124,4 @@ public class TransactionDetailPanel extends JPanel {
 		refresh();
 	}
 	
-	
-
 }

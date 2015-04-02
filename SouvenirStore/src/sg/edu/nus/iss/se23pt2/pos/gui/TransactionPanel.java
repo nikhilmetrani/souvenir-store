@@ -1,4 +1,6 @@
 package sg.edu.nus.iss.se23pt2.pos.gui;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -17,9 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -32,18 +34,6 @@ import sg.edu.nus.iss.se23pt2.pos.exception.InvalidTransactionException;
 
 
 /**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
-/**
  * 
  * @author Rushabh Shah 
  *
@@ -52,7 +42,6 @@ public class TransactionPanel extends javax.swing.JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel searchPanel;
-	private JSeparator searchSeparator;
 	private JButton search;
 	private JLabel transactionsLabel;
 	private JPanel searchListPanel;
@@ -66,7 +55,6 @@ public class TransactionPanel extends javax.swing.JPanel {
 	private JLabel startDateLabel;
 	private JFrame parent;
 	private JButton clear;
-	private JButton jButton1;
 	private JLabel formatLabel;
 	private JTable table;
 	private JScrollPane scrollPane;
@@ -83,29 +71,42 @@ public class TransactionPanel extends javax.swing.JPanel {
 		initGUI();
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void initGUI() {
 		try {
-			this.setPreferredSize(new java.awt.Dimension(650, 453));
-			this.setLayout(null);
-			this.setSize(650, 453);
+			BorderLayout thisLayout = new BorderLayout();
+			this.setLayout(thisLayout);
+			{
+				searchListPanel = new JPanel();
+				this.add(searchListPanel, BorderLayout.CENTER);
+				searchListPanel.setLayout(new BorderLayout());
+				{
+					transactionsLabel = new JLabel();
+					searchListPanel.add(transactionsLabel);
+					transactionsLabel.setText("Transaction List");
+					searchListPanel.add(transactionsLabel,BorderLayout.NORTH);
+					transactionsLabel.setPreferredSize(new java.awt.Dimension(545, 41));
+				}
+				{					
+					refresh();
+				}
+			}
 			{
 				searchPanel = new JPanel();
-				this.add(searchPanel);
+				this.add(searchPanel, BorderLayout.NORTH);
 				searchPanel.setBounds(0, 0, 533, 87);
 				searchPanel.setLayout(null);
 				searchPanel.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
+				searchPanel.setPreferredSize(new java.awt.Dimension(650, 87));
 				{
 					startDateLabel = new JLabel();
 					searchPanel.add(startDateLabel);
 					startDateLabel.setText("Start Date ");
-					startDateLabel.setBounds(6, 45, 78, 21);
+					startDateLabel.setBounds(6, 42, 78, 21);
 				}
 				{
 					startDateText = new JTextField(10);
 					searchPanel.add(startDateText);
-					startDateText.setBounds(86, 49, 115, 15);
-					startDateText.setSize(115, 18);
+					startDateText.setBounds(86, 44, 115, 18);
 				}
 				{
 					transactionSearchLabel = new JLabel();
@@ -117,59 +118,52 @@ public class TransactionPanel extends javax.swing.JPanel {
 					endDateLabel = new JLabel();
 					searchPanel.add(endDateLabel);
 					endDateLabel.setText("End Date");
-					endDateLabel.setBounds(228, 46, 61, 21);
+					endDateLabel.setBounds(228, 42, 61, 21);
 				}
 				{
 					endDateText = new JTextField(10);
 					searchPanel.add(endDateText);
-					endDateText.setBounds(301, 48, 115, 16);
-					endDateText.setSize(115, 18);
-				}
-				{
-					searchSeparator = new JSeparator();
-					searchPanel.add(searchSeparator);
-					searchSeparator.setBounds(2, 31, 529, 10);
+					endDateText.setBounds(301, 44, 115, 18);
 				}
 				{
 					formatLabel = new JLabel();
 					searchPanel.add(formatLabel);
 					formatLabel.setText("*Enter date in format \"yyyy-MM-dd\"");
-					formatLabel.setBounds(390, 67, 141, 21);
+					formatLabel.setBounds(425, 64, 141, 21);
 					formatLabel.setFont(new java.awt.Font("Segoe UI",2,9));
 				}
 			}
 			{
 				buttonPanel = new JPanel();
-				this.add(buttonPanel);
+				this.add(buttonPanel, BorderLayout.EAST);
 				buttonPanel.setBounds(533, 111, 105, 141);
 				buttonPanel.setLayout(null);
+				buttonPanel.setPreferredSize(new java.awt.Dimension(105, 124));
 				{
 					search = new JButton();
-					endDateText.setNextFocusableComponent(search);
 					buttonPanel.add(search);
 					search.setText("Search");
-					search.setPreferredSize(new java.awt.Dimension(100, 22));
-					search.setBounds(3, 5, 100, 22);
+					search.setBounds(5, 44, 100, 21);
 					search.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent arg0) {
 							Date startDate = null, endDate = null;
 							try {
-									String startDateStr = startDateText.getText();
-									String endDateStr = endDateText.getText();
-									if (startDateStr != null
-											&& startDateStr.length() > 0){
-										startDate = dateFormat.parse(startDateStr);
-									}									
-									if (endDateStr != null
-											&& endDateStr.length() > 0){
-										endDate = dateFormat.parse(endDateStr);
-									}
-									transactions = store.getTransactions(startDate,endDate);
-									transactions.sort(new TransactionSort());
-									refresh();
-									if(view!=null){
-										view.setEnabled(false);
-									}
+								String startDateStr = startDateText.getText();
+								String endDateStr = endDateText.getText();
+								if (startDateStr != null
+										&& startDateStr.length() > 0){
+									startDate = dateFormat.parse(startDateStr);
+								}									
+								if (endDateStr != null
+										&& endDateStr.length() > 0){
+									endDate = dateFormat.parse(endDateStr);
+								}
+								transactions = store.getTransactions(startDate,endDate);
+								transactions.sort(new TransactionSort());
+								refresh();
+								if(view!=null){
+									view.setEnabled(false);
+								}
 							} catch (ParseException e) {
 								errorPane(e);
 							} catch (InvalidTransactionException e) {
@@ -182,10 +176,10 @@ public class TransactionPanel extends javax.swing.JPanel {
 								errorPane(e);
 							}
 						}
-
+						
 						private void errorPane(Exception e) {
 							JOptionPane.showMessageDialog(null,
-									 e.getMessage(), "Transaction Search Error",
+									e.getMessage(), "Transaction Search Error",
 									JOptionPane.ERROR_MESSAGE);
 						}
 					});
@@ -194,7 +188,7 @@ public class TransactionPanel extends javax.swing.JPanel {
 					view = new JButton();
 					buttonPanel.add(view);
 					view.setText("View");
-					view.setBounds(3, 57, 100, 22);
+					view.setBounds(5, 97, 100, 22);
 					view.setEnabled(false);
 					view.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
@@ -211,7 +205,7 @@ public class TransactionPanel extends javax.swing.JPanel {
 					close = new JButton();
 					buttonPanel.add(close);
 					close.setText("Close");
-					close.setBounds(2, 84, 100, 22);
+					close.setBounds(5, 124, 100, 22);
 					close.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
 							parent.setContentPane(new EmptyPanel(parent));
@@ -223,7 +217,7 @@ public class TransactionPanel extends javax.swing.JPanel {
 					clear = new JButton();
 					buttonPanel.add(clear);
 					clear.setText("Clear");
-					clear.setBounds(3, 31, 100, 22);
+					clear.setBounds(5, 70, 100, 22);
 					clear.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
 							startDateText.setText(null);
@@ -232,51 +226,26 @@ public class TransactionPanel extends javax.swing.JPanel {
 					});
 				}
 			}
-			{
-				searchListPanel = new JPanel();
-				this.add(searchListPanel);
-				searchListPanel.setBounds(0, 83, 533, 360);
-				searchListPanel.setLayout(null);
-				{
-					transactionsLabel = new JLabel();
-					searchListPanel.add(transactionsLabel);
-					transactionsLabel.setText("Transactions");
-					transactionsLabel.setBounds(6, 6, 82, 21);
-				}
-				{					
-					refresh();
-				}
-			}
-			{
-				jButton1 = new JButton();
-				this.add(jButton1);
-				jButton1.setText("Close");
-				jButton1.setPreferredSize(new java.awt.Dimension(100,22));
-				jButton1.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						parent.setContentPane(new EmptyPanel(parent));
-						parent.repaint();
-					}
-				});
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void refresh() {
+	public void refresh() {		
 			if(scrollPane==null){
 				scrollPane = new JScrollPane();
 			}
 			if(table==null){
 				table = new JTable();
+				FlowLayout tableLayout = new FlowLayout();
+				table.setLayout(tableLayout);
 			}
+			this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			searchListPanel.add(scrollPane);
-			scrollPane.setBounds(6, 33, 527, 277);
 			{
 				scrollPane.setViewportView(table);
 				table.setModel(new TransactionModel(transactions));
-				table.setPreferredSize(new java.awt.Dimension(509, 256));
+				table.setPreferredSize(new java.awt.Dimension(542, 401));
 				table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 			        public void valueChanged(ListSelectionEvent event) {
 			        	if(view!=null){
