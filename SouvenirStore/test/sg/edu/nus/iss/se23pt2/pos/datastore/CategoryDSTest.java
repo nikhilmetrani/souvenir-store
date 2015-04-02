@@ -44,7 +44,7 @@ public class CategoryDSTest extends TestCase{
         dsFactory = DataStoreFactory.getInstance();
         ds = dsFactory.getCategoryDS();
         store = new SouvenirStore();
-        category1 = new Category("WRAP", "Gift Wraps");
+        category1 = new Category("WRP", "Gift Wraps");
         category2 = new Category("LED", "LED Torch Lights");
         
         vendor1 = new Vendor("ABC", "ABC traders - Supplies Gift Wraps");
