@@ -172,7 +172,21 @@ public class ShoppingCart {
 
     /** Created by JV to use instance objects**/
     public double getHighestDiscount(ArrayList<Discount> discounts) {
-        return this.getHighestDiscount( this.customer, discounts, DateUtil.getCurrentDateAsString());
+        String transDate = DateUtil.getCurrentDateAsString();
+        double highestDesc = 0;
+        try{
+            for(Discount discount : discounts) {
+                if(discount.isValid(this.getCustomer(), transDate) && discount.getDiscPct() > highestDesc) {
+                    highestDesc = discount.getDiscPct();
+                    this.discount = discount;
+                }
+            }
+            return highestDesc;
+        }catch(ParseException e){
+            e.printStackTrace();
+            this.discount = null;
+            return 0;
+        }
     }
 
     //returns total price of the items after final check out
