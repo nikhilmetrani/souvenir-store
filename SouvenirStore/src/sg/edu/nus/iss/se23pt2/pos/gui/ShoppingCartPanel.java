@@ -12,9 +12,11 @@
 package sg.edu.nus.iss.se23pt2.pos.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,13 +40,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import sg.edu.nus.iss.se23pt2.pos.Category;
 import sg.edu.nus.iss.se23pt2.pos.Customer;
 import sg.edu.nus.iss.se23pt2.pos.Item;
 import sg.edu.nus.iss.se23pt2.pos.Product;
@@ -56,15 +58,15 @@ import sg.edu.nus.iss.se23pt2.pos.util.DateUtil;
 
 public class ShoppingCartPanel extends JPanel {
 
-    private static final long           serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-    private SouvenirStore               souvenirStore;
-    private ShoppingCart                shoppingCart;
-    private JFrame                      parent;
-    private JScrollPane                 scrollPane;
-    private JScrollPane                 tblScrollPane;
-    private JTable                      table;
-    private JComboBox<String> 			productSelectorCombo;
+    private SouvenirStore souvenirStore;
+    private ShoppingCart shoppingCart;
+    private JFrame parent;
+    private JScrollPane scrollPane;
+    private JScrollPane tblScrollPane;
+    private JTable table;
+    private JComboBox<String> productSelectorCombo;
     private JPanel topPanel;
     private JTextField customerId;
     private JTextField customerName;
@@ -79,6 +81,8 @@ public class ShoppingCartPanel extends JPanel {
     private Map<String, Integer>columnIndices;
     private Vector<Vector<Object>> data;
     private JButton button;
+    private JLabel msgLabel;
+    private Timer timer;
 
     public ShoppingCartPanel (final SouvenirStore souvenirStore, JFrame parent) {
         this.souvenirStore = souvenirStore;
@@ -102,6 +106,8 @@ public class ShoppingCartPanel extends JPanel {
 
         customerId = new JTextField(10);
         customerName = new JTextField(10);
+        msgLabel = new JLabel("");
+        msgLabel.setVisible(false);
         total = new JTextField(2);
         discountPercent = new JTextField(2);
         payableAmount = new JTextField(2);
@@ -124,7 +130,7 @@ public class ShoppingCartPanel extends JPanel {
         	while(itr.hasNext()){
         		item = itr.next();
         		data.add(new Vector<Object>(Arrays.asList(new Object[]{ item.getProduct().getId(), item.getProduct().getName(), item.getQuantity(), item.getProduct().getPrice(), 
-        				new BigDecimal(item.getProduct().getPrice()).multiply(new BigDecimal(item.getQuantity())), "x" })));
+        				new BigDecimal(item.getProduct().getPrice()).multiply(new BigDecimal(item.getQuantity())).setScale(2, BigDecimal.ROUND_HALF_UP), "x" })));
  
                 /* Sample Data */
                 /*
@@ -132,6 +138,30 @@ public class ShoppingCartPanel extends JPanel {
                 data.add(new Vector<Object>(Arrays.asList(new Object[]{ "MUG/2", "Mug 2", new Integer(2), new BigDecimal("4.50"), new BigDecimal("0.0"), "x" })));
                  */
         	}
+        	
+        	timer = new Timer(500, new ActionListener(){
+        	    @Override
+        	    public void actionPerformed(ActionEvent e){
+        	        Thread thread = new Thread(new Runnable(){
+        	            public void run(){
+                	        msgLabel.setText("*Shopping Cart restored from session");
+                	        msgLabel.setFont(new Font("Courier New", Font.ITALIC, 12));
+                	        msgLabel.setForeground(Color.RED);
+                	        msgLabel.setVisible(true);
+                	        try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
+                	        msgLabel.setText("");
+                	        msgLabel.setVisible(false);
+                	        ShoppingCartPanel.this.timer.stop();
+        	            }
+        	        });
+        	        thread.start();
+        	    }
+        	});
+        	timer.start();
         }else{
         	this.shoppingCart = new ShoppingCart();
         	Session.getInstance(souvenirStore).setAttribute("ShoppingCart", this.shoppingCart);
@@ -152,7 +182,7 @@ public class ShoppingCartPanel extends JPanel {
                     customer = souvenirStore.getMember(value);
                 }
                 if(customer == null){
-                	if(value != null && !value.trim().isEmpty()){
+                	if(value != null && !value.trim().isEmpty() && !value.trim().equalsIgnoreCase("PUBLIC")){
                 		JOptionPane.showMessageDialog(table.getParent(),"Member '" + value + "' not found. The Customer will be considered as PUBLIC", "Information", JOptionPane.OK_OPTION);
                 	}
                     customer = new Customer();
@@ -188,6 +218,7 @@ public class ShoppingCartPanel extends JPanel {
         topPanel.add(new JLabel("Customer Name"));
         customerName.setEditable(false);
         topPanel.add(customerName);
+        topPanel.add(msgLabel);
 
         table = new JTable(new MyTableModel(data, columnNames));
         table.setPreferredScrollableViewportSize(new Dimension(450, 70));
@@ -404,14 +435,16 @@ public class ShoppingCartPanel extends JPanel {
                 Product product = null;
                 if(aValue!=null){
                     product = souvenirStore.getInventory().getProduct(aValue.toString());
+                    if(product != null){
+                        this.setValueAt(product.getName(), row, columnIndices.get("name"));
+                        this.setValueAt(product.getPrice(), row, columnIndices.get("unitPrice"));
+                        /**
+                         * Nikhil Metrani
+                         * While adding product to cart, let's add at least one quantity
+                         * */
+                        this.setValueAt("1", row, columnIndices.get("qty"));
+                    }
                 }
-                this.setValueAt(product.getName(), row, columnIndices.get("name"));
-                /**
-                 * Nikhil Metrani
-                 * While adding product to cart, let's add at least one quantity
-                 * */
-                this.setValueAt("1", row, columnIndices.get("qty"));
-                this.setValueAt(product.getPrice(), row, columnIndices.get("unitPrice"));
             }
         }
     }
@@ -634,7 +667,7 @@ public class ShoppingCartPanel extends JPanel {
      * Nikhil Metrani
      * Product selection logic to enable adding products to shopping cart
      * */
-    public JComboBox<String> getProductSelectionCombo() {
+    private JComboBox<String> getProductSelectionCombo() {
     	
     	this.productSelectorCombo = new JComboBox<String>();
     	
