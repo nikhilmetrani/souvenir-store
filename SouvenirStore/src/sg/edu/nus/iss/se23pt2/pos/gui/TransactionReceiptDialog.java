@@ -86,7 +86,7 @@ public class TransactionReceiptDialog extends JDialog {
 
 			JPanel boxPrice = new JPanel();
 			boxPrice.setLayout(new BoxLayout(boxPrice, BoxLayout.Y_AXIS));
-			JLabel totalPrice = new JLabel(i.getQuantity() * i.getPrice() + "");
+			JLabel totalPrice = new JLabel((new BigDecimal(i.getQuantity()).multiply(new BigDecimal(i.getPrice())).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
 			totalPrice.setAlignmentX(Component.RIGHT_ALIGNMENT);
 			boxPrice.add(totalPrice);
 
@@ -136,15 +136,7 @@ public class TransactionReceiptDialog extends JDialog {
 		discountPanel.add(discountAmount);
 		
 		double payable = 0;
-		if(shoppingCart.getMember() != null) {
-			if(shoppingCart.getPoints() == 0) {
-				payable = shoppingCart.getPayableAmount();
-			} else {
-				payable = shoppingCart.getPayableAmount(shoppingCart.getMember(), shoppingCart.getTotalPriceAfterDiscount(), true, shoppingCart.getPoints());
-			}
-		} else {
-			payable = shoppingCart.getPayableAmount();
-		}
+		payable = shoppingCart.getPayableAmount();
 		
 		JPanel nettPanel = new JPanel();
 		nettPanel.setLayout(new BoxLayout(nettPanel, BoxLayout.X_AXIS));
