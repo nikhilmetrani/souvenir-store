@@ -19,4 +19,14 @@ public class MemberDiscount extends Discount{
         }
 		return false;
 	}
+
+    @Override
+    public Boolean isForMemberOnly()
+    {
+        return true;
+    }
+    
+    public boolean isFirstMemberDiscount(){
+        return "FIRST_MEMBER".equals(this.getDiscCode());
+    }
 }
