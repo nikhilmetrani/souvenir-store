@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 
 import sg.edu.nus.iss.se23pt2.pos.Discount;
@@ -99,7 +100,15 @@ public class DiscountTableModel extends AbstractStoreTableModel<Discount> {
 				row.setStartDate(cp.getSelDate());
 				break;
 			case 3:
-				row.setPeriodInDays((String) aValue);
+				String pid = (String)aValue;
+				if((pid.toString().toUpperCase().equals("ALWAYS"))) {
+					row.setPeriodInDays("ALWAYS");
+				} else if(pid.matches("^\\d+$")) {	//If numeric value entered
+					row.setPeriodInDays((String)aValue);
+				} else {
+					JOptionPane.showMessageDialog(parent, "Invalid value!");
+				}
+				
 				break;
 			case 4:
 				row.setDiscPct(Double.parseDouble(aValue.toString()));

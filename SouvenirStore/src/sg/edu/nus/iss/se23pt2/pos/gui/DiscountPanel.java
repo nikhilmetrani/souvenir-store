@@ -103,7 +103,7 @@ public class DiscountPanel extends JPanel implements TableCellEditor, ActionList
     	int idx = this.table.getSelectedRow();
         return (idx == -1) ? null : this.model.get(idx);
     }
-
+    
     private JPanel createButtonPanel () {
 
     	JPanel p = new JPanel (new GridLayout (0, 1, 5, 5));
