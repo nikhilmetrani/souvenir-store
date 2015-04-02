@@ -227,7 +227,7 @@ public class ShoppingCartPanel extends JPanel {
                 int editingRow = this.getEditingRow();
                 int editingCol = this.getEditingColumn();
                 super.editingStopped(e);
-                if(editingCol==columnIndices.get("id"))
+                if(editingCol==columnIndices.get("id") || editingCol==columnIndices.get("qty"))
                     table.setEditingRow(editingRow); 
             }
         };
