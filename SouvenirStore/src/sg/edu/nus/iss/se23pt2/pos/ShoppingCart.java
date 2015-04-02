@@ -168,7 +168,7 @@ public class ShoppingCart {
             this.discount = null;
             return 0;
         }
-    }
+    } 
 
     /** Created by JV to use instance objects**/
     public double getHighestDiscount(ArrayList<Discount> discounts) {
@@ -231,27 +231,34 @@ public class ShoppingCart {
 
     // To calculate the final payment based on member's decision if or not redeeming loyalty points
     // This method is open only to members. For public customers the discount amount is considered final
-    public double calcFinalPmt(Member mem, double discPmt
-            , boolean isRedeemLoyaltyPoints, int pointsRedeemed) {
-        if (isRedeemLoyaltyPoints) {
-            if (mem.getLoyaltyPoints() >= pointsRedeemed) {
-                double newLoyaltyPoints = discPmt-pointsRedeemed;
+    public double calcFinalPmt(Member member, double totalPriceAfterDiscount, int pointsRedeemed) {
+    	int pointsToDollar = 0;
+        int dollarsToPoints = 0;
+        double payableAmount = totalPriceAfterDiscount;
+        double finalAmountToBePaid = 0.0d;
 
-                //Update the member's loyalty points
-                mem.deductLoyaltyPoints(pointsRedeemed);
-
-                System.out.println("Member "+mem.getName()+": "+pointsRedeemed+" Loyalty Points have been redeemed!");
-                System.out.println("Member "+mem.getName()+": "+newLoyaltyPoints+" Loyalty Points remained!");
-                //TO-DO: Display the same message on UI.
-                return newLoyaltyPoints;
-            } else {
-                System.out.println("Member: "+mem.getName()+"'s Loyalty Points not enough for redemption!");
-                //TO-DO: Display the same message on UI.
-                return discPmt;
+        //if Member wants to redeem the points then this block of code will be executed to calculate the final amount
+        if(this.getMember() != null){
+            if(member.getLoyaltyPoints() >= pointsRedeemed){
+                pointsToDollar = (int) ((5d/100d)*pointsRedeemed);
             }
-        } else {
-            return discPmt;
         }
+
+        finalAmountToBePaid = BigDecimal.valueOf(payableAmount - pointsToDollar).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue(); //According to Requirement $5=100 Points redeemed
+
+        if(finalAmountToBePaid < 0){
+            dollarsToPoints = (int)(Math.abs(finalAmountToBePaid) + payableAmount)/10;
+        }
+        else{
+            dollarsToPoints = (int)finalAmountToBePaid/10;
+        }
+        
+        if(member != null){
+        	member.deductLoyaltyPoints(pointsRedeemed);
+        	member.addLoyaltyPoints(dollarsToPoints);
+        }
+
+        return finalAmountToBePaid;
     }
 
     /** Created by JV to use instance objects**/
