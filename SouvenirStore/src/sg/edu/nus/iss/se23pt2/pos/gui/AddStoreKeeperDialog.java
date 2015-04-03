@@ -12,8 +12,8 @@ public class AddStoreKeeperDialog extends OkCancelDialog {
 	
 	private SouvenirStore souvenirStore;
 	private StoreKeeper storeKeeper; 
-    private JTextField storeKeeperPasswordField;
-    private JTextField storeKeeperConfirmPasswordField;
+    private JPasswordField storeKeeperPasswordField;
+    private JPasswordField storeKeeperConfirmPasswordField;
     private JTextField storeKeeperNameField;
     
     public AddStoreKeeperDialog(SouvenirStore souvenirStore, JFrame parent) {
@@ -33,20 +33,22 @@ public class AddStoreKeeperDialog extends OkCancelDialog {
         storeKeeperNameField = new JTextField (20);
         p.add (storeKeeperNameField);
         p.add (new JLabel ("StoreKeeper password:"));
-        storeKeeperPasswordField = new JTextField (20);
+        storeKeeperPasswordField = new JPasswordField (20);
         p.add (storeKeeperPasswordField);
         p.add (new JLabel ("StoreKeeper confirm password:"));
-        storeKeeperConfirmPasswordField = new JTextField (20);
+        storeKeeperConfirmPasswordField = new JPasswordField (20);
         p.add (storeKeeperConfirmPasswordField);
         return p;
 	}
 
 	@Override
 	protected boolean performOkAction() {		
-	        String password = this.storeKeeperPasswordField.getText().toUpperCase();
-	        String confirmPassword = this.storeKeeperConfirmPasswordField.getText().toUpperCase();
-	        String name = this.storeKeeperNameField.getText();
-	        if ((0 == password.length()) || (0 == name.length())) {
+		char[] passwordArray = this.storeKeeperPasswordField.getPassword();			
+		char[] confirmPasswordArray = this.storeKeeperConfirmPasswordField.getPassword();
+		String password = new String(passwordArray);
+		String confirmPassword = new String(confirmPasswordArray);
+	    String name = this.storeKeeperNameField.getText();
+	        if ((0 == password.length()) || (0 == name.length()) || (0 == confirmPassword.length())) {
 	        	JOptionPane.showMessageDialog(null,
                         "Fields are be empty!",
                         "Error",
@@ -60,8 +62,16 @@ public class AddStoreKeeperDialog extends OkCancelDialog {
                         JOptionPane.ERROR_MESSAGE);	
 	        	return false;
 	        }
-	        this.storeKeeper = new StoreKeeper(storeKeeperNameField.getText(), storeKeeperPasswordField.getText());
-	        this.souvenirStore.addStoreKeeper(this.storeKeeper);    	
+	        this.storeKeeper = new StoreKeeper(name, password);
+	        if(this.souvenirStore.isStoreKeeperExist(this.storeKeeper)){
+	        	JOptionPane.showMessageDialog(null,
+                        "Duplicate store keeper!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);	
+	        	return false;
+	        }
+	        this.souvenirStore.addStoreKeeper(this.storeKeeper);
+	        
         return true;
 	}
 	

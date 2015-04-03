@@ -405,5 +405,11 @@ public class SouvenirStore{
     	this.storeKeepers.put(storeKeeper.getName(), storeKeeper);
     	return storeKeeper;
     }
+    
+    public Boolean isStoreKeeperExist(StoreKeeper storeKeeper){
+    	if (this.storeKeepers.containsKey(storeKeeper.getName().toLowerCase()))
+    		return true;
+    	return false;
+    }
 
 }
