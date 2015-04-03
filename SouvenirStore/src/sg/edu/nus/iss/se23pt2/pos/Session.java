@@ -60,7 +60,7 @@ public class Session {
     }
 
     public boolean authenticate() {
-        LoginDialog loginDlg = null;
+        LoginDialog loginDlg;
         String userName = null;
         while (true) {
             loginDlg = new LoginDialog(userName);
@@ -70,10 +70,6 @@ public class Session {
             if (loginDlg.okPerformed()) {
                 userName = loginDlg.getUsername();
                 if (this.authenticate(loginDlg.getUsername(), loginDlg.getPassword())) {
-                    JOptionPane.showMessageDialog(null,
-                            "Welcome back " + userName + "!\nYou have successfully logged in.",
-                            "Login",
-                            JOptionPane.INFORMATION_MESSAGE);
                     return true;
                 } else {
                     JOptionPane.showMessageDialog(null,
@@ -82,6 +78,8 @@ public class Session {
                             JOptionPane.ERROR_MESSAGE);
                 }
             } else {
+                loginDlg.dispose();
+                loginDlg = null;
                 return false;
             }
         }
@@ -121,10 +119,6 @@ public class Session {
                     JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
                     null, options, options[0]);
             if (0 == n) {
-                JOptionPane.showMessageDialog(null,
-                        this.loggedInUser.getName() + ", you were successfully logged off.",
-                        "Login",
-                        JOptionPane.INFORMATION_MESSAGE);
                 this.loggedInUser = null;
                 this.isActive = false;
                 return true; //logoff successful
