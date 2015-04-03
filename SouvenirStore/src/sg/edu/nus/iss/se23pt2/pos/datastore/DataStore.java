@@ -182,54 +182,6 @@ public abstract class DataStore {
         }
     }
     
-    //added by Jing Dong 
-    public <T> void swap (T obj1, T obj2) throws IOException {
-        String fileName = file.getPath();
-        File tmpFile = new File(fileName + ".tmp");
-        File oldFile = new File(fileName + ".old");
-        BufferedReader br = null;
-        BufferedWriter bw = null;
-        String line;        
-        try {
-            tmpFile.createNewFile();
-            br = this.getReader();
-            bw = new BufferedWriter(new FileWriter(tmpFile, true));
-
-            while ((line = br.readLine()) != null) {
-                if(line.trim().isEmpty())
-                    continue;
-
-                if (this.matchData(obj1, line)) {
-                    bw.append(obj2.toString());
-                    bw.newLine();
-                    }else if(this.matchData(obj2, line)){
-                    	bw.append(obj1.toString());
-                        bw.newLine();
-                    }else{
-                    	bw.append(line);
-                        bw.newLine();
-                    }               
-            }
-            bw.close();
-            this.close();
-
-            oldFile.delete();
-            file.renameTo(new File(fileName + ".old"));
-            tmpFile.renameTo(new File(fileName));
-        } catch (IOException e) {
-            throw e;
-        } finally {
-            try {
-                if (bw != null)
-                    bw.close();
-                this.close();
-            } catch (IOException e) {
-                throw e;
-            }
-        }
-    }
-
-    
     protected void deleteAll() throws RemoveFailedException{
         BufferedWriter bufferedWriter = null;
         try{
