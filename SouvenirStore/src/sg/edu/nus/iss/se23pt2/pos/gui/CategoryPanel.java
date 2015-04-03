@@ -98,6 +98,16 @@ public class CategoryPanel extends JPanel {
             }
         });
         p.add(b);
+        
+        b = new JButton("Print");
+        b.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new CategoryPrintDialog(inventory.getCategories()).setVisible(true);
+			}
+		});
+        p.add(b);
 /*
         b = new JButton("Remove");
         b.addActionListener(new ActionListener() {
