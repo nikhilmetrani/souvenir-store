@@ -54,6 +54,7 @@ public class TransactionPanel extends javax.swing.JPanel {
 	private JTextField startDateText;
 	private JLabel startDateLabel;
 	private JFrame parent;
+	private JButton print;
 	private JButton clear;
 	private JLabel formatLabel;
 	private JTable table;
@@ -226,6 +227,18 @@ public class TransactionPanel extends javax.swing.JPanel {
 						}
 					});
 				}
+				{
+					print = new JButton();
+					buttonPanel.add(print);
+					print.setText("Print");
+					print.setEnabled(false);
+					print.setBounds(5, 151, 100, 21);
+					print.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							PrintTransactionDialog printDialog = new PrintTransactionDialog(transactions);
+		            		printDialog.setVisible(true);
+						}
+					});			}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -252,6 +265,9 @@ public class TransactionPanel extends javax.swing.JPanel {
 			        	if(view!=null){
 							view.setEnabled(true);
 						}
+			        	if(print!=null){
+			        		print.setEnabled(true);
+			        	}
 			        }
 			    });
 			}			
