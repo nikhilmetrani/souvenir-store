@@ -168,7 +168,7 @@ public class StoreAppWindow extends JFrame {
         mntmMembers.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MemberPanel panel = new MemberPanel(StoreAppWindow.this.store.getMembers(), StoreAppWindow.this);
+                MemberPanel panel = new MemberPanel(StoreAppWindow.this.store, StoreAppWindow.this);
                 panel.refresh();
                 StoreAppWindow.this.setContentPane(panel);
                 StoreAppWindow.this.makeContentVisible();
