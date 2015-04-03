@@ -2,13 +2,14 @@ package sg.edu.nus.iss.se23pt2.pos.gui;
 
 import java.util.List;
 import javax.swing.event.TableModelEvent;
+import sg.edu.nus.iss.se23pt2.pos.Customer;
 import sg.edu.nus.iss.se23pt2.pos.Member;
 
 /**
  * @author Nikhil Metrani
  *
  */
-public class MemberTableModel extends AbstractStoreTableModel<Member> {
+public class MemberTableModel extends AbstractStoreTableModel<Customer> {
 
     /**
      *
@@ -24,7 +25,7 @@ public class MemberTableModel extends AbstractStoreTableModel<Member> {
         String.class, String.class, Integer.class
     };
 
-    public MemberTableModel(List<Member> memberList) {
+    public MemberTableModel(List<Customer> memberList) {
         super(memberList);
     }
 
@@ -45,14 +46,14 @@ public class MemberTableModel extends AbstractStoreTableModel<Member> {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Member row = super.list.get(rowIndex);
+        Customer row = super.list.get(rowIndex);
         switch (columnIndex) {
             case 0:
                 return row.getId();
             case 1:
-                return row.getName();
+                return ((Member)row).getName();
             case 2:
-                return row.getLoyaltyPoints();
+                return ((Member)row).getLoyaltyPoints();
         }
         return null;
     }
@@ -65,7 +66,7 @@ public class MemberTableModel extends AbstractStoreTableModel<Member> {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        Member row = super.list.get(rowIndex);
+        Customer row = super.list.get(rowIndex);
 
         switch (columnIndex) {
             //We don't allow editing of Member ID, let's update other attributes
@@ -73,10 +74,10 @@ public class MemberTableModel extends AbstractStoreTableModel<Member> {
              row.setId((String) aValue);
              break;*/
             case 1:
-                row.setName((String) aValue);
+                ((Member)row).setName((String) aValue);
                 break;
             case 2:
-                row.setLoyaltyPoints((Integer) aValue);
+                ((Member)row).setLoyaltyPoints((Integer) aValue);
                 break;
         }
         if (0 != columnIndex) {

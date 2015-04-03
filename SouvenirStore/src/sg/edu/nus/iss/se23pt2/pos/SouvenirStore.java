@@ -29,6 +29,7 @@ import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 import sg.edu.nus.iss.se23pt2.pos.exception.CreationFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.DataLoadFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.InvalidTransactionException;
+import sg.edu.nus.iss.se23pt2.pos.exception.MemberNotFoundException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 
@@ -38,7 +39,7 @@ public class SouvenirStore{
     private Map<String, Product>     products;
     private Map<String, ArrayList<Vendor>>      vendors;
     private Map<String, Discount>    discounts;
-    private ArrayList<Member>        members;
+    private ArrayList<Customer>        members;
 
     private Map<Date,ArrayList<Transaction>>        transactions;
     private String                   loginUserName;
@@ -54,7 +55,7 @@ public class SouvenirStore{
         this.products = new HashMap<String, Product>();
         this.discounts = new HashMap<String, Discount>();
         this.vendors=new HashMap<String,ArrayList<Vendor>>();
-        this.members = new ArrayList<Member>();
+        this.members = new ArrayList();
         this.loadData();
         this.inventory = new Inventory(this.products, this.categories, this.vendors, this.discounts);
     }
@@ -63,16 +64,20 @@ public class SouvenirStore{
     	return this.inventory;
     }
 
-    public ArrayList<Member> getMembers() {
+    //Nikhil Metrani
+    //Changed from Member to Customer
+    public ArrayList<Customer> getMembers() {
     	return this.members;
     }
 
-    public Member getMember(String memberId){
-        for(Member member : this.members){
+    //Nikhil Metrani
+    //Implemented error handling
+    public Member getMember(String memberId) throws MemberNotFoundException{
+        for(Customer member : this.members){
             if(member.getId().equalsIgnoreCase(memberId))
-                return member;
+                return (Member)member;
         }
-        return null;
+        throw new MemberNotFoundException("The given member " + memberId + " does not exist");
     }
 
 	public ArrayList<Discount> getDiscounts() {
@@ -250,7 +255,7 @@ public class SouvenirStore{
 
 	private void loadMembers() throws DataLoadFailedException {
 		try{
-			this.members = new ArrayList<Member>();
+			this.members = new ArrayList();
             ArrayList<Member> list = dsFactory.getMemberDS().load(this);
             Iterator<Member> iterator = list.iterator();
             Member member = null;
