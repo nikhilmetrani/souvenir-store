@@ -38,7 +38,7 @@ import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
  *  Transaction2 and Transasction3 done on 2012-02-12 date 
  *  
  *  Transaction1 and Transaction3 contains Two product items
- *  Transaction2 contains Three product items
+ *  Transaction2 contains Four product items
  * 
  *
  */
