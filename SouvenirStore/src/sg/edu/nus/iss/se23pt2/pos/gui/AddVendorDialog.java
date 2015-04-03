@@ -2,8 +2,6 @@ package sg.edu.nus.iss.se23pt2.pos.gui;
 
 import java.awt.GridLayout;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,23 +11,26 @@ import javax.swing.JTextField;
 
 import sg.edu.nus.iss.se23pt2.pos.*;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
+import sg.edu.nus.iss.se23pt2.pos.exception.InvalidCategoryCodeException;
+import sg.edu.nus.iss.se23pt2.pos.exception.InvalidVendorException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 public class AddVendorDialog extends OkCancelDialog {
 
     private static final long serialVersionUID = 1L;
-    private final Inventory inventory;
+
     private final String categoryCode;
     private Vendor vendor;
     private JTextField catCodeField;
     private JTextField vendorNameField;
     private JTextField vendorDescField;
+    private final Inventory inventory;
 
     public AddVendorDialog(String categoryCode, Inventory inventory, JFrame parent) {
         super(parent, "Add Vendor");
-		this.inventory = inventory;
         this.vendor = null;
         this.categoryCode = categoryCode;
+        this.inventory = inventory;
         catCodeField.setText(this.categoryCode);
         this.setLocationRelativeTo(parent);
         this.setModal(true);
@@ -70,23 +71,39 @@ public class AddVendorDialog extends OkCancelDialog {
             return false;
         } else {
             this.vendor = new Vendor(name, desc);
-            DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+            Category cat;
             try {
-				if(isDuplicateVendorForCategory(this.categoryCode,vendor)){
-            		JOptionPane.showMessageDialog(null,
-                            "Error :: The vendor already exits for the category!",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                cat = this.inventory.getCategory(this.categoryCode);
+                try { 
+                    cat.getVendor(this.vendor.getName());
+                    JOptionPane.showMessageDialog(null,
+                                "Error :: The vendor " + this.vendor.getName() + " already exists",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
                     this.vendor = null;
                     return false;
-            	}
-                dsFactory.getVendorDS(this.categoryCode).update(this.vendor);
-                return true;
-            } catch (UpdateFailedException | IOException ufe) {
+                }
+                catch (InvalidVendorException e){
+                    //this is good, let's try to add vendor.
+                    DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+                    try {
+                        dsFactory.getVendorDS(this.categoryCode).update(this.vendor);
+                        return true;
+                    } catch (UpdateFailedException | IOException ufe) {
+                        JOptionPane.showMessageDialog(null,
+                                "Error :: " + ufe.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        this.vendor = null;
+                        return false;
+                    }
+                }
+            }
+            catch (InvalidCategoryCodeException e) {
                 JOptionPane.showMessageDialog(null,
-                        "Error :: " + ufe.getMessage(),
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                                "Error :: " + e.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
                 this.vendor = null;
                 return false;
             }
@@ -96,18 +113,4 @@ public class AddVendorDialog extends OkCancelDialog {
     public Vendor getAdded() {
         return this.vendor;
     }
-	//jing dong: fix the bug - there are duplicate vendors for one category
-    private boolean isDuplicateVendorForCategory(String categoryCode, Vendor vendor)
-    {
-    	ArrayList<Vendor> vendors = this.inventory.getVendors(categoryCode);
-        if (null == vendors) return false;
-        Iterator<Vendor> iterator = vendors.iterator();        
-        while (iterator.hasNext()) {            
-            if (vendor.getName().toUpperCase().equals(iterator.next().getName().toUpperCase())) {
-                return true;
-            }
-        }
-    	return false;
-    }
-    
 }

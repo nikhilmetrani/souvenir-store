@@ -2,7 +2,6 @@ package sg.edu.nus.iss.se23pt2.pos.gui;
 
 import sg.edu.nus.iss.se23pt2.pos.*;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
-import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 import java.awt.*;
@@ -87,7 +86,7 @@ public class CategoryPanel extends JPanel {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddCategoryDialog d = new AddCategoryDialog(CategoryPanel.this.parent);
+                AddCategoryDialog d = new AddCategoryDialog(CategoryPanel.this.inventory, CategoryPanel.this.parent);
                 d.setVisible(true);
                 if (null != d.getAdded()) {
                     CategoryPanel.this.inventory.addCategory(d.getAdded());
@@ -108,41 +107,7 @@ public class CategoryPanel extends JPanel {
 			}
 		});
         p.add(b);
-/*
-        b = new JButton("Remove");
-        b.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (null != CategoryPanel.this.getSelected()) {
-                    if (0 == StoreAppWindow.confirm("Are you sure you want to remove selected category?\nClick Ok to continue.")) {
-                        int index = CategoryPanel.this.table.getSelectedRow();
 
-                        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
-                        try {
-                            dsFactory.getCategoryDS().remove(CategoryPanel.this.getSelected());
-                            CategoryPanel.this.inventory.removeCategory(CategoryPanel.this.getSelected().getCode());
-                            CategoryPanel.this.model.remove(CategoryPanel.this.getSelected());
-                            CategoryPanel.this.refresh();
-                            if (1 <= index) {
-                                index -= 1;
-                                CategoryPanel.this.select(index);
-                            } else {
-                                if (CategoryPanel.this.model.size() >= 1) {
-                                    CategoryPanel.this.select(0);
-                                }
-                            }
-                        } catch (RemoveFailedException | IOException rfe) {
-                            JOptionPane.showMessageDialog(null,
-                                    "Error :: " + rfe.getMessage(),
-                                    "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            }
-        });
-        p.add(b);
-*/
         b = new JButton("Close");
         b.addActionListener(new ActionListener() {
             @Override
