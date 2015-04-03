@@ -185,6 +185,14 @@ public class Category {
         return alv;
     }
 
+    /** JV - without clone to use it in Application **/
+    public ArrayList<Vendor> getVendors() {
+        if (null == this.vendors) {
+            return new ArrayList<Vendor>();
+        }
+        return this.vendors;
+    }
+
     /**
      *
      * @param name
