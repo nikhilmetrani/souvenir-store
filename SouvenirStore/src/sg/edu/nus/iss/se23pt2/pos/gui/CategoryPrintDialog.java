@@ -79,11 +79,13 @@ public class CategoryPrintDialog extends JDialog {
 			box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
 			JLabel categoryName = new JLabel(c.getName());
 			String vendors = "<html>Vendors:" + "<br/>";
-			for (Vendor v: c.getAllVendors()) {
-				vendors += v.getName();
-				vendors +=  "<br/>";
+			if (c.getAllVendors() != null) {
+				for (Vendor v: c.getAllVendors()) {
+					vendors += v.getName();
+					vendors +=  "<br/>";
+				}
+				vendors += "</html>";
 			}
-			vendors += "</html>";
 			JLabel categoryVendor = new JLabel(vendors);
 			categoryName.setFont(font.deriveFont(attributes));
 			box.add(categoryName);
