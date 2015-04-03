@@ -283,7 +283,7 @@ public class SouvenirStore{
 		return null;
 	}
 
-	public void setTransaction(Transaction transaction) throws InvalidTransactionException, AccessDeniedException, CreationFailedException, UpdateFailedException, IOException{
+	public void setTransaction(Transaction transaction) throws InvalidTransactionException, AccessDeniedException, CreationFailedException, UpdateFailedException, IOException, DataLoadFailedException{
 		validateTransaction(transaction);
 		if(transaction.getCustomer() instanceof Member){
 			dsFactory.getMemberDS().update((Member)transaction.getCustomer());
@@ -292,11 +292,10 @@ public class SouvenirStore{
 			dsFactory.getProductDS().update(item.getProduct());
 		}
 		dsFactory.getTransactionDS().create(transaction);
+		loadTransactions();
 	}
 
-	public ArrayList<Transaction> getTransactions(Date startDate,Date endDate) throws InvalidTransactionException, AccessDeniedException, DataLoadFailedException, IOException, ParseException {
-
-		loadTransactions();
+	public ArrayList<Transaction> getTransactions(Date startDate,Date endDate) throws InvalidTransactionException, AccessDeniedException, DataLoadFailedException, IOException, ParseException {		
 		validateTransactionDate(startDate, endDate);
 		ArrayList<Transaction> filterTransactions = new ArrayList<Transaction>();
 		Set<Date> dateSet = transactions.keySet();
