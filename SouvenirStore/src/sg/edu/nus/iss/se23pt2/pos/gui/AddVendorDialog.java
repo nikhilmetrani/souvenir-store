@@ -24,7 +24,7 @@ public class AddVendorDialog extends OkCancelDialog {
     private JTextField catCodeField;
     private JTextField vendorNameField;
     private JTextField vendorDescField;
-    private Inventory inventory;
+    private final Inventory inventory;
 
     public AddVendorDialog(String categoryCode, Inventory inventory, JFrame parent) {
         super(parent, "Add Vendor");
