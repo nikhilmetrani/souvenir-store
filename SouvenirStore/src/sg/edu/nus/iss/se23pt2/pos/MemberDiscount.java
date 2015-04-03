@@ -48,7 +48,7 @@ public class MemberDiscount extends Discount{
             return true;
         else {
             Date startDate = df.parse(this.getStartDate());
-            if("ALWAYS".equals(this.getPeriodInDays()))
+            if(df.parse(transDate).after(startDate) && "ALWAYS".equals(this.getPeriodInDays()))
             	return true;
             else{
             	Date endDate = new Date((startDate.getTime()+Long.parseLong(this.getPeriodInDays())*86400000));
