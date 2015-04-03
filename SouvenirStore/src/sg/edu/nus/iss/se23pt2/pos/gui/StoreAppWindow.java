@@ -315,6 +315,7 @@ public class StoreAppWindow extends JFrame {
         mntmStoreKeepers.setEnabled(false);
         mntmBill.setEnabled(false);
         this.updateUserInTitle();
+        session.removeAttribute("ShoppingCart");
     }
     
     public void makeContentVisible() {
