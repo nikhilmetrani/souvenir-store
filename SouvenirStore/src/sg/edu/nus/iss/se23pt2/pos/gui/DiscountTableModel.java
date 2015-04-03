@@ -95,9 +95,15 @@ public class DiscountTableModel extends AbstractStoreTableModel<Discount> {
 				row.setDiscDesc((String) aValue);
 				break;
 			case 2:
+				String origStartDate = row.getStartDate();
 				CalendarPanel cp = new CalendarPanel(parent);
 				cp.setVisible(true);
-				row.setStartDate(cp.getSelDate());
+				if(cp.getDatePicked() == true) {
+					row.setStartDate(cp.getSelDate());	//If date picked from calendar, then update the same in discounts list
+				} else {
+					//System.out.println("origStartDate = "+origStartDate);
+					row.setStartDate(origStartDate);	//If not date picked, then retain the original start date.
+				}
 				break;
 			case 3:
 				String pid = (String)aValue;
@@ -108,7 +114,6 @@ public class DiscountTableModel extends AbstractStoreTableModel<Discount> {
 				} else {
 					JOptionPane.showMessageDialog(parent, "Invalid value!");
 				}
-				
 				break;
 			case 4:
 				row.setDiscPct(Double.parseDouble(aValue.toString()));

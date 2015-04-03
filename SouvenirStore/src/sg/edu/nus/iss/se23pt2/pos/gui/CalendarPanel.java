@@ -23,11 +23,12 @@ public class CalendarPanel extends OkCancelDialog{
     static JLabel lblMonth, lblYear;
     static JComboBox<String> listYear;
     static String selDate;	//selected date from calendar (in 'yyyy-MM-dd' format)
+    static boolean datePicked = false;	//default = No date picked from calendar
     
     static int realYear, realMonth, realDay, curYear, curMonth;
     final static String[] months =  {"January", "February", "March", "April", "May", "June"
     	, "July", "August", "September", "October", "November", "December"};
-    final static String[] dow = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"}; //Day of the week
+    final static String[] calHeaders = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
     
     public CalendarPanel(JFrame parent){
         super(parent, "Choose a date");
@@ -69,7 +70,7 @@ public class CalendarPanel extends OkCancelDialog{
 			public boolean isCellEditable(int rowIndex, int mColIndex){return false;}
 		};
         for (int i=0; i<7; i++){
-        	calModel.addColumn(dow[i]);	//Add table header
+        	calModel.addColumn(calHeaders[i]);	//Add table header
         }
         calTable = new JTable(calModel);
         calTable.setGridColor(new Color(225, 225, 225));	//Grid color: Light grey
@@ -98,7 +99,6 @@ public class CalendarPanel extends OkCancelDialog{
         calTable.getTableHeader().setReorderingAllowed(false);
         calTable.setColumnSelectionAllowed(true);
         calTable.setRowSelectionAllowed(true);
-        //calTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         calTable.setRowHeight(35);
         calModel.setColumnCount(7);
         calModel.setRowCount(6);
@@ -127,7 +127,7 @@ public class CalendarPanel extends OkCancelDialog{
     }
 
     public static void repaint(int year, int month){
-        int nod, som; //Number Of Days, Start Of Month
+        int dom, dow; //Day of month, Day of week
         
         btnPrev.setEnabled(true);
         btnNext.setEnabled(true);
@@ -146,13 +146,13 @@ public class CalendarPanel extends OkCancelDialog{
         }
         
         GregorianCalendar gc = new GregorianCalendar(year, month, 1);
-        nod = gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);	//Number of days
-        som = gc.get(GregorianCalendar.DAY_OF_WEEK);	//The first day of month
+        dom = gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);	//Day of the month
+        dow = gc.get(GregorianCalendar.DAY_OF_WEEK);	//The first day of week
         
         //Draw calendar
-        for (int i=1; i<=nod; i++){
-            int row = new Integer((i+som-2)/7);
-            int column  =  (i+som-2)%7;
+        for (int i=1; i<=dom; i++){
+            int row = new Integer((i+dow-2)/7);
+            int column  =  (i+dow-2)%7;
             calModel.setValueAt(i, row, column);
         }
         
@@ -223,11 +223,17 @@ public class CalendarPanel extends OkCancelDialog{
         }
     }
     
+    public boolean getDatePicked() {
+    	return datePicked;
+    }
+    
     public String getSelDate() {
     	return selDate;
     }
     
     protected boolean performOkAction(){
+    	//System.out.println("clicked OK button!");
+    	datePicked = true;
     	return true;
     }
 

@@ -52,7 +52,7 @@ public class Transaction {
 	 *  */
     public void setItems(ArrayList<Item> items) {
 		this.items = items;
-		this.items.sort(new ItemSort());
+		//this.items.sort(new ItemSort());
     }
 	
     /** */
