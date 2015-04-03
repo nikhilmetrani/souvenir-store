@@ -2,6 +2,7 @@ package sg.edu.nus.iss.se23pt2.pos.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.font.TextAttribute;
 import java.math.BigDecimal;
@@ -48,7 +49,8 @@ public class PrintTransactionDialog extends JDialog {
 		setModal(true);
 		setLocationByPlatform(true);
 		setTitle("Transaction Receipt");
-		setBounds(100, 100, 340, 600);
+		setBounds(100, 100, 540, 600);
+		String blanks = "  ";
 
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
@@ -56,95 +58,94 @@ public class PrintTransactionDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout());
 		JPanel midPanel = new JPanel();
-		midPanel.setLayout(new BoxLayout(midPanel, BoxLayout.Y_AXIS));
+		//midPanel.setLayout(new BoxLayout(midPanel, BoxLayout.Y_AXIS));
+		midPanel.setLayout(new FlowLayout());
+		JPanel transactionPanel = new JPanel();
+		transactionPanel.setLayout(new BoxLayout(transactionPanel, BoxLayout.Y_AXIS));
+		JLabel transactionIdText = new JLabel("Transaction Id: ");
+		transactionIdText.setAlignmentX(Component.LEFT_ALIGNMENT);
+		transactionPanel.add(transactionIdText, BorderLayout.AFTER_LAST_LINE);
+
+		JPanel transactionPanel1 = new JPanel();
+		transactionPanel1.setLayout(new BoxLayout(transactionPanel1, BoxLayout.Y_AXIS));
+		JLabel memberIdText = new JLabel("Member Id: ");
+		memberIdText.setAlignmentX(Component.LEFT_ALIGNMENT);
+		transactionPanel1.add(memberIdText, BorderLayout.AFTER_LAST_LINE);
+
+		JPanel transactionPanel2 = new JPanel();
+		transactionPanel2.setLayout(new BoxLayout(transactionPanel2, BoxLayout.Y_AXIS));
+		JLabel transactionDateText = new JLabel("Transaction Date: ");
+		transactionDateText.setAlignmentX(Component.LEFT_ALIGNMENT);
+		transactionPanel2.add(transactionDateText, BorderLayout.AFTER_LAST_LINE);
+
+		JPanel productPanel = new JPanel();
+		productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
+		JLabel productIdText = new JLabel("Product Id: ");
+		productPanel.add(productIdText, BorderLayout.AFTER_LAST_LINE);
+
+		JPanel productPanel1 = new JPanel();
+		productPanel1.setLayout(new BoxLayout(productPanel1, BoxLayout.Y_AXIS));
+		JLabel productNameText = new JLabel("Product Name: ");
+		productPanel1.add(productNameText, BorderLayout.AFTER_LAST_LINE);
+
+		JPanel productPanel2 = new JPanel();
+		productPanel2.setLayout(new BoxLayout(productPanel2, BoxLayout.Y_AXIS));
+		JLabel productDescText = new JLabel("Product Description: ");
+		productPanel2.add(productDescText, BorderLayout.AFTER_LAST_LINE);
+
+		JPanel productPanel3 = new JPanel();
+		productPanel3.setLayout(new BoxLayout(productPanel3, BoxLayout.Y_AXIS));
+		JLabel quantityText = new JLabel("Quantity: ");
+		productPanel3.add(quantityText, BorderLayout.AFTER_LAST_LINE);
+
+		midPanel.add(transactionPanel);
+		midPanel.add(transactionPanel2);
+		midPanel.add(transactionPanel1);
+		midPanel.add(productPanel);
+		midPanel.add(productPanel1);
+		midPanel.add(productPanel2);
+		midPanel.add(productPanel3);
+
 		for(Transaction transaction : transactions){
 			ArrayList<Item> itemsPaid = transaction.getItems();
 			for (Item i : itemsPaid) {
-				JPanel itemsPanel = new JPanel();
-				itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.X_AXIS));
+				JLabel transactionId = new JLabel(transaction.getId()+blanks);
+				transactionId.setAlignmentX(Component.LEFT_ALIGNMENT);
+				transactionPanel.add(transactionId, BorderLayout.AFTER_LAST_LINE);
 				
-				JPanel transactionPanel = new JPanel();
-				transactionPanel.setLayout(new BoxLayout(transactionPanel, BoxLayout.X_AXIS));
-				JLabel transactionIdText = new JLabel("Transaction Id: ");
-				JLabel transactionId = new JLabel(transaction.getId()+"");
-				transactionId.setAlignmentX(Component.RIGHT_ALIGNMENT);
-				transactionPanel.add(transactionIdText);
-				transactionPanel.add(Box.createHorizontalGlue());
-				transactionPanel.add(transactionId);
-				
-				JPanel transactionPanel1 = new JPanel();
-				transactionPanel1.setLayout(new BoxLayout(transactionPanel1, BoxLayout.X_AXIS));
-				JLabel memberIdText = new JLabel("Member Id: ");
 				JLabel memberId = null;
-				if (transaction.getCustomer() != null && (transaction.getCustomer() instanceof Member)) {
-					memberId = new JLabel(transaction.getCustomer().getId());
+				if (transaction.getCustomer() != null) {
+					memberId = new JLabel(transaction.getCustomer().getId() + blanks);
 				} else {
-					memberId = new JLabel("N/A");
+					memberId = new JLabel("PUBLIC" + blanks);
 				}
-				memberId.setAlignmentX(Component.RIGHT_ALIGNMENT);
-				transactionPanel1.add(memberIdText);
-				transactionPanel1.add(Box.createHorizontalGlue());
-				transactionPanel1.add(memberId);
+				memberId.setAlignmentX(Component.LEFT_ALIGNMENT);
+				transactionPanel1.add(memberId, BorderLayout.AFTER_LAST_LINE);
 					
-				JPanel transactionPanel2 = new JPanel();
-				transactionPanel2.setLayout(new BoxLayout(transactionPanel2, BoxLayout.X_AXIS));
-				JLabel transactionDateText = new JLabel("Transaction Date: ");
-				JLabel transactionDate = new JLabel(transaction.getDate());
-				transactionDate.setAlignmentX(Component.RIGHT_ALIGNMENT);
-				transactionPanel2.add(transactionDateText);
-				transactionPanel2.add(Box.createHorizontalGlue());
-				transactionPanel2.add(transactionDate);
-				
-				JPanel productPanel = new JPanel();
-				productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.X_AXIS));
-				JLabel productIdText = new JLabel("Product Id: ");
-				JLabel productId = new JLabel(
-						i.getProduct().getId());
-				productId.setAlignmentX(Component.RIGHT_ALIGNMENT);
-				productPanel.add(productIdText);
-				productPanel.add(Box.createHorizontalGlue());
-				productPanel.add(productId);
-				
-				JPanel productPanel1 = new JPanel();
-				productPanel1.setLayout(new BoxLayout(productPanel1, BoxLayout.X_AXIS));
-				JLabel productNameText = new JLabel("Product Name: ");
-				JLabel productName = new JLabel(
-						i.getProduct().getName()+"");
-				productName.setAlignmentX(Component.RIGHT_ALIGNMENT);
-				productPanel1.add(productNameText);
-				productPanel1.add(Box.createHorizontalGlue());
-				productPanel1.add(productName);
-				
-				JPanel productPanel2 = new JPanel();
-				productPanel2.setLayout(new BoxLayout(productPanel2, BoxLayout.X_AXIS));
-				JLabel productDescText = new JLabel("Product Description: ");
-				JLabel productDesc = new JLabel(i.getProduct().getName());
-				productDesc.setAlignmentX(Component.RIGHT_ALIGNMENT);
-				productPanel2.add(productDescText);
-				productPanel2.add(Box.createHorizontalGlue());
-				productPanel2.add(productDesc);
-						
 
-				JPanel productPanel3 = new JPanel();
-				productPanel3.setLayout(new BoxLayout(productPanel3, BoxLayout.X_AXIS));
-				JLabel quantityText = new JLabel("Quantity: ");
-				JLabel quantity = new JLabel(
-						i.getProduct().getQuantity()+"");
-				quantity.setAlignmentX(Component.RIGHT_ALIGNMENT);
-				productPanel3.add(quantityText);
-				productPanel3.add(Box.createHorizontalGlue());
-				productPanel3.add(quantity);
+				JLabel transactionDate = new JLabel(transaction.getDate() + blanks);
+				transactionDate.setAlignmentX(Component.LEFT_ALIGNMENT);
+				transactionPanel2.add(transactionDate, BorderLayout.AFTER_LAST_LINE);
+
 				
-			    itemsPanel.add(transactionPanel);
-				itemsPanel.add(transactionPanel2);
-				itemsPanel.add(transactionPanel1);
-				itemsPanel.add(productPanel);
-				itemsPanel.add(productPanel1);
-				itemsPanel.add(productPanel2);
-				itemsPanel.add(productPanel3);
-				itemsPanel.add(new JLabel("\n"));
-				itemsPanel.add(Box.createHorizontalGlue());
-				midPanel.add(itemsPanel);
+				JLabel productId = new JLabel(i.getProduct().getId() + blanks);
+				productId.setAlignmentX(Component.LEFT_ALIGNMENT);
+				productPanel.add(productId, BorderLayout.AFTER_LAST_LINE);
+				
+				JLabel productName = new JLabel(
+						i.getProduct().getName() + blanks);
+				productName.setAlignmentX(Component.LEFT_ALIGNMENT);
+				productPanel1.add(productName, BorderLayout.AFTER_LAST_LINE);
+				
+				JLabel productDesc = new JLabel(i.getProduct().getName() + blanks);
+				productDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
+				productPanel2.add(productDesc, BorderLayout.AFTER_LAST_LINE);
+						
+				JLabel quantity = new JLabel(blanks + 
+						i.getProduct().getQuantity());
+				quantity.setAlignmentX(Component.RIGHT_ALIGNMENT);
+				productPanel3.add(quantity, BorderLayout.AFTER_LAST_LINE);
+
 			}
 		}
 		JScrollPane scroll = new JScrollPane(midPanel);

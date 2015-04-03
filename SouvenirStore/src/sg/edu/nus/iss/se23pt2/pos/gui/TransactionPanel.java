@@ -231,12 +231,14 @@ public class TransactionPanel extends javax.swing.JPanel {
 					print = new JButton();
 					buttonPanel.add(print);
 					print.setText("Print");
-					print.setEnabled(false);
+					print.setEnabled(true);
 					print.setBounds(5, 151, 100, 21);
 					print.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
-							PrintTransactionDialog printDialog = new PrintTransactionDialog(transactions);
-		            		printDialog.setVisible(true);
+							if(transactions != null && !transactions.isEmpty()){
+								PrintTransactionDialog printDialog = new PrintTransactionDialog(transactions);
+								printDialog.setVisible(true);
+							}
 						}
 					});			}
 			}
@@ -265,9 +267,6 @@ public class TransactionPanel extends javax.swing.JPanel {
 			        	if(view!=null){
 							view.setEnabled(true);
 						}
-			        	if(print!=null){
-			        		print.setEnabled(true);
-			        	}
 			        }
 			    });
 			}			
