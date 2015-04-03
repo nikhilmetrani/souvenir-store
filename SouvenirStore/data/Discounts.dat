@@ -1,6 +1,6 @@
+MEMBER_FIRST,First Purchase by Member,ALWAYS,ALWAYS,20,M
 YEAR_END,Year end sale!,2015-12-01,30,15.0,A
 MEMBER_DOMAIN,Sale for members,ALWAYS,ALWAYS,10.0,M
-
 ORIENTATION_DAY,Orientation day big sale,2015-05-09,2,50.0,A
 HAPPY_HOLIDAYS,Holiday sale,2015-11-01,15,25.0,M
 ANNIVERSARY,Its our store anniversary!,2015-09-04,5,30.0,M
