@@ -85,4 +85,5 @@ public class AddVendorDialog extends OkCancelDialog {
     public Vendor getAdded() {
         return this.vendor;
     }
+    
 }
