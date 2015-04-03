@@ -33,7 +33,7 @@ public class FullTest extends TestCase{
         suite.addTestSuite(MemberDSTest.class);
         suite.addTestSuite(ProductDSTest.class);
         suite.addTestSuite(TransactionDSTest.class);
-
+ 
         suite.addTestSuite(CategoryTest.class);
         suite.addTestSuite(VendorTest.class);
         suite.addTestSuite(ProductTest.class);
