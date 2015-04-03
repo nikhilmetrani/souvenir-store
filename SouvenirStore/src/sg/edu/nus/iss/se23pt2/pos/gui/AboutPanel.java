@@ -1,14 +1,31 @@
 package sg.edu.nus.iss.se23pt2.pos.gui;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
+
+/**
+* This code was edited or generated using CloudGarden's Jigloo
+* SWT/Swing GUI Builder, which is free for non-commercial
+* use. If Jigloo is being used commercially (ie, by a corporation,
+* company or business for any purpose whatever) then you
+* should purchase a license for each developer using Jigloo.
+* Please visit www.cloudgarden.com for details.
+* Use of Jigloo implies acceptance of these licensing terms.
+* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
+* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
+* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
+*/
 public class AboutPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JLabel yiming;
+	private JButton close;
 	private JPanel list;
 	private JLabel jing;
 	private JLabel sabethan;
@@ -19,8 +36,10 @@ public class AboutPanel extends JPanel {
 	private JLabel debasish;
 	private JLabel desc;
 	private JLabel rushabh;
+	private JFrame parent;
 	
-	public AboutPanel(){
+	public AboutPanel(JFrame parent){
+		this.parent=parent;
 		initGUI();
 	}
 	
@@ -36,7 +55,7 @@ public class AboutPanel extends JPanel {
 			{
 				nameList = new JPanel();
 				this.add(nameList);
-				nameList.setBounds(7, 42, 178, 272);
+				nameList.setBounds(7, 42, 178, 129);
 				nameList.setLayout(null);
 				{
 					rushabh = new JLabel();
@@ -66,7 +85,7 @@ public class AboutPanel extends JPanel {
 			{
 				list = new JPanel();
 				this.add(list);
-				list.setBounds(229, 43, 159, 229);
+				list.setBounds(229, 43, 159, 119);
 				list.setLayout(null);
 				{
 					nikhil = new JLabel();
@@ -92,6 +111,18 @@ public class AboutPanel extends JPanel {
 					godwin.setText("Godwin Wong");
 					godwin.setBounds(10, 95, 95, 21);
 				}
+			}
+			{
+				close = new JButton();
+				this.add(close);
+				close.setText("Close");
+				close.setBounds(7, 194, 78, 28);
+				close.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						parent.setContentPane(new EmptyPanel(parent));
+						parent.repaint();
+					}
+				});
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -234,7 +234,7 @@ public class StoreAppWindow extends JFrame {
         mnAbout.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                AboutPanel aboutPanel = new AboutPanel();
+                AboutPanel aboutPanel = new AboutPanel(StoreAppWindow.this);
                 StoreAppWindow.this.setContentPane(aboutPanel);
                 StoreAppWindow.this.makeContentVisible();
             }
