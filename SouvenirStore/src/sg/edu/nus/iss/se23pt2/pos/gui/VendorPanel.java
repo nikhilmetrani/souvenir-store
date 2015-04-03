@@ -252,4 +252,5 @@ public class VendorPanel extends JPanel {
         bp.add ("North", p);
         return bp;
     }
+    
 }
