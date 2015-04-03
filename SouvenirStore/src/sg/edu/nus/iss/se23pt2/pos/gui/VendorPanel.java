@@ -169,8 +169,8 @@ public class VendorPanel extends JPanel {
          Collections.swap(vendorsForCategory,idx,idx-1);          
          DataStoreFactory dsFactory = DataStoreFactory.getInstance(); 
          try{ 
-        	 dsFactory.getVendorDS(getSelectedCategory()).swap(this.model.get(idx), this.model.get(idx-1));            
-         }catch (IOException ufe) {
+        	 dsFactory.getCategoryDS().update(this.getCategoryFromCode(getSelectedCategory()));
+         }catch (Exception ufe) {
              JOptionPane.showMessageDialog(null,
                      "Error :: " + ufe.getMessage(),
                      "Error",
@@ -189,8 +189,8 @@ public class VendorPanel extends JPanel {
          Collections.swap(vendorsForCategory,idx,idx+1);  
          DataStoreFactory dsFactory = DataStoreFactory.getInstance(); 
          try{ 
-        	 dsFactory.getVendorDS(getSelectedCategory()).swap(this.model.get(idx), this.model.get(idx+1));            
-         }catch (IOException ufe) {
+        	 dsFactory.getCategoryDS().update(this.getCategoryFromCode(getSelectedCategory()));
+         }catch (Exception ufe) {
              JOptionPane.showMessageDialog(null,
                      "Error :: " + ufe.getMessage(),
                      "Error",

@@ -1,8 +1,9 @@
 package sg.edu.nus.iss.se23pt2.pos.gui;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -19,18 +20,20 @@ import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
  */
 public class StoreAppWindow extends JFrame {
 
-	//private JFrame storeAppWindow;
+    //private JFrame storeAppWindow;
     private SouvenirStore store = null;
     private Session session = null;
 
-	//Menu structure
-	// System	|	Manage			|	Reports
+    //Menu structure
+    // System	|	Manage			|	Reports
     // Login		Inventory			Transactions
     // Logoff		--	Categories		Products below threshold
-    //				--	Vendors
-    //				--	Products
-    //				Members
-    //				Discounts
+    //			--	Vendors
+    //			--	Products
+    //			Members
+    //			Discounts
+    //                  StoreKeepers
+    
     JMenuBar menuBar = null;
     JMenu mnSystem = null;
     JMenuItem mnLogin = null;
@@ -60,7 +63,9 @@ public class StoreAppWindow extends JFrame {
     /**
      * Create the application.
      */
-    public StoreAppWindow() {
+    public StoreAppWindow(SouvenirStore store, Session session) {
+        this.store = store;
+        this.session = session;
         initialize();
     }
 
@@ -68,16 +73,10 @@ public class StoreAppWindow extends JFrame {
      * Initialize the contents of the frame.
      */
     private void initialize() {
-
-        this.store = new SouvenirStore();
-        store.loadData();
-
-        this.session = Session.getInstance(store);
-
         //storeAppWindow = new JFrame();
         this.setTitle(title);
-        this.setBounds(100, 100, 700, 500);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setBounds(100, 100, 800, 600);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
@@ -229,13 +228,24 @@ public class StoreAppWindow extends JFrame {
 
         menuBar.add(mnReports);
 
-        this.login();
+        //this.login();
         if (this.session.isActive()) {
             this.activateSession();
         } else {
             this.deactivateSession();
         }
 
+        this.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent we) { 
+                StoreAppWindow.this.session.logOff();
+                if (!StoreAppWindow.this.session.isActive()) {
+                    System.exit(0);
+                }
+            }
+        });
+        
         this.setContentPane(new EmptyPanel(this));
     }
 
@@ -262,6 +272,15 @@ public class StoreAppWindow extends JFrame {
     private void logoff() {
         if (session.logOff()) {
             deactivateSession();
+            this.setVisible(false);
+            this.login();
+            if (!session.isActive()) {
+                this.dispose();
+                System.exit(0);
+            }
+            else {
+                this.setVisible(true);
+            }
         }
     }
 
@@ -297,7 +316,7 @@ public class StoreAppWindow extends JFrame {
         mntmBill.setEnabled(false);
         this.updateUserInTitle();
     }
-
+    
     public void makeContentVisible() {
         this.getContentPane().setVisible(false);
         this.getContentPane().setVisible(true);

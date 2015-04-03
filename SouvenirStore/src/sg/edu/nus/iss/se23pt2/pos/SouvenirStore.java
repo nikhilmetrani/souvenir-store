@@ -135,7 +135,7 @@ public class SouvenirStore{
             loadProducts();
             loadDiscounts();
             loadTransactions();
-            loadVendors();
+            //loadVendors();
             loadMembers();
         }
         catch (DataLoadFailedException dlex) {
@@ -198,6 +198,7 @@ public class SouvenirStore{
              while(iterator.hasNext()){
             	 category = iterator.next();
                  this.categories.put( category.getCode(), category);
+                 this.vendors.put(category.getCode(), category.getVendors());
              }
          }catch(Exception e){
              e.printStackTrace();
@@ -374,13 +375,8 @@ public class SouvenirStore{
 
 	public void loadVendors() throws DataLoadFailedException{
 		 try{
-             ArrayList<Category> list = dsFactory.getCategoryDS().load(this);
-             Iterator<Category> iterator = list.iterator();
-             String code;
-             while(iterator.hasNext()){
-            	 code = iterator.next().getCode();
-            	 ArrayList<Vendor> vendorList=dsFactory.getVendorDS(code).load(this);
-            	 this.vendors.put(code, vendorList);
+             for(Category category : this.categories.values()){
+            	 this.vendors.put(category.getCode(), category.getVendors());
              }
          }catch(Exception e){
         	 e.printStackTrace();

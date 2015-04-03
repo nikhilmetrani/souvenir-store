@@ -3,7 +3,7 @@
  */
 package sg.edu.nus.iss.se23pt2.pos;
 import sg.edu.nus.iss.se23pt2.pos.gui.*;
-import java.awt.*;
+import static javafx.application.Platform.exit;
 
 /**
  * @author Nikhil Metrani
@@ -16,20 +16,21 @@ public class StoreApplication {
      */
     public static void main(String[] args) {
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    StoreAppWindow window = new StoreAppWindow();
-                    window.setLocationRelativeTo(null); //show in center of screen
-                    if (window.isSessionActive()) {
-                        window.setVisible(true);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        try {
+            SouvenirStore store = new SouvenirStore();
+            store.loadData();
+            Session session = Session.getInstance(store);
+            session.authenticate();
+            if (session.isActive()) {
+                StoreAppWindow window = new StoreAppWindow(store, session);
+                window.setLocationRelativeTo(null); //show in center of screen
+                window.setVisible(true);
             }
-        });
+            else {
+                exit();
+            }
+        } catch (Exception e) {
+        }
     }
 
 }
