@@ -133,8 +133,26 @@ public class VendorPanel extends JPanel {
     	this.refresh();         
     }
     
+    private Category getCategoryFromCode(String code)
+    {
+    	java.util.List<Category> catList = inventory.getCategories();
+    	
+    	if (null != catList) {
+    		
+	    	Category cat = null;
+	        Iterator<Category> i = catList.iterator();
+	        while (i.hasNext()) {
+	        	cat = i.next();
+	        	if(cat.getCode().equals(code)){
+	        		return cat;
+	        	}
+	        }
+    	}
+    	return null;
+    }
+    
     public String getSelectedCategory() {
-        int idx = categoryCombo.getSelectedIndex();
+        int idx = categoryCombo.getSelectedIndex();        
         return (idx == -1) ? null : categoryCombo.getSelectedItem().toString();
     }
     
@@ -146,20 +164,38 @@ public class VendorPanel extends JPanel {
     private void MoveUpSelectedVendor()
     {
     	int idx = this.table.getSelectedRow();
-    	if(idx == -1 )return; 
-         ArrayList<Vendor> vendorsForCategory=this.inventory.getVendors(this.getSelectedCategory());          
+    	if(idx == -1 || idx== 0 )return; 
+         ArrayList<Vendor> vendorsForCategory=this.inventory.getVendors(this.getSelectedCategory());     
          Collections.swap(vendorsForCategory,idx,idx-1);          
+         DataStoreFactory dsFactory = DataStoreFactory.getInstance(); 
+         try{ 
+        	 dsFactory.getVendorDS(getSelectedCategory()).swap(this.model.get(idx), this.model.get(idx-1));            
+         }catch (IOException ufe) {
+             JOptionPane.showMessageDialog(null,
+                     "Error :: " + ufe.getMessage(),
+                     "Error",
+                     JOptionPane.ERROR_MESSAGE);             
+         }        
          showVendorsForSelectedCategory();
     }
     
     private void MoveDownSelectedVendor()
     {
     	int idx = this.table.getSelectedRow();
-    	 if(idx == -1 )return;    	 
+    	 if(idx == -1 )return;    	     	 
          ArrayList<Vendor> vendorsForCategory=this.inventory.getVendors(this.getSelectedCategory());  
          int listSize= vendorsForCategory.size()-1;
          if(idx == listSize )return;    
-         Collections.swap(vendorsForCategory,idx,idx+1);    
+         Collections.swap(vendorsForCategory,idx,idx+1);  
+         DataStoreFactory dsFactory = DataStoreFactory.getInstance(); 
+         try{ 
+        	 dsFactory.getVendorDS(getSelectedCategory()).swap(this.model.get(idx), this.model.get(idx+1));            
+         }catch (IOException ufe) {
+             JOptionPane.showMessageDialog(null,
+                     "Error :: " + ufe.getMessage(),
+                     "Error",
+                     JOptionPane.ERROR_MESSAGE);             
+         }      
          showVendorsForSelectedCategory();
     }
     private JPanel createButtonPanel () {
