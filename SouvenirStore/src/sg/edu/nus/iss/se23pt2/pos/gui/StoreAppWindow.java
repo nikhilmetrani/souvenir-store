@@ -57,9 +57,6 @@ public class StoreAppWindow extends JFrame {
 
     private final String title = "Souvenir Store - SE23PT2";
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     /**
@@ -234,7 +231,7 @@ public class StoreAppWindow extends JFrame {
         mnAbout.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                AboutPanel aboutPanel = new AboutPanel();
+                AboutPanel aboutPanel = new AboutPanel(StoreAppWindow.this);
                 StoreAppWindow.this.setContentPane(aboutPanel);
                 StoreAppWindow.this.makeContentVisible();
             }
