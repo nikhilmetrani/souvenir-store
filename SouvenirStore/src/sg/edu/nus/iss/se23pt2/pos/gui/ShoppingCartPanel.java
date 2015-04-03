@@ -121,9 +121,7 @@ public class ShoppingCartPanel extends JPanel {
         if(Session.getInstance(souvenirStore).getAttribute("ShoppingCart") != null){
         	this.shoppingCart = (ShoppingCart)Session.getInstance(souvenirStore).getAttribute("ShoppingCart");
         	
-                //Nikhil Metrani
-                //No need to set text
-                //customerId.setText(this.shoppingCart.getCustomer().getId());
+                customerId.setSelectedItem(this.shoppingCart.getCustomer().getId());
         	customerName.setText((this.shoppingCart.getMember()!=null)?this.shoppingCart.getMember().getName():"");
         	total.setText(""+this.shoppingCart.getTotalPriceBeforeDiscount());
         	discountPercent.setText((this.shoppingCart.getDiscount()!=null)?""+this.shoppingCart.getDiscount().getDiscPct():"");
