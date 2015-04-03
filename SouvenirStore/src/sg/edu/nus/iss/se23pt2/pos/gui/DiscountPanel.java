@@ -186,12 +186,12 @@ public class DiscountPanel extends JPanel implements TableCellEditor, ActionList
 
 	@Override
 	public boolean isCellEditable(EventObject anEvent) {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean shouldSelectCell(EventObject anEvent) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -220,6 +220,4 @@ public class DiscountPanel extends JPanel implements TableCellEditor, ActionList
 			boolean isSelected, int row, int column) {
 		return null;
 	}
-    
-
 }

@@ -6,9 +6,6 @@ import javax.swing.*;
 
 public abstract class OkCancelDialog extends JDialog {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public OkCancelDialog (JFrame parent, String title) {
@@ -30,11 +27,13 @@ public abstract class OkCancelDialog extends JDialog {
     private JPanel createButtonPanel () {
         JPanel p = new JPanel ();
 
-        JButton b;
-        ActionListener l;
+        JButton btnOk;
+        JButton btnCx;
+        ActionListener alOk;
+        ActionListener alCx;
 
-        b = new JButton ("OK");
-        l = new ActionListener () {
+        btnOk = new JButton ("OK");
+        alOk = new ActionListener () {
             public void actionPerformed (ActionEvent e) {
                 boolean success = performOkAction ();
                 if (success) {
@@ -42,17 +41,17 @@ public abstract class OkCancelDialog extends JDialog {
                 }
             }
         };
-        b.addActionListener (l);
-        p.add (b);
+        btnOk.addActionListener (alOk);
+        p.add (btnOk);
 
-        b = new JButton ("Cancel");
-        l = new ActionListener () {
+        btnCx = new JButton ("Cancel");
+        alCx = new ActionListener () {
             public void actionPerformed (ActionEvent e) {
                 destroyDialog ();
             }
         };
-        b.addActionListener (l);
-        p.add (b);
+        btnCx.addActionListener (alCx);
+        p.add (btnCx);
 
         return p;
     }
