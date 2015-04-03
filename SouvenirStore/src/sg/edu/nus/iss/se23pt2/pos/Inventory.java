@@ -26,12 +26,59 @@ public class Inventory {
 
     public List<Product> getProducts() {
         if (null == this.products) {
-            return null;
+            return new ArrayList<>();
         }
-        ArrayList<Product> p = new ArrayList<Product>();
+        ArrayList<Product> p = new ArrayList();
         Iterator<Product> ip = this.products.values().iterator();
         while (ip.hasNext()) {
             p.add(ip.next());
+        }
+        return p;
+    }
+    
+    public List<Product> getProducts(String catId) {
+        if (null == this.products) {
+            return new ArrayList<>();
+        }
+        ArrayList<Product> p = new ArrayList();
+        Iterator<Product> ip = this.products.values().iterator();
+        Product prod;
+        while (ip.hasNext()) {
+            prod = ip.next();
+            if (catId.toLowerCase().equals(prod.getCategoryCode().toLowerCase()))
+                p.add(prod);
+        }
+        return p;
+    }
+    
+    public List<Product> getProductsBelowThresholdQuantity() {
+        if (null == this.products) {
+            return new ArrayList<>();
+        }
+        ArrayList<Product> p = new ArrayList();
+        Iterator<Product> ip = this.products.values().iterator();
+        Product prod;
+        while (ip.hasNext()) {
+            prod = ip.next();
+            if (prod.getQuantity() < prod.getReorderThresholdQuantity())
+                p.add(prod);
+        }
+        return p;
+    }
+
+    public List<Product> getProductsBelowThresholdQuantity(String catId) {
+        if (null == this.products) {
+            return new ArrayList<>();
+        }
+        ArrayList<Product> p = new ArrayList();
+        Iterator<Product> ip = this.products.values().iterator();
+        Product prod;
+        while (ip.hasNext()) {
+            prod = ip.next();
+            if (catId.toLowerCase().equals(prod.getCategoryCode().toLowerCase())) {
+                if (prod.getQuantity() < prod.getReorderThresholdQuantity())
+                    p.add(prod);
+            }
         }
         return p;
     }
@@ -45,21 +92,6 @@ public class Inventory {
             }
         }
         return null;
-    }
-
-    public ArrayList<Product> getProducts(String catId) {
-        ArrayList<Product> pr = new ArrayList();
-        return pr;
-    }
-
-    public ArrayList<Product> getProductsBelowThresholdQuantity() {
-        ArrayList<Product> pr = new ArrayList();
-        return pr;
-    }
-
-    public ArrayList<Product> getProductsBelowThresholdQuantity(String catId) {
-        ArrayList<Product> pr = new ArrayList();
-        return pr;
     }
 
     public Product addProduct(Product product) {

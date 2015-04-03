@@ -68,7 +68,7 @@ public class ProductTableModel extends AbstractStoreTableModel<Product> {
             case 7:
                 return row.getOrderQuantity();
             /*case 8:
-                return row.getCategory();*/
+             return row.getCategory();*/
         }
         return null;
     }
@@ -76,7 +76,7 @@ public class ProductTableModel extends AbstractStoreTableModel<Product> {
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         //For now, editing ProductId and Category is not allowed
-        
+
         return !((0 == columnIndex) || (5 == columnIndex));
     }
 
@@ -85,7 +85,7 @@ public class ProductTableModel extends AbstractStoreTableModel<Product> {
         Product row = super.list.get(rowIndex);
 
         switch (columnIndex) {
-        //case 0:
+            //case 0:
             // Editing not allowed
             case 1:
                 row.setName((String) aValue);
@@ -100,8 +100,8 @@ public class ProductTableModel extends AbstractStoreTableModel<Product> {
                 row.setPrice((Float) aValue);
                 break;
             /*case 5: //We are not allowing barcode editing
-                row.setBarcode((String) aValue);
-                break;*/
+             row.setBarcode((String) aValue);
+             break;*/
             case 6:
                 row.setReorderThresholdQuantity((Integer) aValue);
                 break;

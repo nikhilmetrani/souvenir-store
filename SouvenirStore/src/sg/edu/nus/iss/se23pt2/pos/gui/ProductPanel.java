@@ -18,15 +18,19 @@ public class ProductPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    private final Inventory inventory;
-    private final JScrollPane scrollPane;
-    private final JFrame parent;
-    private final JTable table;
-    private final ProductTableModel model;
+    protected final Inventory inventory;
+    protected JScrollPane scrollPane;
+    protected final JFrame parent;
+    protected JTable table;
+    protected ProductTableModel model;
 
     public ProductPanel(Inventory inventory, JFrame parent) {
         this.inventory = inventory;
         this.parent = parent;
+        initializePanel();
+    }
+
+    protected void initializePanel() {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -34,7 +38,7 @@ public class ProductPanel extends JPanel {
         this.model = new ProductTableModel(this.inventory.getProducts());
         this.table = new JTable(model);
         this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
+
         this.table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         Dimension tableSize = new Dimension(900, 400);
         this.table.setPreferredSize(tableSize);
@@ -111,7 +115,7 @@ public class ProductPanel extends JPanel {
         return (idx == -1) ? null : this.model.get(idx);
     }
 
-    private JPanel createButtonPanel() {
+    protected JPanel createButtonPanel() {
 
         JPanel p = new JPanel(new GridLayout(0, 1, 5, 5));
         p.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -131,41 +135,7 @@ public class ProductPanel extends JPanel {
             }
         });
         p.add(b);
-/*
-        b = new JButton("Remove");
-        b.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (null != ProductPanel.this.getSelected()) {
-                    if (0 == StoreAppWindow.confirm("Are you sure you want to remove selected product?\nClick Ok to continue.")) {
-                        int index = ProductPanel.this.table.getSelectedRow();
 
-                        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
-                        try {
-                            dsFactory.getProductDS().remove(ProductPanel.this.getSelected());
-                            ProductPanel.this.inventory.removeProduct(ProductPanel.this.getSelected().getId());
-                            ProductPanel.this.model.remove(ProductPanel.this.getSelected());
-                            ProductPanel.this.refresh();
-                            if (1 <= index) {
-                                index -= 1;
-                                ProductPanel.this.select(index);
-                            } else {
-                                if (ProductPanel.this.model.size() >= 1) {
-                                    ProductPanel.this.select(0);
-                                }
-                            }
-                        } catch (RemoveFailedException | IOException rfe) {
-                            JOptionPane.showMessageDialog(null,
-                                    "Error :: " + rfe.getMessage(),
-                                    "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            }
-        });
-        p.add(b);
-*/
         b = new JButton("Close");
         b.addActionListener(new ActionListener() {
             @Override

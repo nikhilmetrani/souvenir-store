@@ -216,6 +216,15 @@ public class StoreAppWindow extends JFrame {
         });
         mnReports.add(mntmTransactions);
         mntmProductBelowThreshold = new JMenuItem("Products below threshold quantity");
+        mntmProductBelowThreshold.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                ProductOrderPanel panel = new ProductOrderPanel(StoreAppWindow.this.store.getInventory(), StoreAppWindow.this);
+                panel.refresh();
+                StoreAppWindow.this.setContentPane(panel);
+                StoreAppWindow.this.makeContentVisible();
+            }
+        });
         mnReports.add(mntmProductBelowThreshold);
 
         menuBar.add(mnReports);
