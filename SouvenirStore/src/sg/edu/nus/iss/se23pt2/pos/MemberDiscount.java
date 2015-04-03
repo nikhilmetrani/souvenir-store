@@ -48,9 +48,13 @@ public class MemberDiscount extends Discount{
             return true;
         else {
             Date startDate = df.parse(this.getStartDate());
-            Date endDate = new Date((startDate.getTime()+Long.parseLong(this.getPeriodInDays())*86400000));
-            if (df.parse(transDate).after(startDate) && df.parse(transDate).before(endDate)) {
-                return true;
+            if("ALWAYS".equals(this.getPeriodInDays()))
+            	return true;
+            else{
+            	Date endDate = new Date((startDate.getTime()+Long.parseLong(this.getPeriodInDays())*86400000));
+            	if (df.parse(transDate).after(startDate) && df.parse(transDate).before(endDate)) {
+            		return true;
+            	}
             }
         }
         return false;
