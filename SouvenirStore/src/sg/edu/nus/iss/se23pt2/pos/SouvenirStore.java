@@ -88,17 +88,6 @@ public class SouvenirStore{
 		this.discountList = discountList;
 	}
 
-    public void addCategory (String categoryCode, String categoryName) {
-    }
-
-    public void addVendor (String vendorName, String description) {
-    }
-
-    public void addProduct (String productName, String description,
-            Integer availableQty, Float price, Integer reorderThresholdQty,
-            Integer orderQty) {
-    }
-
     public StoreKeeper getStoreKeeper(String name) {
     	if (storeKeepers.containsKey(name))
     		return storeKeepers.get(name);
@@ -110,13 +99,6 @@ public class SouvenirStore{
     public void addMember (String memName, String memId) {
     	Member mem  = new Member(memName, memId);
     	members.add(mem);
-    }
-
-    public void validateLogin (String userName, String password) {
-    }
-
-    public String getLoginUserName () {
-        return null;
     }
 
     public ArrayList<Discount> getDiscountList() {

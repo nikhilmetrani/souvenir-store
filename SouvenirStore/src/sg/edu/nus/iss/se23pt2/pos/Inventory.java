@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 import sg.edu.nus.iss.se23pt2.pos.exception.InvalidCategoryCodeException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
-import sg.edu.nus.iss.se23pt2.pos.gui.ProductOrderPanel;
 
 public class Inventory {
 
@@ -139,16 +138,6 @@ public class Inventory {
             return true;
         }
         return false;
-    }
-
-    public PurchaseOrder generatePurchaseOrder() {
-        PurchaseOrder pr = new PurchaseOrder();
-        return pr;
-    }
-
-    public PurchaseOrder generatePurchaseOrder(String catId) {
-        PurchaseOrder pr = new PurchaseOrder();
-        return pr;
     }
 
     public List<Category> getCategories() {
