@@ -27,7 +27,7 @@ public class StoreApplication {
                 window.setVisible(true);
             }
             else {
-                exit();
+                System.exit(0);
             }
         } catch (Exception e) {
         }
