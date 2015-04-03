@@ -1,8 +1,13 @@
 package sg.edu.nus.iss.se23pt2.pos.gui;
 
 import java.awt.GridLayout;
+import java.io.IOException;
+
 import javax.swing.*;
+
 import sg.edu.nus.iss.se23pt2.pos.StoreKeeper;
+import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
+import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 public class EditStoreKeeperDialog extends OkCancelDialog {
 
@@ -66,7 +71,29 @@ public class EditStoreKeeperDialog extends OkCancelDialog {
 	        if (this.storeKeeper.isPasswordValid(currentPassword, newPassword, confirmPassword)){	        	
 	        	this.storeKeeper.setName(name);
 		        this.storeKeeper.setPassword("", newPassword, "");
-		        return true;
+		        
+		        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+		        try {
+		        	dsFactory.getStoreKeeperDS().update(this.storeKeeper);
+		        	return true;
+		        }
+		        catch (UpdateFailedException ufe) {
+		        	JOptionPane.showMessageDialog(null,
+	                        "Error :: " + ufe.getMessage(),
+	                        "Error",
+	                        JOptionPane.ERROR_MESSAGE);
+		        	this.storeKeeper = null;
+		        	return false;
+		        }
+		        catch (IOException ioe) {
+		        	JOptionPane.showMessageDialog(null,
+	                        "Error :: " + ioe.getMessage(),
+	                        "Error",
+	                        JOptionPane.ERROR_MESSAGE);
+		        	this.storeKeeper = null;
+		        	return false;
+		        }		        
+		        
 	        } else{
 	        	JOptionPane.showMessageDialog(null,
                         "Invalid Entries!",
