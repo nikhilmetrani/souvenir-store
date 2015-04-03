@@ -15,9 +15,12 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+import sg.edu.nus.iss.se23pt2.pos.Customer;
 
 import sg.edu.nus.iss.se23pt2.pos.Member;
+import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
+import sg.edu.nus.iss.se23pt2.pos.exception.MemberNotFoundException;
 import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 public class AddMemberDialog extends OkCancelDialog {
@@ -28,11 +31,11 @@ public class AddMemberDialog extends OkCancelDialog {
     private JTextField memberIdField;
     private JTextField memberNameField;
     private JTextField loyaltyPointsField;
-    private ArrayList<Member> members;
+    private SouvenirStore store;
 
-    public AddMemberDialog (JFrame parent, List<Member> members2) {
+    public AddMemberDialog (JFrame parent, SouvenirStore store) {
         super(parent, "Add Member");
-        this.members = (ArrayList<Member>) members2;
+        this.store = store;
         this.member = null;
         this.setLocationRelativeTo(parent);
         this.setModal(true);
@@ -69,34 +72,37 @@ public class AddMemberDialog extends OkCancelDialog {
         
         if(memberIdField.getText().equalsIgnoreCase("public")) {
         	JOptionPane.showMessageDialog(null,
-                    "Error :: " + "Member ID already exists",
+                    "Error :: " + "Member ID cannot be " + memberIdField.getText(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         	return false;
         }
         
-        for (Member m: members) {
-        	if(memberIdField.getText().equalsIgnoreCase(m.getId())) {
-            	JOptionPane.showMessageDialog(null,
-                        "Error :: " + "Member ID already exists",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            	return false;
+        try{
+            this.store.getMember(id);
+            //Member already exists, let's not add again
+            JOptionPane.showMessageDialog(null,
+                    "Error :: The member " + id + " already exists",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            this.member = null;
+            return false;
+        }
+        catch (MemberNotFoundException e){
+            //This is doog, the Member does not exist, let't add it
+            DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+            try {
+                    dsFactory.getMemberDS().update(this.member);
+                    return true;
             }
-        }
-        
-        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
-        try {
-                dsFactory.getMemberDS().update(this.member);
-                return true;
-        }
-        catch (UpdateFailedException | IOException ufe) {
-                JOptionPane.showMessageDialog(null,
-                "Error :: " + ufe.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-                this.member = null;
-                return false;
+            catch (UpdateFailedException | IOException ufe) {
+                    JOptionPane.showMessageDialog(null,
+                    "Error :: " + ufe.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                    this.member = null;
+                    return false;
+            }
         }
     }
 

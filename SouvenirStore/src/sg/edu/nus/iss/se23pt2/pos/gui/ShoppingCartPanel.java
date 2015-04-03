@@ -55,6 +55,7 @@ import sg.edu.nus.iss.se23pt2.pos.Session;
 import sg.edu.nus.iss.se23pt2.pos.ShoppingCart;
 import sg.edu.nus.iss.se23pt2.pos.SouvenirStore;
 import sg.edu.nus.iss.se23pt2.pos.Transaction;
+import sg.edu.nus.iss.se23pt2.pos.exception.MemberNotFoundException;
 import sg.edu.nus.iss.se23pt2.pos.util.DateUtil;
 
 public class ShoppingCartPanel extends JPanel {
@@ -69,7 +70,7 @@ public class ShoppingCartPanel extends JPanel {
     private JTable table;
     private JComboBox<String> productSelectorCombo;
     private JPanel topPanel;
-    private JTextField customerId;
+    private JComboBox<String> customerId;
     private JTextField customerName;
     private JTextField total;
     private JTextField discountPercent;
@@ -105,7 +106,7 @@ public class ShoppingCartPanel extends JPanel {
         button = new JButton("+");
         button.setSize(20, 20);
 
-        customerId = new JTextField(10);
+        customerId = getMemberSelectionCombo();
         customerName = new JTextField(10);
         msgLabel = new JLabel("");
         msgLabel.setVisible(false);
@@ -119,7 +120,10 @@ public class ShoppingCartPanel extends JPanel {
 
         if(Session.getInstance(souvenirStore).getAttribute("ShoppingCart") != null){
         	this.shoppingCart = (ShoppingCart)Session.getInstance(souvenirStore).getAttribute("ShoppingCart");
-        	customerId.setText(this.shoppingCart.getCustomer().getId());
+        	
+                //Nikhil Metrani
+                //No need to set text
+                //customerId.setText(this.shoppingCart.getCustomer().getId());
         	customerName.setText((this.shoppingCart.getMember()!=null)?this.shoppingCart.getMember().getName():"");
         	total.setText(""+this.shoppingCart.getTotalPriceBeforeDiscount());
         	discountPercent.setText((this.shoppingCart.getDiscount()!=null)?""+this.shoppingCart.getDiscount().getDiscPct():"");
@@ -173,30 +177,35 @@ public class ShoppingCartPanel extends JPanel {
         topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout( FlowLayout.LEFT, 5, 5));
         topPanel.add(new JLabel("Customer Id"));
-        customerId.addFocusListener(new FocusListener() {
+        //Nikhil Metrani
+        //Changed Focus Listener to ActionListener since we changed TextFiels to ConboBox
+        customerId.addActionListener(new ActionListener() {
 
             @Override
-            public void focusLost (FocusEvent e) {
-                String value = customerId.getText();
+            public void actionPerformed (ActionEvent e) {
+                String value = customerId.getSelectedItem().toString();
                 Customer customer = null;
                 if(value != null && !value.trim().isEmpty()){
-                    customer = souvenirStore.getMember(value);
+                    try {
+                        customer = souvenirStore.getMember(value);
+                    }
+                    catch (MemberNotFoundException mnfe) {
+                        if(value != null && !value.trim().isEmpty() && !value.trim().equalsIgnoreCase("PUBLIC")){
+                            JOptionPane.showMessageDialog(table.getParent(),"Member '" + value + "' not found. The Customer will be considered as PUBLIC", "Information", JOptionPane.OK_OPTION);
+                        }
+                        customer = new Customer();
+                    }
                 }
-                if(customer == null){
-                	if(value != null && !value.trim().isEmpty() && !value.trim().equalsIgnoreCase("PUBLIC")){
-                		JOptionPane.showMessageDialog(table.getParent(),"Member '" + value + "' not found. The Customer will be considered as PUBLIC", "Information", JOptionPane.OK_OPTION);
-                	}
-                    customer = new Customer();
-                }
-
-                customerId.setText(customer.getId());
 
                 shoppingCart.setCustomer(customer);
                 if(shoppingCart.getMember() != null){
-                	customerName.setText(shoppingCart.getMember().getName());
+                    customerName.setText(shoppingCart.getMember().getName());
                     loyaltyPoints.setText(String.valueOf(shoppingCart.getMember().getLoyaltyPoints()));
                 }else{
-                	loyaltyPoints.setText("");
+                    //Nikhil Metrani
+                    //Lets reset customer name if public was selected in drop down
+                    customerName.setText("");
+                    loyaltyPoints.setText("");
                 }
 
                 double discount = shoppingCart.getHighestDiscount(souvenirStore.getDiscounts());
@@ -207,12 +216,6 @@ public class ShoppingCartPanel extends JPanel {
                 }
                 
                 calculatePayableAmount();
-            }
-
-            @Override
-            public void focusGained (FocusEvent e) {
-                // TODO Auto-generated method stub
-
             }
         });
         topPanel.add(customerId);
@@ -243,8 +246,9 @@ public class ShoppingCartPanel extends JPanel {
          * Nikhil Metrani
          * Product selection logic to enable adding products to shopping cart
          * */
+        this.productSelectorCombo = this.getProductSelectionCombo();
         TableColumn catColumn = this.table.getColumnModel().getColumn(0);
-        catColumn.setCellEditor(new DefaultCellEditor(this.getProductSelectionCombo()));
+        catColumn.setCellEditor(new DefaultCellEditor(this.productSelectorCombo));
         
         /** Modify row selection on table row insert/delete **/
         table.getModel().addTableModelListener(new TableModelListener(){
@@ -696,20 +700,43 @@ public class ShoppingCartPanel extends JPanel {
      * */
     private JComboBox<String> getProductSelectionCombo() {
     	
-    	this.productSelectorCombo = new JComboBox<String>();
+    	JComboBox<String> products = new JComboBox<String>();
     	
     	java.util.List<Product> prodList = this.souvenirStore.getInventory().getProducts();
     	
-    	this.productSelectorCombo.addItem(""); //Let's add a blank item
+    	products.addItem(""); //Let's add a blank item
     	if (null != prodList) {
-    		this.productSelectorCombo.removeAll();
+    		products.removeAll();
 	    	Product prod = null;
 	        Iterator<Product> i = prodList.iterator();
 	        while (i.hasNext()) {
 	        	prod = i.next();
-	        	this.productSelectorCombo.addItem(prod.getId());
+	        	products.addItem(prod.getId());
 	        }
     	}
-    	return this.productSelectorCombo;
+    	return products;
+    }
+    
+    /**
+     * Nikhil Metrani
+     * Customer selection logic to
+     * */
+    private JComboBox<String> getMemberSelectionCombo () {
+    	
+    	JComboBox<String> customers = new JComboBox();
+    	
+    	java.util.List<Customer> custList = this.souvenirStore.getMembers();
+    	
+    	customers.addItem("PUBLIC"); //Let's add a blank item
+    	if (null != custList) {
+            customers.removeAll();
+            Customer cust;
+            Iterator<Customer> i = custList.iterator();
+            while (i.hasNext()) {
+                cust = i.next();
+                customers.addItem(cust.getId());
+            }
+    	}
+    	return customers;
     }
 }

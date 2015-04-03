@@ -19,14 +19,16 @@ public class MemberPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    private final java.util.List<Member> members;
+    private final java.util.List<Customer> members;
     private final JFrame parent;
     private final JScrollPane scrollPane;
     private final JTable table;
     private final MemberTableModel model;
+    private SouvenirStore store;
 
-    public MemberPanel(List<Member> members, JFrame parent) {
-        this.members = members;
+    public MemberPanel(SouvenirStore store, JFrame parent) {
+        this.store = store;
+        this.members = this.store.getMembers();
         this.parent = parent;
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -73,7 +75,7 @@ public class MemberPanel extends JPanel {
         }
     }
 
-    public Member getSelected() {
+    public Customer getSelected() {
         int idx = this.table.getSelectedRow();
         return (idx == -1) ? null : this.model.get(idx);
     }
@@ -86,7 +88,7 @@ public class MemberPanel extends JPanel {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddMemberDialog d = new AddMemberDialog(MemberPanel.this.parent, members);
+                AddMemberDialog d = new AddMemberDialog(MemberPanel.this.parent, MemberPanel.this.store);
                 d.setVisible(true);
                 if (null != d.getAdded()) {
                     //VendorPanel.this.inventory.addVendor(selectedCat, d.getAdded());
