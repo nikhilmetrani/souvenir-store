@@ -73,6 +73,7 @@ public class AddDiscountDialog extends OkCancelDialog {
 	        String startDate = this.startDateField.getText().toUpperCase();
 	        String periodInDays = this.periodInDaysField.getText();
 	        Double discPct = null;
+	        
 	        try {
 	        	discPct = Double.parseDouble(this.discPctField.getText());
 	        }
@@ -85,12 +86,16 @@ public class AddDiscountDialog extends OkCancelDialog {
 	        }
 	        String appTo = (String) this.appToField.getSelectedItem();
 	        
-	    	
+	    	//If entered invalid value, then return "invalid message" alert
 	        if ((discCode.length() == 0) || (discDesc.length() == 0) ||
         		(startDate.length() == 0) || (periodInDays.length() == 0) ||
-        		(appTo.length() == 0)) {
-	            return false;
+        		(appTo.length() == 0) || !startDate.matches("\\d{4}-\\d{2}-\\d{2}")
+        		|| ((!periodInDays.toUpperCase().equals("ALWAYS")) && !periodInDays.matches("^\\d+$"))
+        	) {
+	        	JOptionPane.showMessageDialog(null, "Invalid Input! Please enter again!");
+	        	return false;
 	        }
+	        
 	        this.discount = new Discount(discCode, discDesc, startDate, periodInDays, discPct, appTo);
 	        
 	        DataStoreFactory dsFactory = DataStoreFactory.getInstance();

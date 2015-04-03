@@ -15,6 +15,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+/**
+ * @author jing dong
+ *
+ */
 public class VendorPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
@@ -139,6 +143,25 @@ public class VendorPanel extends JPanel {
         return (idx == -1) ? null : this.model.get(idx);
     }
     
+    private void MoveUpSelectedVendor()
+    {
+    	int idx = this.table.getSelectedRow();
+    	if(idx == -1 )return; 
+         ArrayList<Vendor> vendorsForCategory=this.inventory.getVendors(this.getSelectedCategory());          
+         Collections.swap(vendorsForCategory,idx,idx-1);          
+         showVendorsForSelectedCategory();
+    }
+    
+    private void MoveDownSelectedVendor()
+    {
+    	int idx = this.table.getSelectedRow();
+    	 if(idx == -1 )return;    	 
+         ArrayList<Vendor> vendorsForCategory=this.inventory.getVendors(this.getSelectedCategory());  
+         int listSize= vendorsForCategory.size()-1;
+         if(idx == listSize )return;    
+         Collections.swap(vendorsForCategory,idx,idx+1);    
+         showVendorsForSelectedCategory();
+    }
     private JPanel createButtonPanel () {
 
     	JPanel p = new JPanel (new GridLayout (0, 1, 5, 5));
@@ -172,9 +195,10 @@ public class VendorPanel extends JPanel {
 
                             DataStoreFactory dsFactory = DataStoreFactory.getInstance();
                             try {
-                                    dsFactory.getVendorDS(VendorPanel.this.getSelectedCategory()).remove(VendorPanel.this.getSelected());
-                                    VendorPanel.this.inventory.removeVendor(VendorPanel.this.getSelectedCategory(), VendorPanel.this.getSelected());
-                                    VendorPanel.this.model.remove(VendorPanel.this.getSelected());
+                                    Vendor vendorSelected=VendorPanel.this.getSelected();
+                                    dsFactory.getVendorDS(VendorPanel.this.getSelectedCategory()).remove(vendorSelected);
+                                    VendorPanel.this.inventory.removeVendor(VendorPanel.this.getSelectedCategory(), vendorSelected);
+                                    VendorPanel.this.model.remove(vendorSelected);
                                     VendorPanel.this.refresh();
                             if (1 <= index) {
                                     index -= 1;
@@ -196,6 +220,22 @@ public class VendorPanel extends JPanel {
             }
         });        
         p.add (b);
+
+		b = new JButton ("Move Up");    
+        b.addActionListener (new ActionListener () {
+            public void actionPerformed (ActionEvent e) {
+            	MoveUpSelectedVendor();
+            }
+        });        
+        p.add (b);
+        
+        b = new JButton ("Move Down"); 
+        b.addActionListener (new ActionListener () {
+            public void actionPerformed (ActionEvent e) {
+            	MoveDownSelectedVendor();
+            }
+        });        
+        p.add (b);
         
         b = new JButton ("Close");    
         b.addActionListener (new ActionListener () {
@@ -212,4 +252,5 @@ public class VendorPanel extends JPanel {
         bp.add ("North", p);
         return bp;
     }
+    
 }

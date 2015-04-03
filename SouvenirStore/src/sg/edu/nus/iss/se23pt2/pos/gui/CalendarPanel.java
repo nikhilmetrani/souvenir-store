@@ -21,7 +21,7 @@ public class CalendarPanel extends OkCancelDialog{
     static DefaultTableModel calModel;
     static JButton btnPrev, btnNext;
     static JLabel lblMonth, lblYear;
-    static JComboBox<String> cmbYear;
+    static JComboBox<String> listYear;
     static String selDate;	//selected date from calendar (in 'yyyy-MM-dd' format)
     
     static int realYear, realMonth, realDay, curYear, curMonth;
@@ -46,21 +46,21 @@ public class CalendarPanel extends OkCancelDialog{
     	lblYear = new JLabel ("Change year (+/-20):");
         lblYear.setBounds(15, 10, 150, 20);
         
-        cmbYear = new JComboBox<String>();
-        cmbYear.setBounds(205, 10, 80, 20);
-        cmbYear.addActionListener(new cmbYear_Action());
+        listYear = new JComboBox<String>();
+        listYear.setBounds(205, 10, 80, 20);
+        listYear.addActionListener(new listYear_Action());
         
         lblMonth = new JLabel ("January");
         lblMonth.setBounds(145-lblMonth.getPreferredSize().width/2, 40, 100, 25);
-        lblMonth.setFont(new Font(null, Font.BOLD, 14));
+        lblMonth.setFont(new Font(null, Font.BOLD, 16));
         
-        btnPrev = new JButton ("<<");
-        btnPrev.setBounds(15, 40, 50, 25);
+        btnPrev = new JButton ("<");
+        btnPrev.setBounds(15, 40, 45, 25);
         btnPrev.setToolTipText("Previous month");
         btnPrev.addActionListener(new btnPrev_Action());
         
-        btnNext = new JButton (">>");
-        btnNext.setBounds(235, 40, 50, 25);
+        btnNext = new JButton (">");
+        btnNext.setBounds(240, 40, 45, 25);
         btnNext.setToolTipText("Next month");
         btnNext.addActionListener(new btnNext_Action());
         
@@ -81,7 +81,7 @@ public class CalendarPanel extends OkCancelDialog{
         calPanel.setPreferredSize(new Dimension(300,335));
         calPanel.add(lblMonth);
         calPanel.add(lblYear);
-        calPanel.add(cmbYear);
+        calPanel.add(listYear);
         calPanel.add(btnPrev);
         calPanel.add(btnNext);
         calPanel.add(calScrollPane);
@@ -104,7 +104,7 @@ public class CalendarPanel extends OkCancelDialog{
         calModel.setRowCount(6);
         
         for (int i=realYear-20; i<=realYear+20; i++){
-            cmbYear.addItem(String.valueOf(i));
+        	listYear.addItem(String.valueOf(i));
         }
         
         calTable.addMouseListener(new MouseAdapter() {
@@ -122,8 +122,7 @@ public class CalendarPanel extends OkCancelDialog{
             }
         });
         
-        repaint(realYear, realMonth);
-        
+        repaint(realYear, realMonth);    
         return calPanel;
     }
 
@@ -137,7 +136,7 @@ public class CalendarPanel extends OkCancelDialog{
         
         lblMonth.setText(months[month]); //Refresh the month label (at the top)
         lblMonth.setBounds(145-lblMonth.getPreferredSize().width/2, 40, 180, 25); //Re-align label with calendar
-        cmbYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box
+        listYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box
         
         //Clear calendar
         for (int i=0; i<6; i++){
@@ -188,6 +187,16 @@ public class CalendarPanel extends OkCancelDialog{
         }
     }
     
+    static class listYear_Action implements ActionListener{
+        public void actionPerformed (ActionEvent e){
+            if (listYear.getSelectedItem() != null){
+                String b = listYear.getSelectedItem().toString();
+                curYear = Integer.parseInt(b);
+                repaint(curYear, curMonth);
+            }
+        }
+    }
+    
     static class btnPrev_Action implements ActionListener{
         public void actionPerformed (ActionEvent e){
             if (curMonth == 0){ //Back to the previous year
@@ -211,16 +220,6 @@ public class CalendarPanel extends OkCancelDialog{
                 curMonth += 1;
             }
             repaint(curYear, curMonth);
-        }
-    }
-    
-    static class cmbYear_Action implements ActionListener{
-        public void actionPerformed (ActionEvent e){
-            if (cmbYear.getSelectedItem() != null){
-                String b = cmbYear.getSelectedItem().toString();
-                curYear = Integer.parseInt(b);
-                repaint(curYear, curMonth);
-            }
         }
     }
     
