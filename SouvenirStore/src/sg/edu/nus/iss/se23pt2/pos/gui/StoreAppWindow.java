@@ -52,6 +52,8 @@ public class StoreAppWindow extends JFrame {
     JMenu mnTransaction = null;
     JMenuItem mntmBill = null;
     JMenuItem mntmStoreKeepers = null;
+    JMenu mnHelp = null;
+    JMenuItem mnAbout = null;
 
     private final String title = "Souvenir Store - SE23PT2";
 
@@ -227,6 +229,18 @@ public class StoreAppWindow extends JFrame {
         mnReports.add(mntmProductBelowThreshold);
 
         menuBar.add(mnReports);
+        mnHelp = new JMenu("Help");
+        mnAbout = new JMenuItem("About");            
+        mnAbout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                AboutPanel aboutPanel = new AboutPanel();
+                StoreAppWindow.this.setContentPane(aboutPanel);
+                StoreAppWindow.this.makeContentVisible();
+            }
+        });
+        mnHelp.add(mnAbout);   
+        menuBar.add(mnHelp);
 
         //this.login();
         if (this.session.isActive()) {
