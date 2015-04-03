@@ -57,9 +57,6 @@ public class StoreAppWindow extends JFrame {
 
     private final String title = "Souvenir Store - SE23PT2";
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     /**
