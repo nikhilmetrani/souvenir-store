@@ -163,6 +163,12 @@ public class Inventory {
         return c;
     }
 
+    public Category getCategory(String code)  throws InvalidCategoryCodeException {
+        if (this.categories.containsKey(code))
+            return this.categories.get(code);
+        throw new InvalidCategoryCodeException("The given category" + code + "does not exist");
+    }
+    
     public Category addCategory(String catId, String name) throws InvalidCategoryCodeException {
 
         Category cat = new Category(catId, name);

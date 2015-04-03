@@ -15,25 +15,30 @@ import sg.edu.nus.iss.se23pt2.pos.exception.*;
 //
 //
 /**
- *  */
+ *
+ */
 public class Category {
 
     /**
-     *      */
+     *
+     */
     private String code = null;
 
     /**
-     *      */
+     *
+     */
     private String name = null;
 
     /**
-     *      */
+     *
+     */
     public ArrayList<Vendor> vendors;
 
     /**
      *
-     * @throws sg.edu.nus.iss.se23pt2.pos.exception.InvalidCategoryCodeException */
-    public Category()  throws InvalidCategoryCodeException {
+     * @throws sg.edu.nus.iss.se23pt2.pos.exception.InvalidCategoryCodeException
+     */
+    public Category() throws InvalidCategoryCodeException {
         this(null, null);
     }
 
@@ -42,7 +47,7 @@ public class Category {
      * @param name
      * @throws sg.edu.nus.iss.se23pt2.pos.exception.InvalidCategoryCodeException
      */
-    public Category(String code, String name)  throws InvalidCategoryCodeException {
+    public Category(String code, String name) throws InvalidCategoryCodeException {
         this.setCode(code);
         this.name = name;
         this.vendors = null;
@@ -52,8 +57,7 @@ public class Category {
         if (null != code) {
             if (3 == code.length() && (!code.contains(" "))) {
                 this.code = code.toUpperCase();
-            }
-            else {
+            } else {
                 throw new InvalidCategoryCodeException("The category code " + code + " is invalid.\nCategory"
                         + " code must be\n1. Three characters in length\n"
                         + "2. Must not contain white spaces");
@@ -86,6 +90,7 @@ public class Category {
 
     /**
      * @param vendor
+     * @return 
      * @throws sg.edu.nus.iss.se23pt2.pos.exception.VendorExistsException
      */
     public Vendor addVendor(Vendor vendor) throws VendorExistsException {
@@ -105,11 +110,16 @@ public class Category {
     }
 
     /**
-     *      */
+     *
+     * @param name
+     * @param description
+     * @return
+     * @throws sg.edu.nus.iss.se23pt2.pos.exception.VendorExistsException
+     */
     public Vendor addVendor(String name, String description) throws VendorExistsException {
         if ((null != name) && (null != description)) {
             if (null == this.vendors) {
-                this.vendors = new ArrayList<Vendor>();
+                this.vendors = new ArrayList();
             }
             Vendor vendor = new Vendor(name, description);
             if (this.vendors.contains(vendor)) {
@@ -123,7 +133,11 @@ public class Category {
     }
 
     /**
-     *      */
+     *
+     * @param name
+     * @return 
+     * @throws sg.edu.nus.iss.se23pt2.pos.exception.InvalidVendorException 
+     */
     public Vendor getVendor(String name) throws InvalidVendorException {
         if (null != this.vendors) {
             if (null != name) {
@@ -131,7 +145,7 @@ public class Category {
                 Vendor vendor = null;
                 while (iterator.hasNext()) {
                     vendor = iterator.next();
-                    if (name == vendor.getName()) {
+                    if (name.toLowerCase().equals(vendor.getName().toLowerCase())) {
                         return vendor;
                     }
                 }
@@ -141,7 +155,10 @@ public class Category {
     }
 
     /**
-     *      */
+     *
+     * @param index
+     * @return 
+     */
     public Vendor getVendor(Integer index) throws IndexOutOfBoundsException {
         if (null != this.vendors) {
             if ((0 <= index) && (this.vendors.size() > index)) {
@@ -152,12 +169,14 @@ public class Category {
     }
 
     /**
-     *      */
+     *
+     * @return 
+     */
     public ArrayList<Vendor> getAllVendors() {
         if (null == this.vendors) {
             return null;
         }
-        ArrayList<Vendor> alv = new ArrayList<Vendor>();
+        ArrayList<Vendor> alv = new ArrayList();
 
         Iterator<Vendor> iv = this.vendors.iterator();
         while (iv.hasNext()) {
@@ -167,7 +186,11 @@ public class Category {
     }
 
     /**
-     *      */
+     *
+     * @param name
+     * @return 
+     * @throws sg.edu.nus.iss.se23pt2.pos.exception.InvalidVendorException 
+     */
     public Vendor removeVendor(String name) throws InvalidVendorException {
         if (null != this.vendors) {
             if (null != name) {
@@ -175,7 +198,7 @@ public class Category {
                 Vendor vendor = null;
                 while (iterator.hasNext()) {
                     vendor = iterator.next();
-                    if (name == vendor.getName()) {
+                    if (name.toLowerCase().equals(vendor.getName().toLowerCase())) {
                         if (this.vendors.remove(vendor)) {
                             return vendor;
                         }
@@ -187,7 +210,10 @@ public class Category {
     }
 
     /**
-     *      */
+     *
+     * @param index
+     * @return 
+     */
     public Vendor removeVendor(Integer index) throws IndexOutOfBoundsException {
         if (null != this.vendors) {
             if ((0 <= index) && (this.vendors.size() > index)) {
@@ -215,7 +241,9 @@ public class Category {
     }
 
     /**
-     *      */
+     *
+     * @return 
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Category) {
