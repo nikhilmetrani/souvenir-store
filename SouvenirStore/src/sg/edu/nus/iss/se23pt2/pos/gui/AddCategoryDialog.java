@@ -21,9 +21,11 @@ public class AddCategoryDialog extends OkCancelDialog {
     private Category category = null;
     private JTextField categoryCodeField;
     private JTextField categoryNameField;
+    private final Inventory inventory;
 
-    public AddCategoryDialog(JFrame parent) {
+    public AddCategoryDialog(Inventory inventory, JFrame parent) {
         super(parent, "Add Category");
+        this.inventory = inventory;
         this.setLocationRelativeTo(parent);
         this.setModal(true);
         this.pack();
@@ -49,17 +51,29 @@ public class AddCategoryDialog extends OkCancelDialog {
         String name = this.categoryNameField.getText();
         try {
             this.category = new Category(code, name);
-            DataStoreFactory dsFactory = DataStoreFactory.getInstance();
             try {
-                dsFactory.getCategoryDS().update(this.category);
-                return true;
-            } catch (UpdateFailedException | IOException ufe) {
+                this.inventory.getCategory(code);
                 JOptionPane.showMessageDialog(null,
-                        "Error :: " + ufe.getMessage(),
+                        "Error :: The category " + code + " already exists",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
                 this.category = null;
                 return false;
+            }
+            catch (InvalidCategoryCodeException e) {
+                //Exception is good!, Let's try to add the category to data store.
+                DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+                try {
+                    dsFactory.getCategoryDS().update(this.category);
+                    return true;
+                } catch (UpdateFailedException | IOException ufe) {
+                    JOptionPane.showMessageDialog(null,
+                            "Error :: " + ufe.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    this.category = null;
+                    return false;
+                }
             }
         }
         catch (InvalidCategoryCodeException icce) {
