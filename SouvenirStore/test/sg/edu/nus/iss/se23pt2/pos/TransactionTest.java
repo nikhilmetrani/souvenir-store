@@ -31,6 +31,17 @@ import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
  * 
  */
 
+/**
+ *  Initial Setup
+ *  Transaction1 done on 2013-09-28 date 
+ *  Transaction2 and Transasction3 done on 2012-02-12 date 
+ *  
+ *  Transaction1 and Transaction3 contains Two product items
+ *  Transaction2 contains Three product items
+ * 
+ *
+ */
+
 public class TransactionTest extends TestCase{
     private DataStoreFactory dsFactory;
     private DataStore ds1, ds2, ds3;
@@ -39,11 +50,11 @@ public class TransactionTest extends TestCase{
     private Transaction transaction2;
     private Transaction transaction3;
     private Customer customer;
-    private Item item;
-    private Product product;
+    private Item item1,item2,item3,item4;
+    private Product product1,product2,product3,product4;
     private SimpleDateFormat dateFormat;
     private Date date1,date2,date3;
-    private ArrayList<Item> items;
+    private ArrayList<Item> items1,items2,items;
 
     @Before
     public void setUp() throws Exception {
@@ -62,36 +73,36 @@ public class TransactionTest extends TestCase{
         customer.setId("TEST_MEMBER1");
         ds2.create(customer);
 
-        items = new ArrayList<Item>();
+        items1 = new ArrayList<Item>();
 
-        product = new Product();
-        product.setId("CTY/2");
-        product.setQuantity(40);
-        product.setPrice(4.1f);
-        ds3.create(product);
+        product1 = new Product();
+        product1.setId("CTY/2");
+        product1.setQuantity(40);
+        product1.setPrice(4.1f);
+        ds3.create(product1);
 
-        item = new Item();
-        item.setProduct(product);
-        item.setQuantity(5);
-        item.setPrice(20.5f);
-        items.add(item);
+        item1 = new Item();
+        item1.setProduct(product1);
+        item1.setQuantity(5);
+        item1.setPrice(20.5f);
+        items1.add(item1);
 
-        product= new Product();
-        product.setId("CTY/5");
-        product.setQuantity(100);
-        product.setPrice(0.40f);
-        ds3.create(product);
+        product2= new Product();
+        product2.setId("CTY/5");
+        product2.setQuantity(100);
+        product2.setPrice(0.40f);
+        ds3.create(product2);
 
-        item = new Item();
-        item.setProduct(product);
-        item.setQuantity(25);
-        item.setPrice(10.15f);
-        items.add(item);
+        item2 = new Item();
+        item2.setProduct(product2);
+        item2.setQuantity(25);
+        item2.setPrice(10.15f);
+        items1.add(item2);
 
         transaction1 = new Transaction();
         transaction1.setId(1);
         transaction1.setCustomer(customer);
-        transaction1.setItems(items);
+        transaction1.setItems(items1);
         transaction1.setDate("2013-09-28");
 
         /** Data set 02 **/
@@ -99,37 +110,37 @@ public class TransactionTest extends TestCase{
         customer.setId("TEST_MEMBER2");
         ds2.create(customer);
 
-        items = new ArrayList<Item>();
-        items.addAll(transaction1.getItems()); //Make use of previously created items 
+        items2 = new ArrayList<Item>();
+        items2.addAll(transaction1.getItems()); //Make use of previously created items 
 
-        product= new Product();
-        product.setId("TIE/1");
-        product.setQuantity(150);
-        product.setPrice(0.60f);
-        ds3.create(product);
+        product3= new Product();
+        product3.setId("TIE/1");
+        product3.setQuantity(150);
+        product3.setPrice(0.60f);
+        ds3.create(product3);
 
-        item = new Item();
-        item.setProduct(product);
-        item.setQuantity(52);
-        item.setPrice(31.5f);
-        items.add(item);
+        item3 = new Item();
+        item3.setProduct(product3);
+        item3.setQuantity(52);
+        item3.setPrice(31.5f);
+        items2.add(item3);
 
-        product = new Product();
-        product.setId("TIE/2");
-        product.setQuantity(50);
-        product.setPrice(7.07f);
-        ds3.create(product);
+        product4 = new Product();
+        product4.setId("TIE/2");
+        product4.setQuantity(50);
+        product4.setPrice(7.07f);
+        ds3.create(product4);
 
-        item = new Item();
-        item.setProduct(product);
-        item.setQuantity(2);
-        item.setPrice(14.15f);
-        items.add(item);
+        item4 = new Item();
+        item4.setProduct(product4);
+        item4.setQuantity(2);
+        item4.setPrice(14.15f);
+        items2.add(item4);
 
         transaction2 = new Transaction();
         transaction2.setId(2);
         transaction2.setCustomer(customer); 
-        transaction2.setItems(items);
+        transaction2.setItems(items2);
         transaction2.setDate("2012-02-12");
 
         /** Data set 03 **/
@@ -140,7 +151,7 @@ public class TransactionTest extends TestCase{
         transaction3 = new Transaction();
         transaction3.setId(3);
         transaction3.setCustomer(customer);
-        transaction3.setItems(items); //Make use of previously created items
+        transaction3.setItems(items1); //Make use of previously created items
         transaction3.setDate("2012-02-12");
 
         ds1.create(transaction1);
@@ -189,7 +200,7 @@ public class TransactionTest extends TestCase{
     public void testTransactionMapSize() throws AccessDeniedException, DataLoadFailedException, IOException, ParseException {
         Map<Date, ArrayList<Transaction>> transactionMap = store.getTransactions();
         assertNotNull(transactionMap);
-        assertTrue(transactionMap.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/		
+        assertEquals(2,transactionMap.size()); 		
     }
 
     @Test
@@ -213,9 +224,10 @@ public class TransactionTest extends TestCase{
         assertNotNull(transactionMap);
         Set<Date> dateSet = transactionMap.keySet();
         assertTrue(dateSet.contains(date1));	
+        System.out.println(transactionMap);
         ArrayList<Transaction> transactions = transactionMap.get(date1);
         assertNotNull(transactions);
-        assertTrue(transactions.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+        assertEquals(1,transactions.size()); 	
         assertTrue(transactions.contains(transaction1));		
     }
 
@@ -228,7 +240,7 @@ public class TransactionTest extends TestCase{
         assertTrue(dateSet.contains(date2));	
         ArrayList<Transaction> transactions = transactionMap.get(date2);
         assertNotNull(transactions);
-        assertTrue(transactions.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+        assertEquals(2,transactionMap.size());
         assertTrue(transactions.contains(transaction2));
         assertTrue(transactions.contains(transaction3));		
     }
@@ -242,13 +254,13 @@ public class TransactionTest extends TestCase{
         assertTrue(dateSet.contains(date2));	
         ArrayList<Transaction> transactions = transactionMap.get(date2);
         assertNotNull(transactions);
-        assertTrue(transactions.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+        assertEquals(2,transactionMap.size());
         assertTrue(transactions.contains(transaction2));
         assertTrue(transactions.contains(transaction3));	
         ArrayList<Item> items = transaction3.getItems();
         assertNotNull(items);
-        assertEquals(4, items.size()); 
-        assertTrue(items.contains(item));
+        assertEquals(2, items.size()); 
+        assertTrue(items.contains(item1));
     }
 
     @Test
@@ -259,7 +271,7 @@ public class TransactionTest extends TestCase{
         assertTrue(dateSet.contains(date2));	
         ArrayList<Transaction> transactions = transactionMap.get(date2);
         assertNotNull(transactions);
-        assertTrue(transactions.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+        assertEquals(2,transactionMap.size());
         assertTrue(transactions.contains(transaction2));
         assertTrue(transactions.contains(transaction3));	
         ArrayList<Item> items = transaction2.getItems();
@@ -281,7 +293,7 @@ public class TransactionTest extends TestCase{
         try {
             ArrayList<Transaction> transactionList=store.getTransactions(startDate,endDate);
             assertNotNull(transactionList);
-            assertTrue(transactionList.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+            assertEquals(2,transactionMap.size());
         } catch (InvalidTransactionException e) {
             Assert.fail("Should not throw an exception");
         }		
@@ -296,7 +308,7 @@ public class TransactionTest extends TestCase{
         try {
             ArrayList<Transaction> transactionList=store.getTransactions(startDate,endDate);
             assertNotNull(transactionList);
-            assertTrue(transactionList.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+            assertEquals(1,transactionList.size());
         } catch (InvalidTransactionException e) {
             Assert.fail("Should not throw an exception");
         }		
@@ -311,7 +323,7 @@ public class TransactionTest extends TestCase{
         try {
             ArrayList<Transaction> transactionList=store.getTransactions(startDate,endDate);
             assertNotNull(transactionList);
-            assertTrue(transactionList.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+            assertEquals(3,transactionList.size());
         } catch (InvalidTransactionException e) {
             Assert.fail("Should not throw an exception");
         }		
@@ -346,29 +358,15 @@ public class TransactionTest extends TestCase{
 
         ArrayList<Transaction> transactionList = store.getTransactions(startDate,endDate);
         assertNotNull(transactionList);
-        assertTrue(transactionList.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+        assertEquals(3,transactionList.size());
         assertTrue(transactionList.contains(transaction1));
         assertTrue(transactionList.contains(transaction2));
         assertTrue(transactionList.contains(transaction3));		
 
         ArrayList<Item> items = transaction3.getItems();
         assertNotNull(items);
-        assertEquals(4, items.size());
-
-        /** JV - Issue Fixed by creating Item object to compare **/
-        product = new Product();
-        product.setId("CTY/2");
-        product.setQuantity(40);
-        product.setPrice(4.1f);
-
-        item = new Item();
-        item.setProduct(product);
-        item.setQuantity(5);
-        item.setPrice(20.5f);
-
-        assertTrue(items.contains(item));
-        product = null;
-        item = null;
+        assertEquals(2, items.size());
+        assertTrue(items.contains(item1));
     }
 
 
@@ -388,7 +386,7 @@ public class TransactionTest extends TestCase{
 
         ArrayList<Transaction> transactionList = store.getTransactions(startDate,endDate);
         assertNotNull(transactionList);
-        assertTrue(transactionList.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+        assertEquals(1,transactionList.size());
         assertTrue(transactionList.contains(transaction1));
         assertFalse(transactionList.contains(transaction2));
         assertFalse(transactionList.contains(transaction3));		
@@ -396,21 +394,7 @@ public class TransactionTest extends TestCase{
         ArrayList<Item> items = transaction1.getItems();
         assertNotNull(items);
         assertEquals(2, items.size());
-
-        /** JV - Issue Fixed by creating Item object to compare **/
-        product = new Product();
-        product.setId("CTY/2");
-        product.setQuantity(40);
-        product.setPrice(4.1f);
-
-        item = new Item();
-        item.setProduct(product);
-        item.setQuantity(5);
-        item.setPrice(20.5f);
-
-        assertTrue(items.contains(item));
-        product = null;
-        item = null;
+        assertTrue(items.contains(item1));
     }
 
 
@@ -429,29 +413,15 @@ public class TransactionTest extends TestCase{
 
         ArrayList<Transaction> transactionList = store.getTransactions(startDate,endDate);
         assertNotNull(transactionList);
-        assertTrue(transactionList.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+        assertEquals(2,transactionList.size());
         assertFalse(transactionList.contains(transaction1));
         assertTrue(transactionList.contains(transaction2));
         assertTrue(transactionList.contains(transaction3));		
 
         ArrayList<Item> items = transaction3.getItems();
         assertNotNull(items);
-        assertEquals(4, items.size());
-
-        /** JV - Issue Fixed by creating Item object to compare **/
-        product = new Product();
-        product.setId("CTY/2");
-        product.setQuantity(40);
-        product.setPrice(4.1f);
-
-        item = new Item();
-        item.setProduct(product);
-        item.setQuantity(5);
-        item.setPrice(20.5f);
-
-        assertTrue(items.contains(item));
-        product = null;
-        item = null;
+        assertEquals(2, items.size());
+        assertTrue(items.contains(item1));
     }
 
 
@@ -470,29 +440,15 @@ public class TransactionTest extends TestCase{
 
         ArrayList<Transaction> transactionList = store.getTransactions(startDate,endDate);
         assertNotNull(transactionList);
-        assertTrue(transactionList.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+        assertEquals(2,transactionList.size());
         assertFalse(transactionList.contains(transaction1));
         assertTrue(transactionList.contains(transaction2));
         assertTrue(transactionList.contains(transaction3));		
 
         ArrayList<Item> items = transaction3.getItems();
         assertNotNull(items);
-        assertEquals(4, items.size());
-
-        /** JV - Issue Fixed by creating Item object to compare **/
-        product = new Product();
-        product.setId("CTY/2");
-        product.setQuantity(40);
-        product.setPrice(4.1f);
-
-        item = new Item();
-        item.setProduct(product);
-        item.setQuantity(5);
-        item.setPrice(20.5f);
-
-        assertTrue(items.contains(item));
-        product = null;
-        item = null;
+        assertEquals(2, items.size());
+        assertTrue(items.contains(item1));
     }
 
     @Test
@@ -700,7 +656,7 @@ public class TransactionTest extends TestCase{
 
         ArrayList<Transaction> transactions = transactionMap.get(date3);
         assertNotNull(transactions);
-        assertTrue(transactions.size() > 0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+        assertEquals(1,transactions.size());
         assertTrue(transactions.contains(transaction1));
 
         ds1.remove(transaction1);
@@ -722,7 +678,7 @@ public class TransactionTest extends TestCase{
 
         ArrayList<Transaction> transactions = transactionMap.get(date2);
         assertNotNull(transactions);
-        assertTrue(transactions.size()>0); /** JV - Modified the test criteria as the transactionMap size will grow after start use of the application. **/
+        assertEquals(3,transactions.size());
         assertTrue(transactions.contains(transaction2));		
         ds1.remove(transaction2); 
         transaction2.setId(2); //Reset the Id to allow the tearDown() to clear the data
