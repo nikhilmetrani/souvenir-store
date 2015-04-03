@@ -32,6 +32,7 @@ import sg.edu.nus.iss.se23pt2.pos.exception.RemoveFailedException;
  */
 
 /**
+ * 
  *  Initial Setup
  *  Transaction1 done on 2013-09-28 date 
  *  Transaction2 and Transasction3 done on 2012-02-12 date 
