@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,9 +20,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import sg.edu.nus.iss.se23pt2.pos.Category;
 import sg.edu.nus.iss.se23pt2.pos.Inventory;
 import sg.edu.nus.iss.se23pt2.pos.Product;
+import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
+import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
 
 /**
  *
@@ -31,7 +36,7 @@ import sg.edu.nus.iss.se23pt2.pos.Product;
 public class ProductOrderPanel extends ProductPanel {
 
     private JComboBox<String> categoryCombo;
-    protected ProductOrderTableModel model;
+    //protected ProductOrderTableModel model;
 
     public ProductOrderPanel(Inventory inventory, JFrame parent) {
         super(inventory, parent);
@@ -50,6 +55,24 @@ public class ProductOrderPanel extends ProductPanel {
         this.table = new JTable(model);
         this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+        this.table.getModel().addTableModelListener(new TableModelListener() {
+
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                if (TableModelEvent.UPDATE == e.getType()) {
+                    DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+
+                    try {
+                        dsFactory.getProductDS().update(ProductOrderPanel.this.getSelected());
+                    } catch (UpdateFailedException | IOException ufe) {
+                        JOptionPane.showMessageDialog(null,
+                                "Error :: " + ufe.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
         //Add the listener for categoryCombo
         this.categoryCombo.addActionListener(new ActionListener() {
 
@@ -129,8 +152,15 @@ public class ProductOrderPanel extends ProductPanel {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int rows = ProductOrderPanel.this.model.getRowCount();
+                ArrayList<Product> products = new ArrayList();
+                for (int i = 0; i < rows; i++) {
+                    products.add(ProductOrderPanel.this.model.get(i));
+                }
+                ProductOrderPanel.this.inventory.replinishProducts(products);
+                ProductOrderPanel.this.showProducts();
                 JOptionPane.showMessageDialog(null,
-                        "Info :: This functionality is not yet implemented",
+                        "Info :: Products listed below have been replenished and can be seen only in Products section.",
                         "Info",
                         JOptionPane.INFORMATION_MESSAGE);
             }

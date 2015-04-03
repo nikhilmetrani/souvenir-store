@@ -1,10 +1,15 @@
 package sg.edu.nus.iss.se23pt2.pos;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import javax.swing.JOptionPane;
+import sg.edu.nus.iss.se23pt2.pos.datastore.DataStoreFactory;
 import sg.edu.nus.iss.se23pt2.pos.exception.InvalidCategoryCodeException;
+import sg.edu.nus.iss.se23pt2.pos.exception.UpdateFailedException;
+import sg.edu.nus.iss.se23pt2.pos.gui.ProductOrderPanel;
 
 public class Inventory {
 
@@ -24,6 +29,29 @@ public class Inventory {
         this.discounts = discounts;
     }
 
+    public void replinishProducts(ArrayList<Product> products) {
+        if (null == products) {
+            return;
+        }
+
+        Iterator<Product> ip = products.iterator();
+        Product p;
+        while (ip.hasNext()) {
+            p = this.getProduct(ip.next().getId());
+            p.addQuantity(p.getOrderQuantity());
+            DataStoreFactory dsFactory = DataStoreFactory.getInstance();
+            try {
+                dsFactory.getProductDS().update(p);
+            } catch (UpdateFailedException | IOException ufe) {
+                JOptionPane.showMessageDialog(null,
+                        "Error :: " + ufe.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+    }
+
     public List<Product> getProducts() {
         if (null == this.products) {
             return new ArrayList<>();
@@ -35,7 +63,7 @@ public class Inventory {
         }
         return p;
     }
-    
+
     public List<Product> getProducts(String catId) {
         if (null == this.products) {
             return new ArrayList<>();
@@ -45,12 +73,13 @@ public class Inventory {
         Product prod;
         while (ip.hasNext()) {
             prod = ip.next();
-            if (catId.toLowerCase().equals(prod.getCategoryCode().toLowerCase()))
+            if (catId.toLowerCase().equals(prod.getCategoryCode().toLowerCase())) {
                 p.add(prod);
+            }
         }
         return p;
     }
-    
+
     public List<Product> getProductsBelowThresholdQuantity() {
         if (null == this.products) {
             return new ArrayList<>();
@@ -60,8 +89,9 @@ public class Inventory {
         Product prod;
         while (ip.hasNext()) {
             prod = ip.next();
-            if (prod.getQuantity() < prod.getReorderThresholdQuantity())
+            if (prod.getQuantity() < prod.getReorderThresholdQuantity()) {
                 p.add(prod);
+            }
         }
         return p;
     }
@@ -76,8 +106,9 @@ public class Inventory {
         while (ip.hasNext()) {
             prod = ip.next();
             if (catId.toLowerCase().equals(prod.getCategoryCode().toLowerCase())) {
-                if (prod.getQuantity() < prod.getReorderThresholdQuantity())
+                if (prod.getQuantity() < prod.getReorderThresholdQuantity()) {
                     p.add(prod);
+                }
             }
         }
         return p;
@@ -133,7 +164,7 @@ public class Inventory {
     }
 
     public Category addCategory(String catId, String name) throws InvalidCategoryCodeException {
-        
+
         Category cat = new Category(catId, name);
         return this.addCategory(cat);
     }
