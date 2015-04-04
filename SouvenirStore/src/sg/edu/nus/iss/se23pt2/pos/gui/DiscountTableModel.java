@@ -3,8 +3,6 @@
  */
 package sg.edu.nus.iss.se23pt2.pos.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -116,8 +114,23 @@ public class DiscountTableModel extends AbstractStoreTableModel<Discount> {
 				}
 				break;
 			case 4:
-				row.setDiscPct(Double.parseDouble(aValue.toString()));
-				break;
+                             try {
+                                Double discPct = Double.parseDouble(aValue.toString());
+                                if(discPct > 100 || discPct < 0) {
+                                    JOptionPane.showMessageDialog(null, "Discount percentage must range between 0 to 100!");
+                                    break;
+                                }
+                                    row.setDiscPct(discPct);
+                                    break;
+                                }
+                                catch (NumberFormatException nfe) {
+                                        JOptionPane.showMessageDialog(null,
+                                        "Error :: " + nfe.getMessage(),
+                                        "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                                        break;
+                                }
+				
 			case 5:
 				row.setAppTo((String) aValue);
 				break;

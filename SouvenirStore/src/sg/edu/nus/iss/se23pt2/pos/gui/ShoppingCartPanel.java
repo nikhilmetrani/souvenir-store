@@ -651,7 +651,7 @@ public class ShoppingCartPanel extends JPanel {
                     rPoints = Integer.parseInt(strRPoints);
                     //Nikhil Metrani
                     //If points to redim is 0, validity checks are not required
-                    if ("0".equals(rPoints)) { 
+                    if (!"0".equals(rPoints)) { 
                         if(lPoints < rPoints){
                             shoppingCart.setPoints(0);
                             JOptionPane.showMessageDialog(table.getParent(),"Points to be redeemed cannot be greater than available loyalty points", "Error", JOptionPane.OK_OPTION);

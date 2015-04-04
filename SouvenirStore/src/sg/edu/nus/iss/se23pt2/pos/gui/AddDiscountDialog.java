@@ -94,7 +94,11 @@ public class AddDiscountDialog extends OkCancelDialog {
         	) {
 	        	JOptionPane.showMessageDialog(null, "Invalid Input! Please enter again!");
 	        	return false;
-	        }
+	        } else if(discPct > 100 || discPct < 0) {
+                    JOptionPane.showMessageDialog(null, "Discount percentage must range between 0 to 100!");
+                    return false;
+                }
+            
 	        
                 if ("m".equals(appTo.toLowerCase()))
                     this.discount = new MemberDiscount(discCode, discDesc, startDate, periodInDays, discPct, appTo);
