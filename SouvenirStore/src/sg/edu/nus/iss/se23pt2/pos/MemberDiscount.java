@@ -44,22 +44,8 @@ public class MemberDiscount extends Discount{
         if(this.isMemberFirstDiscount() && !((Member)customer).isFirstPurchase())
             return false;
 
-        if("ALWAYS".equals(this.getStartDate()) && "ALWAYS".equals(this.getPeriodInDays()))
-            return true;
-        else {
-            Date startDate = df.parse(this.getStartDate());
-            if(df.parse(transDate).after(startDate)){
-            	if("ALWAYS".equals(this.getPeriodInDays())){
-            		return true;
-            	}
-	            else{
-	            	Date endDate = new Date((startDate.getTime()+Long.parseLong(this.getPeriodInDays())*86400000));
-	            	if (df.parse(transDate).after(startDate) && df.parse(transDate).before(endDate)) {
-	            		return true;
-	            	}
-	            }
-            }
-        }
-        return false;
+        //Nikhil Metrani
+        //The logic exists in super.iValid(), so let's just call it.
+        return super.isValid(customer, transDate);
     }
 }

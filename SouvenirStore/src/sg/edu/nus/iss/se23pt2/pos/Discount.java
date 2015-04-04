@@ -93,8 +93,11 @@ public class Discount
 	// To determine the time validity of a certain discount
 	public boolean isValid(Discount disc, String transDate) throws ParseException {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		if("ALWAYS".equals(disc.getStartDate()) && "ALWAYS".equals(disc.getPeriodInDays()))
-			return true;
+                //Nikhil Metrani
+                //We are not allowing start date to be ALWAYS, not updated the condition
+		if("ALWAYS".equals(this.getPeriodInDays())){
+                    return true;
+                }
 		else {
 		    Date startDate = df.parse(disc.getStartDate());
 			Date endDate = new Date((startDate.getTime()+Long.parseLong(disc.getPeriodInDays())*86400000));
@@ -108,13 +111,16 @@ public class Discount
     public boolean isValid(Customer customer, String transDate) throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
-        if("ALWAYS".equals(this.getStartDate()) && "ALWAYS".equals(this.getPeriodInDays()))
+        //Nikhil Metrani
+        //We are not allowing start date to be ALWAYS, not updated the condition
+        if("ALWAYS".equals(this.getPeriodInDays())){
             return true;
-        else {
+        }
+        else{
             Date startDate = df.parse(this.getStartDate());
             Date endDate = new Date((startDate.getTime()+Long.parseLong(this.getPeriodInDays())*86400000));
             if (df.parse(transDate).after(startDate) && df.parse(transDate).before(endDate)) {
-                return true;
+                    return true;
             }
         }
         return false;

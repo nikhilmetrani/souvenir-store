@@ -96,7 +96,10 @@ public class AddDiscountDialog extends OkCancelDialog {
 	        	return false;
 	        }
 	        
-	        this.discount = new Discount(discCode, discDesc, startDate, periodInDays, discPct, appTo);
+                if ("m".equals(appTo.toLowerCase()))
+                    this.discount = new MemberDiscount(discCode, discDesc, startDate, periodInDays, discPct, appTo);
+                else
+                    this.discount = new Discount(discCode, discDesc, startDate, periodInDays, discPct, appTo);
 	        
 	        DataStoreFactory dsFactory = DataStoreFactory.getInstance();
 	        try {

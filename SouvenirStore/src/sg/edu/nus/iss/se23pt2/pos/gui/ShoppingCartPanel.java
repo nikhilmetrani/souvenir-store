@@ -343,7 +343,7 @@ public class ShoppingCartPanel extends JPanel {
             @Override
             public void focusLost (FocusEvent e) {
             	String rPoints = redeemPoints.getText();
-            	if(rPoints != null && !rPoints.trim().isEmpty()){
+            	if(rPoints != null && !rPoints.trim().isEmpty() && !"0".equals(rPoints)){
             		try{
             			shoppingCart.setPoints(Integer.parseInt(rPoints));
             		}catch(Exception ex){
@@ -633,26 +633,33 @@ public class ShoppingCartPanel extends JPanel {
         double payableAmt = 0;
         if(strRPoints != null && !strRPoints.trim().isEmpty()){
             if(shoppingCart.getMember()==null){
-                shoppingCart.setPoints(0);
-                JOptionPane.showMessageDialog(table.getParent(),"Non-Members cannot Redeem points", "Error", JOptionPane.OK_OPTION);
-                redeemPoints.requestFocusInWindow();
-                return false;
+                //Nikhil Metrani
+                //If points to redim is 0, validity checks are not required
+                if (!"0".equals(redeemPoints.getText())) {
+                    shoppingCart.setPoints(0);
+                    JOptionPane.showMessageDialog(table.getParent(),"Non-Members cannot Redeem points", "Error", JOptionPane.OK_OPTION);
+                    redeemPoints.requestFocusInWindow();
+                    return false;
+                }
             }
-
             if(strLPoints != null && !strLPoints.trim().isEmpty()){
                 try{
                     lPoints = Integer.parseInt(strLPoints);
                     rPoints = Integer.parseInt(strRPoints);
-                    if(lPoints < rPoints){
-                        shoppingCart.setPoints(0);
-                        JOptionPane.showMessageDialog(table.getParent(),"Points to be redeemed cannot be greater than available loyalty points", "Error", JOptionPane.OK_OPTION);
-                        redeemPoints.requestFocusInWindow();
-                        return false;
-                    }else if (rPoints%100!=0){
-                        shoppingCart.setPoints(0);
-                        JOptionPane.showMessageDialog(table.getParent(), "Enter the redeem points in multiples of 100", "Error", JOptionPane.OK_OPTION);
-                        redeemPoints.requestFocusInWindow();
-                        return false;
+                    //Nikhil Metrani
+                    //If points to redim is 0, validity checks are not required
+                    if ("0".equals(rPoints)) { 
+                        if(lPoints < rPoints){
+                            shoppingCart.setPoints(0);
+                            JOptionPane.showMessageDialog(table.getParent(),"Points to be redeemed cannot be greater than available loyalty points", "Error", JOptionPane.OK_OPTION);
+                            redeemPoints.requestFocusInWindow();
+                            return false;
+                        }else if (rPoints%100!=0){
+                            shoppingCart.setPoints(0);
+                            JOptionPane.showMessageDialog(table.getParent(), "Enter the redeem points in multiples of 100", "Error", JOptionPane.OK_OPTION);
+                            redeemPoints.requestFocusInWindow();
+                            return false;
+                        }
                     }
                 }catch(Exception ex){
                     JOptionPane.showMessageDialog(table.getParent(),"Error validating redeem points->"+ex.getMessage(), "Error", JOptionPane.OK_OPTION);
