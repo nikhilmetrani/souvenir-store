@@ -651,19 +651,20 @@ public class ShoppingCartPanel extends JPanel {
                     rPoints = Integer.parseInt(strRPoints);
                     //Nikhil Metrani
                     //If points to redim is 0, validity checks are not required
-                    if (!"0".equals(rPoints)) { 
+                    
                         if(lPoints < rPoints){
-                            shoppingCart.setPoints(0);
-                            JOptionPane.showMessageDialog(table.getParent(),"Points to be redeemed cannot be greater than available loyalty points", "Error", JOptionPane.OK_OPTION);
-                            redeemPoints.requestFocusInWindow();
-                            return false;
+                            if (0 != rPoints) { 
+                                shoppingCart.setPoints(0);
+                                JOptionPane.showMessageDialog(table.getParent(),"Points to be redeemed cannot be greater than available loyalty points", "Error", JOptionPane.OK_OPTION);
+                                redeemPoints.requestFocusInWindow();
+                                return false;
+                            }
                         }else if (rPoints%100!=0){
                             shoppingCart.setPoints(0);
                             JOptionPane.showMessageDialog(table.getParent(), "Enter the redeem points in multiples of 100", "Error", JOptionPane.OK_OPTION);
                             redeemPoints.requestFocusInWindow();
                             return false;
                         }
-                    }
                 }catch(Exception ex){
                     JOptionPane.showMessageDialog(table.getParent(),"Error validating redeem points->"+ex.getMessage(), "Error", JOptionPane.OK_OPTION);
                     redeemPoints.setText("");
