@@ -42,40 +42,40 @@ public class PrintTransactionDialog extends JDialog {
 		midPanel.setLayout(new FlowLayout());
 		JPanel transactionPanel = new JPanel();
 		transactionPanel.setLayout(new BoxLayout(transactionPanel, BoxLayout.Y_AXIS));
-		JLabel transactionIdText = new JLabel("Transaction Id: ");
+		JLabel transactionIdText = new JLabel("Transaction Id  ");
 		transactionIdText.setAlignmentX(Component.LEFT_ALIGNMENT);
 		transactionPanel.add(transactionIdText, BorderLayout.AFTER_LAST_LINE);
 
 		JPanel transactionPanel1 = new JPanel();
 		transactionPanel1.setLayout(new BoxLayout(transactionPanel1, BoxLayout.Y_AXIS));
-		JLabel memberIdText = new JLabel("Member Id: ");
+		JLabel memberIdText = new JLabel("Member Id  ");
 		memberIdText.setAlignmentX(Component.LEFT_ALIGNMENT);
 		transactionPanel1.add(memberIdText, BorderLayout.AFTER_LAST_LINE);
 
 		JPanel transactionPanel2 = new JPanel();
 		transactionPanel2.setLayout(new BoxLayout(transactionPanel2, BoxLayout.Y_AXIS));
-		JLabel transactionDateText = new JLabel("Transaction Date: ");
+		JLabel transactionDateText = new JLabel("Transaction Date  ");
 		transactionDateText.setAlignmentX(Component.LEFT_ALIGNMENT);
 		transactionPanel2.add(transactionDateText, BorderLayout.AFTER_LAST_LINE);
 
 		JPanel productPanel = new JPanel();
 		productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
-		JLabel productIdText = new JLabel("Product Id: ");
+		JLabel productIdText = new JLabel("Product Id  ");
 		productPanel.add(productIdText, BorderLayout.AFTER_LAST_LINE);
 
 		JPanel productPanel1 = new JPanel();
 		productPanel1.setLayout(new BoxLayout(productPanel1, BoxLayout.Y_AXIS));
-		JLabel productNameText = new JLabel("Product Name: ");
+		JLabel productNameText = new JLabel("Product Name  ");
 		productPanel1.add(productNameText, BorderLayout.AFTER_LAST_LINE);
 
 		JPanel productPanel2 = new JPanel();
 		productPanel2.setLayout(new BoxLayout(productPanel2, BoxLayout.Y_AXIS));
-		JLabel productDescText = new JLabel("Product Description: ");
+		JLabel productDescText = new JLabel("Product Description  ");
 		productPanel2.add(productDescText, BorderLayout.AFTER_LAST_LINE);
 
 		JPanel productPanel3 = new JPanel();
 		productPanel3.setLayout(new BoxLayout(productPanel3, BoxLayout.Y_AXIS));
-		JLabel quantityText = new JLabel("Quantity: ");
+		JLabel quantityText = new JLabel("Quantity  ");
 		productPanel3.add(quantityText, BorderLayout.AFTER_LAST_LINE);
 
 		midPanel.add(transactionPanel);
@@ -122,8 +122,8 @@ public class PrintTransactionDialog extends JDialog {
 				productPanel2.add(productDesc, BorderLayout.AFTER_LAST_LINE);
 						
 				JLabel quantity = new JLabel(blanks + 
-						i.getProduct().getQuantity());
-				quantity.setAlignmentX(Component.RIGHT_ALIGNMENT);
+						i.getQuantity());
+				quantity.setAlignmentX(Component.LEFT_ALIGNMENT);
 				productPanel3.add(quantity, BorderLayout.AFTER_LAST_LINE);
 
 			}
