@@ -171,9 +171,10 @@ public class ShoppingCart {
     } 
 
     /** Created by JV to use instance objects**/
-    public double getHighestDiscount(ArrayList<Discount> discounts) {
+    public double getHighestDiscount(List<Discount> discounts) {
         String transDate = DateUtil.getCurrentDateAsString();
         double highestDesc = 0;
+        this.discount = null;
         try{
             for(Discount discount : discounts) {
                 if(discount.isValid(this.getCustomer(), transDate) && discount.getDiscPct() > highestDesc) {

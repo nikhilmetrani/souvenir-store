@@ -206,7 +206,7 @@ public class ShoppingCartPanel extends JPanel {
                     loyaltyPoints.setText("");
                 }
 
-                double discount = shoppingCart.getHighestDiscount(souvenirStore.getDiscounts());
+                double discount = shoppingCart.getHighestDiscount(souvenirStore.getInventory().getDiscounts());
                 if(shoppingCart.getDiscount()!=null){
                     discountPercent.setText(String.valueOf(shoppingCart.getDiscount().getDiscPct()));
                 }else{
@@ -216,6 +216,9 @@ public class ShoppingCartPanel extends JPanel {
                 calculatePayableAmount();
             }
         });
+        
+        customerId.setSelectedItem(customerId.getSelectedItem());
+        
         topPanel.add(customerId);
         topPanel.add(new JLabel("Customer Name"));
         customerName.setEditable(false);

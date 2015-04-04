@@ -38,14 +38,25 @@ public class MemberDiscount extends Discount{
     public boolean isValid(Customer customer, String transDate) throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
-        if(!(customer instanceof Member))
+        //Nikhil Metrani
+        //Do additional check for appTo() just in case Storekeeper changes discount type from 
+        //all to member or vice versa.
+        if(!(customer instanceof Member) && "m".equalsIgnoreCase(this.getAppTo()))
             return false;
 
         if(this.isMemberFirstDiscount() && !((Member)customer).isFirstPurchase())
             return false;
 
-        //Nikhil Metrani
-        //The logic exists in super.iValid(), so let's just call it.
-        return super.isValid(customer, transDate);
+        if("ALWAYS".equals(this.getPeriodInDays())){
+            return true;
+        }
+        else{
+            Date startDate = df.parse(this.getStartDate());
+            Date endDate = new Date((startDate.getTime()+Long.parseLong(this.getPeriodInDays())*86400000));
+            if (df.parse(transDate).after(startDate) && df.parse(transDate).before(endDate)) {
+                    return true;
+            }
+        }
+        return false;
     }
 }
